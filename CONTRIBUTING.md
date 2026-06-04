@@ -1,6 +1,6 @@
 # Contributing to CivicWatch
 
-Thank you for wanting to contribute. CivicPulse is a civic project — it works better the more people are involved.
+Thank you for wanting to contribute. CivicWatch is a civic project — it works better the more people are involved.
 
 ## Ways to Contribute
 
