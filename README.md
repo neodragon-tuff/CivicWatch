@@ -80,7 +80,7 @@ Most cities publish public data — but it's buried across 6 different websites,
 ## Getting Started
 
 ### Option 1 — View Live (GitHub Pages)
-Visit: `https://github.com/neodragon-tuff/CivicWatch.git`
+Visit: `https://neodragon-tuff.github.io/CivicWatch/`
 
 ### Option 2 — Run Locally
 ```bash
