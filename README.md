@@ -1,4 +1,4 @@
-# 🏛️ CivicWatch — Real-Time Civic Engagement Dashboard
+# CivicWatch — Real-Time Civic Engagement Dashboard
 
 ![Version](https://img.shields.io/badge/version-1.0.0-green)
 ![License](https://img.shields.io/badge/license-MIT-blue)
@@ -10,11 +10,11 @@
 
 > **"Democracy works better when people actually know what's happening."**
 
-CivicPulse is a real-time, open-source civic transparency dashboard that aggregates local government data — council votes, annual budgets, public meetings, and infrastructure alerts — into a single, clean, resident-facing interface. No login required. No paywall. Just your city, fully visible.
+CivicWatch is a real-time, open-source civic transparency dashboard that aggregates local government data — council votes, annual budgets, public meetings, and infrastructure alerts — into a single, clean, resident-facing interface. No login required. No paywall. Just your city, fully visible.
 
 ---
 
-## 🌍 The Problem
+## The Problem
 
 Most cities publish public data — but it's buried across 6 different websites, written in government jargon, and impossible to track in real time. As a result:
 
@@ -23,47 +23,47 @@ Most cities publish public data — but it's buried across 6 different websites,
 - Infrastructure failures (water advisories, transit outages) spread faster on social media than official channels
 - Council votes on zoning, housing, and safety pass with minimal scrutiny
 
-**CivicPulse solves this.** One dashboard. Every city. Every resident.
+**CivicWatch solves this.** One dashboard. Every city. Every resident.
 
 ---
 
-## ✨ Features
+## Features
 
-### 📊 Live Vote Tracker
+### Live Vote Tracker
 - Real-time status of all active city council votes (Live / Pending / Passed / Failed)
 - Expandable vote cards showing description, vote counts, and visual yea/nay breakdown
 - Impact tagging (High / Medium / Low) so residents know what matters most
 
-### 💰 Annual Budget Visualizer
+### Annual Budget Visualizer
 - Full breakdown of city budget allocation by department
 - Percentage bars with dollar amounts for each category
 - Year-over-year change indicator
 
-### 📅 Public Meeting Calendar
+### Public Meeting Calendar
 - Upcoming city council sessions, zoning boards, and planning meetings
 - One-click RSVP tracking so residents never miss a meeting
 - Agenda item counts so you know what's being decided
 
-### 🏗️ Infrastructure Status Board
+### Infrastructure Status Board
 - Live status for roads, bridges, water systems, power grid, and transit
 - Three-tier alert system: Critical / Warning / OK
 - Resident issue reporting with direct city routing
 
-### 🏙️ Multi-City Support
+### Multi-City Support
 - Switch between 6+ major cities with one dropdown
 - Boston, New York, Chicago, LA, Houston, Seattle
 - Designed to scale to any city with open data APIs
 
-### 📡 Live News Ticker
+### Live News Ticker
 - Continuous scrolling feed of active civic events
 - Color-coded by urgency (red/yellow/green)
 
-### 🔍 Unified Search
+### Unified Search
 - Single search bar across votes, meetings, projects, and alerts
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology | Why |
 |---|---|---|
@@ -73,11 +73,11 @@ Most cities publish public data — but it's buried across 6 different websites,
 | Hosting | GitHub Pages | Free, open, always available |
 | Future | Node.js + Express backend, PostgreSQL | Persistent data + real API integration |
 
-**No frameworks. No build tools. No npm.** This is intentional — CivicPulse is designed to run in any browser, on any device, without a build step. Accessibility first.
+**No frameworks. No build tools. No npm.** This is intentional — CivicWatch is designed to run in any browser, on any device, without a build step. Accessibility first.
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Option 1 — View Live (GitHub Pages)
 Visit: `https://neodragon-tuff.github.io/CivicWatch/`
@@ -88,7 +88,7 @@ Visit: `https://neodragon-tuff.github.io/CivicWatch/`
 git clone https://neodragon-tuff.github.io/CivicWatch/
 
 # Navigate into the project
-cd civicpulse
+cd civicwatch
 
 # Open in browser (no server needed)
 open index.html
@@ -102,10 +102,10 @@ That's it. No `npm install`. No `.env` file. No Docker. Just open and run.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
-civicpulse/
+civicwatch/
 ├── index.html              # Main application (self-contained)
 ├── README.md               # This file
 ├── LICENSE                 # MIT License
@@ -123,7 +123,7 @@ civicpulse/
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
 ### Phase 1 — Foundation (Current)
 - [x] Core dashboard UI with all four main panels
@@ -159,9 +159,9 @@ civicpulse/
 
 ---
 
-## 🌐 Real Data Sources
+## Real Data Sources
 
-CivicPulse is designed to pull from these **free, public government APIs**:
+CivicWatch is designed to pull from these **free, public government APIs**:
 
 | City | Portal | API |
 |---|---|---|
@@ -176,9 +176,9 @@ All data sources are **100% free and public** under open government data laws (U
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are genuinely welcome. CivicPulse is a civic project — it belongs to everyone.
+Contributions are genuinely welcome. CivicWatch is a civic project — it belongs to everyone.
 
 **Ways to help:**
 - Add your city's data
@@ -191,7 +191,7 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed guidelines.
 
 ```bash
 # Fork the repo on GitHub, then:
-git clone https://github.com/[your-fork]/civicpulse.git
+git clone https://github.com/[your-fork]/civicwatch.git
 git checkout -b feature/your-feature-name
 # Make your changes
 git commit -m "feat: describe your change clearly"
@@ -201,7 +201,7 @@ git push origin feature/your-feature-name
 
 ---
 
-## 📖 Developer Journal
+## Developer Journal
 
 I'm documenting every day of development in [`docs/JOURNAL.md`](docs/JOURNAL.md).
 
@@ -209,7 +209,7 @@ This includes what I built, what broke, what I learned, and what's next. If you'
 
 ---
 
-## 📄 License
+## License
 
 MIT License — see [LICENSE](LICENSE) for full text.
 
@@ -217,7 +217,7 @@ You are free to use, copy, modify, and distribute this project for any purpose, 
 
 ---
 
-## 👤 Author
+## Author
 
 Built by a first-year developer passionate about civic technology and government transparency.
 
@@ -229,7 +229,7 @@ Built by a first-year developer passionate about civic technology and government
 
 ## ⭐ If This Helps You
 
-If CivicPulse is useful to you, your city, or your newsroom — **star the repo**. It helps more people find it, and it helps me keep building.
+If CivicWatch is useful to you, your city, or your newsroom — **star the repo**. It helps more people find it, and it helps me keep building.
 
 > *"The price of liberty is eternal vigilance."* — Thomas Jefferson
 
