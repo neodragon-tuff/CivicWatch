@@ -1,4 +1,4 @@
-# 🏛️ CivicPulse — Real-Time Civic Engagement Dashboard
+# 🏛️ CivicWatch — Real-Time Civic Engagement Dashboard
 
 ![Version](https://img.shields.io/badge/version-1.0.0-green)
 ![License](https://img.shields.io/badge/license-MIT-blue)
