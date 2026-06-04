@@ -80,12 +80,12 @@ Most cities publish public data — but it's buried across 6 different websites,
 ## 🚀 Getting Started
 
 ### Option 1 — View Live (GitHub Pages)
-Visit: `https://[your-username].github.io/civicpulse`
+Visit: `https://neodragon-tuff.github.io/CivicWatch/`
 
 ### Option 2 — Run Locally
 ```bash
 # Clone the repository
-git clone https://github.com/[your-username]/civicpulse.git
+git clone https://neodragon-tuff.github.io/CivicWatch/
 
 # Navigate into the project
 cd civicpulse
