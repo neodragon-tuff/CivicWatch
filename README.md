@@ -80,12 +80,12 @@ Most cities publish public data — but it's buried across 6 different websites,
 ## Getting Started
 
 ### Option 1 — View Live (GitHub Pages)
-Visit: `https://neodragon-tuff.github.io/CivicWatch/`
+Visit: `https://github.com/neodragon-tuff/CivicWatch.git`
 
 ### Option 2 — Run Locally
 ```bash
 # Clone the repository
-git clone https://neodragon-tuff.github.io/CivicWatch/
+git clone git clone https://github.com/neodragon-tuff/CivicWatch.git
 
 # Navigate into the project
 cd civicwatch
@@ -221,7 +221,7 @@ You are free to use, copy, modify, and distribute this project for any purpose, 
 
 Built by a first-year developer passionate about civic technology and government transparency.
 
-- **GitHub:** [@your-username](https://github.com/your-username)
+- **GitHub:** [@neodragon-tuff](https://github.com/neodragon-tuff)
 - **Project started:** June 3, 2026
 - **Status:** Active development
 
