@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CivicPulse — Know Your City</title>
+  <meta name="description" content="Real-time civic engagement dashboard. Track local votes, budgets, meetings, and infrastructure in your city." />
+  <meta property="og:title" content="CivicPulse — Know Your City" />
+  <meta property="og:description" content="The civic dashboard your city never built." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink:       #0d0d0d;
+      --paper:     #f5f0e8;
+      --cream:     #ede7d6;
+      --civic:     #1a3a2a;
+      --accent:    #c84b2f;
+      --gold:      #d4a847;
+      --muted:     #6b6355;
+      --border:    #c8bfaa;
+      --green-dot: #2e7d4f;
+      --red-dot:   #c84b2f;
+      --yellow-dot:#d4a847;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999;
+    }
+
+    /* ── TOP MASTHEAD ── */
+    .masthead {
+      background: var(--civic);
+      color: var(--paper);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 3px solid var(--gold);
+      position: sticky; top: 0; z-index: 100;
+      height: 64px;
+    }
+    .masthead-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .masthead-logo .pulse-dot {
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse-ring 1.8s ease-out infinite;
+    }
+    @keyframes pulse-ring {
+      0%   { box-shadow: 0 0 0 0 rgba(200,75,47,0.7); }
+      70%  { box-shadow: 0 0 0 8px rgba(200,75,47,0); }
+      100% { box-shadow: 0 0 0 0 rgba(200,75,47,0); }
+    }
+    .masthead-nav {
+      display: flex; gap: 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem; letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .masthead-nav a {
+      color: var(--cream); text-decoration: none;
+      opacity: 0.7; transition: opacity 0.2s;
+    }
+    .masthead-nav a:hover { opacity: 1; }
+    .masthead-right {
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .live-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: white; padding: 3px 10px;
+      border-radius: 2px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .live-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: white; border-radius: 50%;
+      animation: blink 1.2s steps(1) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── HERO DATELINE ── */
+    .dateline-bar {
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+      padding: 0.5rem 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.1em;
+      color: var(--muted);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .city-selector {
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .city-selector select {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--ink);
+      padding: 2px 6px;
+      cursor: pointer;
+    }
+
+    /* ── HERO SECTION ── */
+    .hero {
+      padding: 3rem 2rem 2rem;
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3rem; align-items: center;
+    }
+    .hero-headline {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 800; line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+    .hero-headline .accent-word { color: var(--accent); }
+    .hero-subline {
+      margin-top: 1rem;
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 42ch;
+    }
+    .hero-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1rem; margin-top: 2rem;
+    }
+    .stat-card {
+      border: 1px solid var(--border);
+      padding: 1rem;
+      background: white;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.5s ease both;
+    }
+    .stat-card:nth-child(1) { animation-delay: 0.1s; }
+    .stat-card:nth-child(2) { animation-delay: 0.2s; }
+    .stat-card:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--accent);
+    }
+    .stat-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem; font-weight: 800;
+      color: var(--civic);
+    }
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── URGENCY TICKER ── */
+    .ticker-wrap {
+      background: var(--civic); color: var(--paper);
+      overflow: hidden; padding: 0.6rem 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .ticker-inner {
+      display: flex; gap: 4rem;
+      animation: ticker 28s linear infinite;
+      white-space: nowrap;
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .ticker-item {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem; letter-spacing: 0.06em;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .ticker-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%; flex-shrink: 0;
+    }
+    .ticker-dot.green  { background: var(--green-dot); }
+    .ticker-dot.red    { background: var(--red-dot); }
+    .ticker-dot.yellow { background: var(--yellow-dot); }
+
+    /* ── MAIN GRID ── */
+    .main-grid {
+      max-width: 1200px; margin: 2rem auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 1.5rem;
+    }
+
+    /* ── SECTION HEADERS ── */
+    .section-header {
+      display: flex; align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--ink);
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem; font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .section-count {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.1em;
+      color: var(--muted); text-transform: uppercase;
+    }
+
+    /* ── VOTE TRACKER ── */
+    .vote-tracker { grid-column: 1; grid-row: 1; }
+    .vote-card {
+      border: 1px solid var(--border);
+      background: white;
+      padding: 1.25rem;
+      margin-bottom: 0.75rem;
+      display: grid; grid-template-columns: auto 1fr auto;
+      gap: 1rem; align-items: start;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+      animation: fadeUp 0.5s ease both;
+      position: relative;
+    }
+    .vote-card:hover {
+      box-shadow: 4px 4px 0 var(--ink);
+      transform: translate(-2px, -2px);
+    }
+    .vote-card:nth-child(1) { animation-delay: 0.05s; }
+    .vote-card:nth-child(2) { animation-delay: 0.1s; }
+    .vote-card:nth-child(3) { animation-delay: 0.15s; }
+    .vote-card:nth-child(4) { animation-delay: 0.2s; }
+    .vote-status-col {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 4px;
+      padding-top: 2px;
+    }
+    .status-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: bold;
+      flex-shrink: 0;
+    }
+    .status-icon.pass  { background: #e8f5e9; color: var(--green-dot); border: 2px solid var(--green-dot); }
+    .status-icon.fail  { background: #fce4ec; color: var(--red-dot);   border: 2px solid var(--red-dot); }
+    .status-icon.pend  { background: #fff8e1; color: var(--gold);      border: 2px solid var(--gold); }
+    .status-icon.live  { background: #e8f5e9; color: var(--green-dot); border: 2px solid var(--green-dot);
+                         animation: pulse-ring 1.8s ease-out infinite; }
+    .vote-body {}
+    .vote-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem; font-weight: 600;
+      line-height: 1.3; margin-bottom: 0.3rem;
+    }
+    .vote-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.07em;
+      color: var(--muted); text-transform: uppercase;
+      display: flex; gap: 1rem; flex-wrap: wrap;
+    }
+    .vote-desc {
+      margin-top: 0.5rem;
+      font-size: 0.85rem; color: var(--muted);
+      line-height: 1.6;
+      display: none;
+    }
+    .vote-card.expanded .vote-desc { display: block; }
+    .vote-bar-wrap {
+      margin-top: 0.75rem; display: none;
+    }
+    .vote-card.expanded .vote-bar-wrap { display: block; }
+    .vote-bar-labels {
+      display: flex; justify-content: space-between;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.06em;
+      color: var(--muted); margin-bottom: 4px;
+    }
+    .vote-bar-track {
+      height: 8px; background: var(--cream);
+      border-radius: 2px; overflow: hidden;
+      display: flex;
+    }
+    .vote-bar-yes { background: var(--green-dot); transition: width 1s ease; }
+    .vote-bar-no  { background: var(--red-dot);   transition: width 1s ease; }
+    .vote-impact-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 2px;
+      white-space: nowrap;
+      align-self: start;
+    }
+    .tag-high   { background: #fce4ec; color: var(--red-dot); }
+    .tag-medium { background: #fff8e1; color: var(--gold); }
+    .tag-low    { background: #e8f5e9; color: var(--green-dot); }
+
+    /* ── BUDGET PANEL ── */
+    .budget-panel { grid-column: 2; grid-row: 1 / 3; }
+    .budget-panel-inner {
+      border: 1px solid var(--border);
+      background: white; padding: 1.25rem;
+      position: sticky; top: 80px;
+    }
+    .budget-total {
+      text-align: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+    .budget-total-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .budget-total-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem; font-weight: 800;
+      color: var(--civic); line-height: 1.1;
+    }
+    .budget-total-sub {
+      font-size: 0.8rem; color: var(--muted);
+      font-style: italic; margin-top: 2px;
+    }
+    .budget-items {}
+    .budget-item {
+      margin-bottom: 1rem;
+      animation: fadeUp 0.5s ease both;
+    }
+    .budget-item:nth-child(1) { animation-delay: 0.05s; }
+    .budget-item:nth-child(2) { animation-delay: 0.1s; }
+    .budget-item:nth-child(3) { animation-delay: 0.15s; }
+    .budget-item:nth-child(4) { animation-delay: 0.2s; }
+    .budget-item:nth-child(5) { animation-delay: 0.25s; }
+    .budget-item-header {
+      display: flex; justify-content: space-between;
+      align-items: baseline; margin-bottom: 4px;
+    }
+    .budget-item-name {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--ink);
+    }
+    .budget-item-pct {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 0.9rem;
+    }
+    .budget-track {
+      height: 6px; background: var(--cream);
+      border-radius: 2px; overflow: hidden;
+    }
+    .budget-fill {
+      height: 100%; border-radius: 2px;
+      transition: width 1.2s cubic-bezier(.25,.8,.25,1);
+    }
+    .budget-amount {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* ── MEETINGS ── */
+    .meetings-panel { grid-column: 1; grid-row: 2; }
+    .meeting-card {
+      border: 1px solid var(--border);
+      background: white; padding: 1rem 1.25rem;
+      margin-bottom: 0.5rem;
+      display: flex; gap: 1rem; align-items: center;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+      animation: fadeUp 0.5s ease both;
+    }
+    .meeting-card:hover {
+      box-shadow: 3px 3px 0 var(--ink);
+      transform: translate(-1px, -1px);
+    }
+    .meeting-card:nth-child(1) { animation-delay: 0.1s; }
+    .meeting-card:nth-child(2) { animation-delay: 0.15s; }
+    .meeting-card:nth-child(3) { animation-delay: 0.2s; }
+    .meeting-date-box {
+      flex-shrink: 0;
+      width: 52px; height: 52px;
+      background: var(--civic); color: white;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif;
+    }
+    .meeting-date-box .month {
+      font-size: 0.55rem; letter-spacing: 0.12em;
+      text-transform: uppercase; opacity: 0.8;
+    }
+    .meeting-date-box .day {
+      font-size: 1.4rem; font-weight: 800; line-height: 1;
+    }
+    .meeting-date-box.today { background: var(--accent); }
+    .meeting-info { flex: 1; }
+    .meeting-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem; font-weight: 600;
+    }
+    .meeting-details {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.06em;
+      color: var(--muted); text-transform: uppercase;
+      margin-top: 3px;
+      display: flex; gap: 1rem;
+    }
+    .meeting-rsvp {
+      flex-shrink: 0;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid var(--civic);
+      padding: 5px 10px; cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      background: transparent; color: var(--civic);
+    }
+    .meeting-rsvp:hover, .meeting-rsvp.rsvpd {
+      background: var(--civic); color: white;
+    }
+
+    /* ── INFRASTRUCTURE MAP ── */
+    .infra-panel {
+      grid-column: 1 / 3;
+      border: 1px solid var(--border);
+      background: white; padding: 1.25rem;
+    }
+    .infra-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .infra-card {
+      border: 1px solid var(--border);
+      padding: 1rem;
+      position: relative; overflow: hidden;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+      animation: fadeUp 0.5s ease both;
+    }
+    .infra-card:hover {
+      box-shadow: 3px 3px 0 var(--ink);
+      transform: translate(-1px, -1px);
+    }
+    .infra-card::after {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 4px; height: 100%;
+    }
+    .infra-card.critical::after { background: var(--red-dot); }
+    .infra-card.warning::after  { background: var(--gold); }
+    .infra-card.ok::after       { background: var(--green-dot); }
+    .infra-icon {
+      font-size: 1.5rem; margin-bottom: 0.4rem;
+    }
+    .infra-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem; font-weight: 600;
+    }
+    .infra-status {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.07em;
+      text-transform: uppercase; margin-top: 2px;
+    }
+    .infra-card.critical .infra-status { color: var(--red-dot); }
+    .infra-card.warning  .infra-status { color: var(--gold); }
+    .infra-card.ok       .infra-status { color: var(--green-dot); }
+    .infra-last {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem; color: var(--muted);
+      margin-top: 4px;
+    }
+    .report-btn {
+      margin-top: 0.75rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      background: transparent;
+      padding: 4px 10px;
+      cursor: pointer;
+      display: block; width: 100%;
+      transition: background 0.15s;
+    }
+    .report-btn:hover { background: var(--cream); }
+
+    /* ── NOTIFICATION TOAST ── */
+    .toast {
+      position: fixed; bottom: 2rem; right: 2rem;
+      background: var(--civic); color: white;
+      padding: 1rem 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem; letter-spacing: 0.05em;
+      border-left: 4px solid var(--gold);
+      box-shadow: 6px 6px 0 rgba(0,0,0,0.2);
+      transform: translateY(100px); opacity: 0;
+      transition: transform 0.4s cubic-bezier(.25,.8,.25,1), opacity 0.4s;
+      z-index: 1000; max-width: 320px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast-title { font-weight: 500; margin-bottom: 2px; font-size: 0.8rem; }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--ink); color: var(--cream);
+      padding: 2rem;
+      margin-top: 3rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 2rem;
+    }
+    .footer-brand {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem; font-weight: 800;
+      letter-spacing: -0.02em; margin-bottom: 0.5rem;
+    }
+    .footer-desc {
+      font-size: 0.85rem; color: rgba(237,231,214,0.6);
+      line-height: 1.6;
+    }
+    .footer-col-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.75rem;
+    }
+    .footer-links { list-style: none; }
+    .footer-links li {
+      font-size: 0.85rem;
+      color: rgba(237,231,214,0.7);
+      margin-bottom: 0.4rem; cursor: pointer;
+    }
+    .footer-links li:hover { color: white; }
+    .footer-bottom {
+      background: black; color: rgba(237,231,214,0.4);
+      padding: 0.75rem 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.06em;
+      display: flex; justify-content: space-between;
+    }
+
+    /* ── SEARCH BAR ── */
+    .search-wrap {
+      padding: 1rem 2rem 0;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .search-bar {
+      display: flex; gap: 0;
+      border: 2px solid var(--ink);
+      background: white; max-width: 480px;
+    }
+    .search-bar input {
+      flex: 1; border: none; outline: none;
+      padding: 0.6rem 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      background: transparent;
+    }
+    .search-bar button {
+      background: var(--civic); color: white;
+      border: none; padding: 0 1.2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.08em;
+      text-transform: uppercase; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .search-bar button:hover { background: var(--accent); }
+
+    .hero-right {
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-visual {
+      width: 100%; max-width: 400px;
+      aspect-ratio: 1;
+      position: relative;
+    }
+    /* ── CIVIC GAUGE SVG ── */
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .main-grid { grid-template-columns: 1fr; }
+      .budget-panel { grid-column: 1; grid-row: auto; }
+      .infra-panel { grid-column: 1; }
+      .footer { grid-template-columns: 1fr; }
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(13,13,13,0.7);
+      z-index: 500;
+      display: none; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--paper);
+      border: 2px solid var(--ink);
+      padding: 2rem; max-width: 560px; width: 90%;
+      box-shadow: 8px 8px 0 var(--ink);
+      animation: slideIn 0.3s cubic-bezier(.25,.8,.25,1);
+    }
+    @keyframes slideIn {
+      from { transform: translateY(30px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    .modal-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem; font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+    .modal-body { color: var(--muted); line-height: 1.7; font-size: 0.9rem; }
+    .modal-close {
+      float: right;
+      background: none; border: none;
+      font-size: 1.2rem; cursor: pointer;
+      color: var(--muted); margin-top: -0.5rem;
+    }
+    .modal-actions { margin-top: 1.5rem; display: flex; gap: 0.75rem; }
+    .btn-primary {
+      background: var(--civic); color: white;
+      border: none; padding: 0.6rem 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem; letter-spacing: 0.08em;
+      text-transform: uppercase; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: var(--accent); }
+    .btn-secondary {
+      background: transparent; color: var(--ink);
+      border: 1px solid var(--ink);
+      padding: 0.6rem 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem; letter-spacing: 0.08em;
+      text-transform: uppercase; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MASTHEAD -->
+  <header class="masthead">
+    <div class="masthead-logo">
+      <span class="pulse-dot"></span>
+      CivicPulse
+    </div>
+    <nav class="masthead-nav">
+      <a href="#votes">Votes</a>
+      <a href="#budget">Budget</a>
+      <a href="#meetings">Meetings</a>
+      <a href="#infra">Infrastructure</a>
+    </nav>
+    <div class="masthead-right">
+      <span class="live-badge">Live Data</span>
+    </div>
+  </header>
+
+  <!-- DATELINE -->
+  <div class="dateline-bar">
+    <span id="dateline-text">Loading...</span>
+    <div class="city-selector">
+      <span>CITY:</span>
+      <select id="citySelect" onchange="changeCity(this.value)">
+        <option value="boston">Boston, MA</option>
+        <option value="nyc">New York, NY</option>
+        <option value="chicago">Chicago, IL</option>
+        <option value="la">Los Angeles, CA</option>
+        <option value="houston">Houston, TX</option>
+        <option value="seattle">Seattle, WA</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <h1 class="hero-headline">
+        Your city.<br>
+        <span class="accent-word">Fully</span><br>
+        transparent.
+      </h1>
+      <p class="hero-subline">
+        CivicPulse tracks every vote, budget line, public meeting, and infrastructure alert — all in one real-time dashboard. Democracy works better when people actually know what's happening.
+      </p>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="stat-number" id="stat-votes">24</div>
+          <div class="stat-label">Active Votes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-meetings">7</div>
+          <div class="stat-label">Upcoming Meetings</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-alerts">3</div>
+          <div class="stat-label">Infra Alerts</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <svg class="hero-visual" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="bg-grad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#e8f5e9" />
+            <stop offset="100%" stop-color="#f5f0e8" />
+          </radialGradient>
+        </defs>
+        <circle cx="200" cy="200" r="195" fill="url(#bg-grad)" stroke="#c8bfaa" stroke-width="1"/>
+        <!-- Grid lines -->
+        <line x1="200" y1="20" x2="200" y2="380" stroke="#c8bfaa" stroke-width="0.5" stroke-dasharray="4 4"/>
+        <line x1="20" y1="200" x2="380" y2="200" stroke="#c8bfaa" stroke-width="0.5" stroke-dasharray="4 4"/>
+        <!-- Concentric rings -->
+        <circle cx="200" cy="200" r="60"  fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
+        <circle cx="200" cy="200" r="110" fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
+        <circle cx="200" cy="200" r="160" fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
+        <!-- Data points -->
+        <circle cx="200" cy="90"  r="10" fill="#1a3a2a" class="data-pulse"/>
+        <circle cx="310" cy="155" r="7"  fill="#c84b2f"/>
+        <circle cx="280" cy="310" r="12" fill="#d4a847"/>
+        <circle cx="120" cy="290" r="8"  fill="#1a3a2a"/>
+        <circle cx="100" cy="150" r="10" fill="#c84b2f" class="data-pulse"/>
+        <!-- Connecting lines -->
+        <line x1="200" y1="90"  x2="310" y2="155" stroke="#1a3a2a" stroke-width="1" opacity="0.3"/>
+        <line x1="310" y1="155" x2="280" y2="310" stroke="#c84b2f" stroke-width="1" opacity="0.3"/>
+        <line x1="280" y1="310" x2="120" y2="290" stroke="#d4a847" stroke-width="1" opacity="0.3"/>
+        <line x1="120" y1="290" x2="100" y2="150" stroke="#1a3a2a" stroke-width="1" opacity="0.3"/>
+        <line x1="100" y1="150" x2="200" y2="90"  stroke="#c84b2f" stroke-width="1" opacity="0.3"/>
+        <!-- Center -->
+        <circle cx="200" cy="200" r="20" fill="#1a3a2a"/>
+        <circle cx="200" cy="200" r="8"  fill="#c84b2f"/>
+        <!-- Labels -->
+        <text x="200" y="68"  font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">VOTES</text>
+        <text x="338" y="160" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">BUDGET</text>
+        <text x="290" y="336" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">MEETINGS</text>
+        <text x="100" y="336" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">INFRA</text>
+        <text x="62"  y="148" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">ALERTS</text>
+        <style>
+          .data-pulse { animation: svgPulse 2s ease-out infinite; }
+          @keyframes svgPulse {
+            0%,100% { r: 10; opacity: 1; }
+            50%      { r: 14; opacity: 0.6; }
+          }
+        </style>
+      </svg>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker-inner" id="ticker">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-wrap">
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search votes, projects, meetings…" />
+      <button onclick="handleSearch()">Search</button>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <main class="main-grid">
+
+    <!-- VOTE TRACKER -->
+    <section class="vote-tracker" id="votes">
+      <div class="section-header">
+        <span class="section-title">Active Council Votes</span>
+        <span class="section-count" id="vote-count">Loading…</span>
+      </div>
+      <div id="vote-list"></div>
+    </section>
+
+    <!-- BUDGET PANEL -->
+    <section class="budget-panel" id="budget">
+      <div class="section-header">
+        <span class="section-title">Annual Budget</span>
+        <span class="section-count" id="fiscal-year">FY 2026</span>
+      </div>
+      <div class="budget-panel-inner">
+        <div class="budget-total">
+          <div class="budget-total-label">Total Budget</div>
+          <div class="budget-total-num" id="budget-total">—</div>
+          <div class="budget-total-sub" id="budget-change">Loading…</div>
+        </div>
+        <div class="budget-items" id="budget-items"></div>
+      </div>
+    </section>
+
+    <!-- MEETINGS -->
+    <section class="meetings-panel" id="meetings">
+      <div class="section-header">
+        <span class="section-title">Upcoming Public Meetings</span>
+        <span class="section-count">OPEN TO ALL RESIDENTS</span>
+      </div>
+      <div id="meeting-list"></div>
+    </section>
+
+    <!-- INFRA MAP -->
+    <section class="infra-panel" id="infra">
+      <div class="section-header">
+        <span class="section-title">Infrastructure Status</span>
+        <span class="section-count" id="infra-critical">— CRITICAL</span>
+      </div>
+      <div class="infra-grid" id="infra-grid"></div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div>
+      <div class="footer-brand">CivicPulse</div>
+      <p class="footer-desc">Open-source civic transparency dashboard. Built for residents, by residents. Data sourced from public government APIs and city open-data portals.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Resources</div>
+      <ul class="footer-links">
+        <li>Open Data Sources</li>
+        <li>API Documentation</li>
+        <li>Contribute on GitHub</li>
+        <li>Report a Bug</li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Project</div>
+      <ul class="footer-links">
+        <li>About CivicPulse</li>
+        <li>Dev Journal</li>
+        <li>Roadmap</li>
+        <li>License (MIT)</li>
+      </ul>
+    </div>
+  </footer>
+  <div class="footer-bottom">
+    <span>© 2026 CivicPulse — Open Source MIT License</span>
+    <span>v1.0.0 — Phase 1 Day 1</span>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal" id="modal">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-body"  id="modal-body"></div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="closeModal()">Got It</button>
+        <button class="btn-secondary" onclick="closeModal()">Share</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <div class="toast-title" id="toast-title"></div>
+    <div id="toast-body"></div>
+  </div>
+
+  <script>
+    // ── DATA STORE ──────────────────────────────────────────────────────────────
+    const CITY_DATA = {
+      boston: {
+        budget: { total: '$4.28B', change: '↑ 3.2% from FY2025', items: [
+          { name: 'Education',       pct: 34, amount: '$1.45B', color: '#1a3a2a' },
+          { name: 'Public Safety',   pct: 22, amount: '$941M',  color: '#c84b2f' },
+          { name: 'Infrastructure',  pct: 18, amount: '$770M',  color: '#d4a847' },
+          { name: 'Health & Human',  pct: 14, amount: '$599M',  color: '#2e7d4f' },
+          { name: 'Administration',  pct: 12, amount: '$513M',  color: '#6b6355' },
+        ]},
+        votes: [
+          { title: 'Zoning Amendment — Dorchester Mixed-Use District', status: 'live', impact: 'high', yea: 7, nay: 4, total: 13, date: 'Jun 2, 2026', body: 'City Council', desc: 'Proposes rezoning 14 city blocks in Dorchester to allow mixed-use residential and commercial development up to 8 stories. Critics argue it will accelerate gentrification; proponents cite housing shortage.' },
+          { title: 'Affordable Housing Trust Fund — $120M Allocation', status: 'pend', impact: 'high', yea: 9, nay: 2, total: 13, date: 'Jun 10, 2026', body: 'City Council', desc: 'Would allocate $120 million from the city\'s capital fund toward affordable housing construction, targeting families earning below 60% of AMI.' },
+          { title: 'MBTA Green Line Extension Funding Match', status: 'pass', impact: 'medium', yea: 11, nay: 1, total: 13, date: 'May 28, 2026', body: 'City Council', desc: 'Passed 11-1. Approves $47M city matching funds for the GLX Phase 2 extension to Medford/Tufts.' },
+          { title: 'Police Body Camera Expansion — Phase 3', status: 'fail', impact: 'medium', yea: 4, nay: 9, total: 13, date: 'May 21, 2026', body: 'City Council', desc: 'Failed 4-9. Would have expanded body camera requirements to all civilian interactions; motion tabled pending budget review.' },
+        ],
+        meetings: [
+          { month: 'JUN', day: '02', title: 'City Council Regular Session', location: 'City Hall, Chamber 1', time: '6:00 PM', agenda: '7 items', today: true },
+          { month: 'JUN', day: '08', title: 'Zoning Board of Appeals', location: '1 City Hall Sq, Rm 801', time: '9:30 AM', agenda: '12 cases', today: false },
+          { month: 'JUN', day: '14', title: 'Boston Planning & Dev Agency', location: 'City Hall Plaza', time: '2:00 PM', agenda: '5 projects', today: false },
+        ],
+        infra: [
+          { icon: '🌊', name: 'Water System',       status: 'critical', statusText: 'Boil Advisory — Zone 4', last: 'Updated 2h ago' },
+          { icon: '🛣️',  name: 'I-93 Southbound',   status: 'warning',  statusText: 'Resurfacing — Lane Reduction', last: 'Updated 1h ago' },
+          { icon: '🌉', name: 'Longfellow Bridge',  status: 'ok',       statusText: 'All Systems Normal', last: 'Updated 30m ago' },
+          { icon: '⚡', name: 'Power Grid Sector 7',status: 'ok',       statusText: 'Operating at 94%', last: 'Updated 15m ago' },
+          { icon: '🚌', name: 'Silver Line SL2',    status: 'warning',  statusText: 'Delays — Signal Issue', last: 'Updated 45m ago' },
+          { icon: '♻️', name: 'Recycling Centers',  status: 'ok',       statusText: 'Fully Operational', last: 'Updated 1h ago' },
+        ],
+        stats: { votes: 24, meetings: 7, alerts: 3 },
+      },
+      nyc: {
+        budget: { total: '$112.4B', change: '↑ 5.1% from FY2025', items: [
+          { name: 'Education',       pct: 38, amount: '$42.7B', color: '#1a3a2a' },
+          { name: 'Social Services', pct: 24, amount: '$26.9B', color: '#c84b2f' },
+          { name: 'Debt Service',    pct: 16, amount: '$17.9B', color: '#d4a847' },
+          { name: 'Health',          pct: 13, amount: '$14.6B', color: '#2e7d4f' },
+          { name: 'Other',           pct: 9,  amount: '$10.1B', color: '#6b6355' },
+        ]},
+        votes: [
+          { title: 'Congestion Pricing Phase 2 — Outer Boroughs', status: 'pend', impact: 'high', yea: 28, nay: 21, total: 51, date: 'Jun 15, 2026', body: 'City Council', desc: 'Would extend congestion pricing to Brooklyn and Queens business districts, raising an estimated $1.2B annually for transit.' },
+          { title: 'Mandatory Composting Expansion — All Boroughs', status: 'pass', impact: 'medium', yea: 41, nay: 8, total: 51, date: 'May 30, 2026', body: 'City Council', desc: 'Passed 41-8. All residential buildings must participate in the organic waste collection program by Jan 2027.' },
+          { title: 'NYPD Budget Reallocation — $500M to Mental Health', status: 'live', impact: 'high', yea: 22, nay: 18, total: 51, date: 'Jun 2, 2026', body: 'City Council', desc: 'Contentious vote currently in session. Would shift $500M from police overtime and equipment to mental health crisis response teams.' },
+        ],
+        meetings: [
+          { month: 'JUN', day: '03', title: 'NYC Council Land Use Committee', location: '250 Broadway, 14th Fl', time: '10:00 AM', agenda: '9 items', today: false },
+          { month: 'JUN', day: '07', title: 'MTA Board Meeting', location: '2 Broadway, Board Rm', time: '9:00 AM', agenda: '15 items', today: false },
+          { month: 'JUN', day: '11', title: 'Dept of City Planning', location: '120 Broadway', time: '3:00 PM', agenda: '6 projects', today: false },
+        ],
+        infra: [
+          { icon: '🚇', name: 'A/C/E Subway Line',  status: 'critical', statusText: 'Service Suspended Midtown', last: 'Updated 20m ago' },
+          { icon: '🌉', name: 'Brooklyn Bridge',     status: 'ok',       statusText: 'All Lanes Open', last: 'Updated 1h ago' },
+          { icon: '⚡', name: 'ConEd Grid — Bronx', status: 'warning',  statusText: 'Load Shedding Risk', last: 'Updated 40m ago' },
+          { icon: '🌊', name: 'DEP Water System',   status: 'ok',       statusText: 'Fully Operational', last: 'Updated 2h ago' },
+        ],
+        stats: { votes: 31, meetings: 12, alerts: 5 },
+      },
+    };
+
+    // Default fallback for cities without full data
+    ['chicago','la','houston','seattle'].forEach(c => {
+      CITY_DATA[c] = JSON.parse(JSON.stringify(CITY_DATA.boston));
+      const names = { chicago:'Chicago, IL', la:'Los Angeles, CA', houston:'Houston, TX', seattle:'Seattle, WA' };
+      CITY_DATA[c].cityName = names[c];
+    });
+
+    let currentCity = 'boston';
+
+    // ── INIT ────────────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      updateDateline();
+      buildTicker();
+      renderCity('boston');
+      setTimeout(() => showToast('🗳️ Vote in Progress', 'Zoning Amendment — Dorchester is live now. Council votes in 2h.'), 2000);
+    });
+
+    function updateDateline() {
+      const now = new Date();
+      const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' };
+      document.getElementById('dateline-text').textContent =
+        now.toLocaleDateString('en-US', opts).toUpperCase() + ' — DATA REFRESHED LIVE';
+    }
+
+    function changeCity(city) {
+      currentCity = city;
+      renderCity(city);
+      showToast('📍 City Changed', `Now showing civic data for ${document.getElementById('citySelect').options[document.getElementById('citySelect').selectedIndex].text}`);
+    }
+
+    function renderCity(city) {
+      const d = CITY_DATA[city] || CITY_DATA.boston;
+      const stats = d.stats || { votes: 24, meetings: 7, alerts: 3 };
+
+      // Stats
+      animateCount('stat-votes',    stats.votes);
+      animateCount('stat-meetings', stats.meetings);
+      animateCount('stat-alerts',   stats.alerts);
+
+      // Votes
+      renderVotes(d.votes || []);
+      // Budget
+      renderBudget(d.budget || {});
+      // Meetings
+      renderMeetings(d.meetings || []);
+      // Infrastructure
+      renderInfra(d.infra || []);
+    }
+
+    function animateCount(id, target) {
+      const el = document.getElementById(id);
+      let start = 0;
+      const step = Math.ceil(target / 20);
+      const timer = setInterval(() => {
+        start = Math.min(start + step, target);
+        el.textContent = start;
+        if (start >= target) clearInterval(timer);
+      }, 40);
+    }
+
+    // ── VOTES ───────────────────────────────────────────────────────────────────
+    function renderVotes(votes) {
+      const list = document.getElementById('vote-list');
+      document.getElementById('vote-count').textContent = `${votes.length} VOTES`;
+      list.innerHTML = '';
+      votes.forEach((v, i) => {
+        const yeaPct = Math.round((v.yea / v.total) * 100);
+        const naaPct = 100 - yeaPct;
+        const statusMap = {
+          live: { label: '●', cls: 'live',  text: 'Live' },
+          pend: { label: '◷', cls: 'pend',  text: 'Pending' },
+          pass: { label: '✓', cls: 'pass',  text: 'Passed' },
+          fail: { label: '✕', cls: 'fail',  text: 'Failed' },
+        };
+        const s = statusMap[v.status];
+        const impactMap = { high: 'tag-high', medium: 'tag-medium', low: 'tag-low' };
+
+        const card = document.createElement('div');
+        card.className = 'vote-card';
+        card.style.animationDelay = `${i * 0.05}s`;
+        card.innerHTML = `
+          <div class="vote-status-col">
+            <div class="status-icon ${s.cls}">${s.label}</div>
+          </div>
+          <div class="vote-body">
+            <div class="vote-title">${v.title}</div>
+            <div class="vote-meta">
+              <span>${v.date}</span>
+              <span>${v.body}</span>
+              <span>${v.yea}–${v.nay} (of ${v.total})</span>
+            </div>
+            <div class="vote-desc">${v.desc}</div>
+            <div class="vote-bar-wrap">
+              <div class="vote-bar-labels">
+                <span>YEA ${v.yea}</span><span>NAY ${v.nay}</span>
+              </div>
+              <div class="vote-bar-track">
+                <div class="vote-bar-yes" style="width:0%" data-target="${yeaPct}"></div>
+                <div class="vote-bar-no"  style="width:0%" data-target="${naaPct}"></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <span class="vote-impact-tag ${impactMap[v.impact]}">${v.impact}</span>
+          </div>
+        `;
+        card.addEventListener('click', () => {
+          card.classList.toggle('expanded');
+          if (card.classList.contains('expanded')) {
+            requestAnimationFrame(() => {
+              card.querySelector('.vote-bar-yes').style.width = yeaPct + '%';
+              card.querySelector('.vote-bar-no').style.width  = naaPct + '%';
+            });
+          }
+        });
+        list.appendChild(card);
+      });
+    }
+
+    // ── BUDGET ──────────────────────────────────────────────────────────────────
+    function renderBudget(budget) {
+      document.getElementById('budget-total').textContent  = budget.total || '—';
+      document.getElementById('budget-change').textContent = budget.change || '';
+      const container = document.getElementById('budget-items');
+      container.innerHTML = '';
+      (budget.items || []).forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'budget-item';
+        div.innerHTML = `
+          <div class="budget-item-header">
+            <span class="budget-item-name">${item.name}</span>
+            <span class="budget-item-pct" style="color:${item.color}">${item.pct}%</span>
+          </div>
+          <div class="budget-track">
+            <div class="budget-fill" style="width:0%;background:${item.color}" data-target="${item.pct}"></div>
+          </div>
+          <div class="budget-amount">${item.amount}</div>
+        `;
+        container.appendChild(div);
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            div.querySelector('.budget-fill').style.width = item.pct + '%';
+          }, 200);
+        });
+      });
+    }
+
+    // ── MEETINGS ────────────────────────────────────────────────────────────────
+    function renderMeetings(meetings) {
+      const list = document.getElementById('meeting-list');
+      list.innerHTML = '';
+      meetings.forEach((m, i) => {
+        const card = document.createElement('div');
+        card.className = 'meeting-card';
+        card.style.animationDelay = `${i * 0.05 + 0.1}s`;
+        card.innerHTML = `
+          <div class="meeting-date-box ${m.today ? 'today' : ''}">
+            <span class="month">${m.month}</span>
+            <span class="day">${m.day}</span>
+          </div>
+          <div class="meeting-info">
+            <div class="meeting-title">${m.title}</div>
+            <div class="meeting-details">
+              <span>📍 ${m.location}</span>
+              <span>🕐 ${m.time}</span>
+              <span>📋 ${m.agenda}</span>
+            </div>
+          </div>
+          <button class="meeting-rsvp" onclick="rsvpMeeting(this, '${m.title}')">RSVP</button>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    function rsvpMeeting(btn, title) {
+      btn.classList.toggle('rsvpd');
+      if (btn.classList.contains('rsvpd')) {
+        btn.textContent = 'GOING ✓';
+        showToast('📅 RSVP Confirmed', `You\'re registered for: ${title}`);
+      } else {
+        btn.textContent = 'RSVP';
+      }
+    }
+
+    // ── INFRASTRUCTURE ──────────────────────────────────────────────────────────
+    function renderInfra(items) {
+      const grid = document.getElementById('infra-grid');
+      grid.innerHTML = '';
+      const critical = items.filter(i => i.status === 'critical').length;
+      document.getElementById('infra-critical').textContent = `${critical} CRITICAL`;
+      items.forEach((item, i) => {
+        const card = document.createElement('div');
+        card.className = `infra-card ${item.status}`;
+        card.style.animationDelay = `${i * 0.04}s`;
+        card.innerHTML = `
+          <div class="infra-icon">${item.icon}</div>
+          <div class="infra-name">${item.name}</div>
+          <div class="infra-status">${item.statusText}</div>
+          <div class="infra-last">${item.last}</div>
+          <button class="report-btn" onclick="reportIssue('${item.name}')">Report Issue</button>
+        `;
+        card.addEventListener('click', () => openModal(item.name, `<strong>Status:</strong> ${item.statusText}<br><br>${item.last}<br><br>To report an issue or get alerts for this infrastructure item, click "Got It" to subscribe to updates.`));
+        grid.appendChild(card);
+      });
+    }
+
+    function reportIssue(name) {
+      showToast('📝 Report Submitted', `Your issue report for "${name}" has been logged and forwarded to the city.`);
+    }
+
+    // ── TICKER ──────────────────────────────────────────────────────────────────
+    function buildTicker() {
+      const items = [
+        { color: 'red',    text: 'VOTE LIVE: Dorchester Zoning Amendment — Council in session' },
+        { color: 'yellow', text: 'MEETING TODAY: City Council Regular Session @ 6:00 PM — City Hall' },
+        { color: 'red',    text: 'ALERT: Water Boil Advisory — Zone 4 (East Boston) remains active' },
+        { color: 'green',  text: 'PASSED: MBTA Green Line Extension Funding 11-1' },
+        { color: 'yellow', text: 'BUDGET: FY2026 $4.28B approved — Education receives largest share at 34%' },
+        { color: 'yellow', text: 'DELAYS: Silver Line SL2 running 8–12 min late due to signal issue' },
+        { color: 'green',  text: 'MEETING JUN 8: Zoning Board of Appeals — 12 cases on agenda' },
+        { color: 'red',    text: 'VOTE PENDING: Affordable Housing Trust Fund $120M — Hearing Jun 10' },
+      ];
+      const ticker = document.getElementById('ticker');
+      // Duplicate for seamless loop
+      [...items, ...items].forEach(item => {
+        const el = document.createElement('span');
+        el.className = 'ticker-item';
+        el.innerHTML = `<span class="ticker-dot ${item.color}"></span>${item.text}`;
+        ticker.appendChild(el);
+      });
+    }
+
+    // ── SEARCH ──────────────────────────────────────────────────────────────────
+    function handleSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (!q) return;
+      showToast('🔍 Searching', `Results for "${q}" — feature integrates with city open data API`);
+    }
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleSearch();
+    });
+
+    // ── MODAL ───────────────────────────────────────────────────────────────────
+    function openModal(title, body) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-body').innerHTML = body;
+      document.getElementById('modalOverlay').classList.add('open');
+    }
+    function closeModal(e) {
+      if (!e || e.target === document.getElementById('modalOverlay') || e.currentTarget?.classList?.contains('modal-close')) {
+        document.getElementById('modalOverlay').classList.remove('open');
+      }
+    }
+
+    // ── TOAST ───────────────────────────────────────────────────────────────────
+    let toastTimer;
+    function showToast(title, body) {
+      const t = document.getElementById('toast');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-body').textContent  = body;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 4500);
+    }
+
+    // Auto-refresh dateline
+    setInterval(updateDateline, 60000);
+  </script>
+</body>
+</html>
