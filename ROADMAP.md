@@ -1,4 +1,4 @@
-# 🗺️ CivicPulse Roadmap
+# CivicPulse Roadmap
 
 ## Phase 1 — Foundation (June 2026)
 **Goal:** Working front-end dashboard, publicly deployed, good looking, actually useful
