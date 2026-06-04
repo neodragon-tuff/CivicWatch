@@ -1,4 +1,4 @@
-# Contributing to CivicPulse
+# Contributing to CivicWatch
 
 Thank you for wanting to contribute. CivicPulse is a civic project — it works better the more people are involved.
 
