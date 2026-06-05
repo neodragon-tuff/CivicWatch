@@ -1,746 +1,440 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CivicWatch — Know Your City</title>
-  <meta name="description" content="Real-time civic engagement dashboard. Track local votes, budgets, meetings, and infrastructure in your city." />
-  <meta property="og:title" content="CivicWatch — Know Your City" />
-  <meta property="og:description" content="The civic dashboard your city never built." />
-  <meta property="og:url" content="https://neodragon-tuff.github.io/CivicWatch/" />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="CivicWatch — Know Your City" />
-  <meta name="twitter:description" content="The civic dashboard your city never built." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <meta name="description" content="Real-time civic engagement dashboard. Track local votes, budgets, meetings, and infrastructure in your city."/>
+  <meta property="og:title" content="CivicWatch — Know Your City"/>
+  <meta property="og:description" content="The civic dashboard your city never built."/>
+  <meta property="og:url" content="https://neodragon-tuff.github.io/CivicWatch/"/>
+  <meta property="og:type" content="website"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="theme-color" content="#1a3a2a"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
   <style>
+    /* ══════════════════════════════════════════
+       TOKENS
+    ══════════════════════════════════════════ */
     :root {
-      --ink:       #0d0d0d;
-      --paper:     #f5f0e8;
-      --cream:     #ede7d6;
-      --civic:     #1a3a2a;
-      --accent:    #c84b2f;
-      --gold:      #d4a847;
-      --muted:     #6b6355;
-      --border:    #c8bfaa;
-      --green-dot: #2e7d4f;
-      --red-dot:   #c84b2f;
-      --yellow-dot:#d4a847;
-      /* dark mode */
-      --dm-bg:     #0f1a14;
-      --dm-paper:  #1a2820;
-      --dm-cream:  #243320;
-      --dm-border: #2e4a38;
-      --dm-muted:  #7a9e88;
-      --dm-ink:    #e8f0e4;
+      --ink:#0d0d0d; --paper:#f5f0e8; --cream:#ede7d6;
+      --civic:#1a3a2a; --civic2:#245038;
+      --accent:#c84b2f; --gold:#d4a847;
+      --muted:#6b6355; --border:#c8bfaa;
+      --green:#2e7d4f; --red:#c84b2f; --yellow:#d4a847;
+      --white:#ffffff;
+      --shadow-sm:2px 2px 0 var(--ink);
+      --shadow-md:4px 4px 0 var(--ink);
+      --shadow-lg:8px 8px 0 rgba(0,0,0,0.25);
+      --t:.18s cubic-bezier(.25,.8,.25,1);
     }
-
-    /* ── DARK MODE ── */
     body.dark {
-      --paper:  var(--dm-bg);
-      --cream:  var(--dm-paper);
-      --border: var(--dm-border);
-      --muted:  var(--dm-muted);
-      --ink:    var(--dm-ink);
-    }
-    body.dark .vote-card,
-    body.dark .budget-panel-inner,
-    body.dark .meeting-card,
-    body.dark .infra-panel,
-    body.dark .infra-card,
-    body.dark .search-bar { background: var(--dm-paper); }
-    body.dark .stat-card  { background: var(--dm-paper); }
-    body.dark .modal      { background: var(--dm-paper); }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Lora', Georgia, serif;
-      background: var(--paper);
-      color: var(--ink);
-      min-height: 100vh;
-      overflow-x: hidden;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    /* ── NOISE TEXTURE ── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: 9999;
-    }
-
-    /* ── MASTHEAD ── */
-    .masthead {
-      background: var(--civic);
-      color: var(--paper);
-      padding: 0 2rem;
-      display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 3px solid var(--gold);
-      position: sticky; top: 0; z-index: 100;
-      height: 64px;
-      gap: 1rem;
-    }
-    .masthead-logo {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800; font-size: 1.5rem;
-      letter-spacing: -0.02em;
-      display: flex; align-items: center; gap: 0.5rem;
-      flex-shrink: 0;
-    }
-    .masthead-logo .pulse-dot {
-      width: 10px; height: 10px;
-      background: var(--accent); border-radius: 50%;
-      animation: pulse-ring 1.8s ease-out infinite;
-    }
-    @keyframes pulse-ring {
-      0%   { box-shadow: 0 0 0 0 rgba(200,75,47,0.7); }
-      70%  { box-shadow: 0 0 0 8px rgba(200,75,47,0); }
-      100% { box-shadow: 0 0 0 0 rgba(200,75,47,0); }
-    }
-    .masthead-nav {
-      display: flex; gap: 1.5rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem; letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    .masthead-nav a {
-      color: var(--cream); text-decoration: none;
-      opacity: 0.7; transition: opacity 0.2s;
-    }
-    .masthead-nav a:hover { opacity: 1; }
-    .masthead-right {
-      display: flex; align-items: center; gap: 0.75rem;
-      flex-shrink: 0;
-    }
-    .live-badge {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.12em;
-      text-transform: uppercase;
-      background: var(--accent);
-      color: white; padding: 3px 10px;
-      border-radius: 2px;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .live-badge::before {
-      content: '';
-      width: 6px; height: 6px;
-      background: white; border-radius: 50%;
-      animation: blink 1.2s steps(1) infinite;
-    }
-    @keyframes blink { 50% { opacity: 0; } }
-
-    /* Dark mode toggle */
-    .dark-toggle {
-      background: transparent; border: 1px solid rgba(255,255,255,0.3);
-      color: white; width: 32px; height: 32px;
-      border-radius: 2px; cursor: pointer;
-      font-size: 1rem; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-      flex-shrink: 0;
-    }
-    .dark-toggle:hover { background: rgba(255,255,255,0.15); }
-
-    /* Hamburger for mobile */
-    .hamburger {
-      display: none;
-      background: transparent; border: none;
-      color: white; font-size: 1.3rem; cursor: pointer;
-      padding: 4px;
-    }
-
-    /* Mobile nav drawer */
-    .mobile-nav {
-      display: none;
-      position: fixed; top: 64px; left: 0; right: 0;
-      background: var(--civic);
-      border-bottom: 3px solid var(--gold);
-      padding: 1rem 2rem;
-      z-index: 99;
-      flex-direction: column; gap: 1rem;
-    }
-    .mobile-nav.open { display: flex; }
-    .mobile-nav a {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.85rem; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--cream);
-      text-decoration: none; padding: 0.5rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-
-    /* ── DATELINE ── */
-    .dateline-bar {
-      background: var(--cream);
-      border-bottom: 1px solid var(--border);
-      padding: 0.5rem 2rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem; letter-spacing: 0.1em;
-      color: var(--muted);
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 0.5rem;
-      transition: background 0.3s;
-    }
-    .city-selector { display: flex; align-items: center; gap: 0.5rem; }
-    .city-selector select {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--ink); padding: 2px 6px; cursor: pointer;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      padding: 3rem 2rem 2rem;
-      max-width: 1200px; margin: 0 auto;
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 3rem; align-items: center;
-      animation: fadeUp 0.6s ease both;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .hero-headline {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
-      font-weight: 800; line-height: 1.05;
-      letter-spacing: -0.03em;
-    }
-    .hero-headline .accent-word { color: var(--accent); }
-    .hero-subline {
-      margin-top: 1rem; font-size: 1.05rem;
-      color: var(--muted); line-height: 1.7; max-width: 42ch;
-    }
-    .hero-stats {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 1rem; margin-top: 2rem;
-    }
-    .stat-card {
-      border: 1px solid var(--border);
-      padding: 1rem; background: white;
-      position: relative; overflow: hidden;
-      animation: fadeUp 0.5s ease both;
-      transition: background 0.3s;
-    }
-    .stat-card:nth-child(1) { animation-delay: 0.1s; }
-    .stat-card:nth-child(2) { animation-delay: 0.2s; }
-    .stat-card:nth-child(3) { animation-delay: 0.3s; }
-    .stat-card::before {
-      content: ''; position: absolute; top: 0; left: 0;
-      width: 3px; height: 100%; background: var(--accent);
-    }
-    .stat-number {
-      font-family: 'Syne', sans-serif;
-      font-size: 2rem; font-weight: 800; color: var(--civic);
-    }
-    .stat-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--muted); margin-top: 2px;
-    }
-
-    /* ── TICKER ── */
-    .ticker-wrap {
-      background: var(--civic); color: var(--paper);
-      overflow: hidden; padding: 0.6rem 0;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    .ticker-inner {
-      display: flex; gap: 4rem;
-      animation: ticker 28s linear infinite;
-      white-space: nowrap;
-    }
-    @keyframes ticker {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-    .ticker-item {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem; letter-spacing: 0.06em;
-      display: flex; align-items: center; gap: 0.5rem;
-    }
-    .ticker-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .ticker-dot.green  { background: var(--green-dot); }
-    .ticker-dot.red    { background: var(--red-dot); }
-    .ticker-dot.yellow { background: var(--yellow-dot); }
-
-    /* ── SEARCH ── */
-    .search-wrap {
-      padding: 1rem 2rem 0;
-      max-width: 1200px; margin: 0 auto;
-    }
-    .search-bar {
-      display: flex;
-      border: 2px solid var(--ink);
-      background: white; max-width: 560px;
-      transition: background 0.3s;
-    }
-    .search-bar input {
-      flex: 1; border: none; outline: none;
-      padding: 0.6rem 1rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.8rem; background: transparent;
-      color: var(--ink);
-    }
-    .search-bar button {
-      background: var(--civic); color: white;
-      border: none; padding: 0 1.2rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem; letter-spacing: 0.08em;
-      text-transform: uppercase; cursor: pointer;
-      transition: background 0.15s;
-    }
-    .search-bar button:hover { background: var(--accent); }
-
-    /* Search results */
-    .search-results {
-      max-width: 560px;
-      border: 1px solid var(--border);
-      background: white;
-      margin-top: 4px;
-      display: none;
-      transition: background 0.3s;
-    }
-    .search-results.open { display: block; }
-    .search-result-item {
-      padding: 0.6rem 1rem;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      display: flex; align-items: center; gap: 0.75rem;
-      transition: background 0.15s;
-    }
-    .search-result-item:last-child { border-bottom: none; }
-    .search-result-item:hover { background: var(--cream); }
-    .search-result-type {
-      font-size: 0.6rem; letter-spacing: 0.1em;
-      text-transform: uppercase; padding: 2px 6px;
-      border-radius: 2px; flex-shrink: 0;
-    }
-    .search-result-type.vote     { background: #fce4ec; color: var(--red-dot); }
-    .search-result-type.meeting  { background: #e8f5e9; color: var(--green-dot); }
-    .search-result-type.infra    { background: #fff8e1; color: var(--gold); }
-    .search-no-results {
-      padding: 1rem; font-family: 'DM Mono', monospace;
-      font-size: 0.72rem; color: var(--muted); text-align: center;
-    }
-
-    /* ── MAIN GRID ── */
-    .main-grid {
-      max-width: 1200px; margin: 2rem auto;
-      padding: 0 2rem;
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      grid-template-rows: auto auto;
-      gap: 1.5rem;
-    }
-
-    /* ── SECTION HEADERS ── */
-    .section-header {
-      display: flex; align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid var(--ink);
-    }
-    .section-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.1rem; font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-    .section-count {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.1em;
-      color: var(--muted); text-transform: uppercase;
-    }
-
-    /* ── VOTE TRACKER ── */
-    .vote-tracker { grid-column: 1; grid-row: 1; }
-    .vote-card {
-      border: 1px solid var(--border);
-      background: white; padding: 1.25rem;
-      margin-bottom: 0.75rem;
-      display: grid; grid-template-columns: auto 1fr auto;
-      gap: 1rem; align-items: start;
-      cursor: pointer;
-      transition: box-shadow 0.2s, transform 0.2s, background 0.3s;
-      animation: fadeUp 0.5s ease both;
-      position: relative;
-    }
-    .vote-card:hover {
-      box-shadow: 4px 4px 0 var(--ink);
-      transform: translate(-2px, -2px);
-    }
-    .vote-card:nth-child(1) { animation-delay: 0.05s; }
-    .vote-card:nth-child(2) { animation-delay: 0.1s; }
-    .vote-card:nth-child(3) { animation-delay: 0.15s; }
-    .vote-card:nth-child(4) { animation-delay: 0.2s; }
-    .vote-status-col {
-      display: flex; flex-direction: column;
-      align-items: center; gap: 4px; padding-top: 2px;
-    }
-    .status-icon {
-      width: 28px; height: 28px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.75rem; font-weight: bold; flex-shrink: 0;
-    }
-    .status-icon.pass { background: #e8f5e9; color: var(--green-dot); border: 2px solid var(--green-dot); }
-    .status-icon.fail { background: #fce4ec; color: var(--red-dot);   border: 2px solid var(--red-dot); }
-    .status-icon.pend { background: #fff8e1; color: var(--gold);      border: 2px solid var(--gold); }
-    .status-icon.live { background: #e8f5e9; color: var(--green-dot); border: 2px solid var(--green-dot);
-                        animation: pulse-ring 1.8s ease-out infinite; }
-    .vote-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 0.95rem; font-weight: 600;
-      line-height: 1.3; margin-bottom: 0.3rem;
-    }
-    .vote-meta {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.07em;
-      color: var(--muted); text-transform: uppercase;
-      display: flex; gap: 1rem; flex-wrap: wrap;
-    }
-    .vote-desc {
-      margin-top: 0.5rem; font-size: 0.85rem;
-      color: var(--muted); line-height: 1.6; display: none;
-    }
-    .vote-card.expanded .vote-desc { display: block; }
-    .vote-bar-wrap { margin-top: 0.75rem; display: none; }
-    .vote-card.expanded .vote-bar-wrap { display: block; }
-    .vote-bar-labels {
-      display: flex; justify-content: space-between;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.06em;
-      color: var(--muted); margin-bottom: 4px;
-    }
-    .vote-bar-track {
-      height: 8px; background: var(--cream);
-      border-radius: 2px; overflow: hidden; display: flex;
-    }
-    .vote-bar-yes { background: var(--green-dot); transition: width 1s ease; }
-    .vote-bar-no  { background: var(--red-dot);   transition: width 1s ease; }
-
-    /* Share button on vote cards */
-    .vote-share-btn {
-      margin-top: 0.75rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem; letter-spacing: 0.08em;
-      text-transform: uppercase;
-      border: 1px solid var(--border);
-      background: transparent; color: var(--muted);
-      padding: 3px 10px; cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      display: none;
-    }
-    .vote-card.expanded .vote-share-btn { display: inline-block; }
-    .vote-share-btn:hover { background: var(--civic); color: white; border-color: var(--civic); }
-
-    .vote-impact-tag {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem; letter-spacing: 0.08em;
-      text-transform: uppercase; padding: 2px 7px;
-      border-radius: 2px; white-space: nowrap; align-self: start;
-    }
-    .tag-high   { background: #fce4ec; color: var(--red-dot); }
-    .tag-medium { background: #fff8e1; color: var(--gold); }
-    .tag-low    { background: #e8f5e9; color: var(--green-dot); }
-
-    /* ── BUDGET PANEL ── */
-    .budget-panel { grid-column: 2; grid-row: 1 / 3; }
-    .budget-panel-inner {
-      border: 1px solid var(--border);
-      background: white; padding: 1.25rem;
-      position: sticky; top: 80px;
-      transition: background 0.3s;
-    }
-    .budget-total {
-      text-align: center; padding: 1rem 0;
-      border-bottom: 1px solid var(--border); margin-bottom: 1rem;
-    }
-    .budget-total-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--muted);
-    }
-    .budget-total-num {
-      font-family: 'Syne', sans-serif;
-      font-size: 2.2rem; font-weight: 800;
-      color: var(--civic); line-height: 1.1;
-    }
-    .budget-total-sub {
-      font-size: 0.8rem; color: var(--muted);
-      font-style: italic; margin-top: 2px;
-    }
-    .budget-item { margin-bottom: 1rem; animation: fadeUp 0.5s ease both; }
-    .budget-item:nth-child(1) { animation-delay: 0.05s; }
-    .budget-item:nth-child(2) { animation-delay: 0.1s; }
-    .budget-item:nth-child(3) { animation-delay: 0.15s; }
-    .budget-item:nth-child(4) { animation-delay: 0.2s; }
-    .budget-item:nth-child(5) { animation-delay: 0.25s; }
-    .budget-item-header {
-      display: flex; justify-content: space-between;
-      align-items: baseline; margin-bottom: 4px;
-    }
-    .budget-item-name {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem; letter-spacing: 0.04em;
-      text-transform: uppercase; color: var(--ink);
-    }
-    .budget-item-pct { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; }
-    .budget-track { height: 6px; background: var(--cream); border-radius: 2px; overflow: hidden; }
-    .budget-fill { height: 100%; border-radius: 2px; transition: width 1.2s cubic-bezier(.25,.8,.25,1); }
-    .budget-amount { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); margin-top: 3px; }
-
-    /* Export button */
-    .export-btn {
-      width: 100%; margin-top: 1rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.08em;
-      text-transform: uppercase;
-      border: 1px solid var(--border);
-      background: transparent; color: var(--muted);
-      padding: 6px; cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-    .export-btn:hover { background: var(--civic); color: white; border-color: var(--civic); }
-
-    /* ── MEETINGS ── */
-    .meetings-panel { grid-column: 1; grid-row: 2; }
-    .meeting-card {
-      border: 1px solid var(--border);
-      background: white; padding: 1rem 1.25rem;
-      margin-bottom: 0.5rem;
-      display: flex; gap: 1rem; align-items: center;
-      cursor: pointer;
-      transition: box-shadow 0.2s, transform 0.2s, background 0.3s;
-      animation: fadeUp 0.5s ease both;
-    }
-    .meeting-card:hover {
-      box-shadow: 3px 3px 0 var(--ink);
-      transform: translate(-1px, -1px);
-    }
-    .meeting-card:nth-child(1) { animation-delay: 0.1s; }
-    .meeting-card:nth-child(2) { animation-delay: 0.15s; }
-    .meeting-card:nth-child(3) { animation-delay: 0.2s; }
-    .meeting-date-box {
-      flex-shrink: 0; width: 52px; height: 52px;
-      background: var(--civic); color: white;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      font-family: 'Syne', sans-serif;
-    }
-    .meeting-date-box .month { font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; }
-    .meeting-date-box .day   { font-size: 1.4rem; font-weight: 800; line-height: 1; }
-    .meeting-date-box.today  { background: var(--accent); }
-    .meeting-info { flex: 1; }
-    .meeting-title { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 600; }
-    .meeting-details {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.06em;
-      color: var(--muted); text-transform: uppercase;
-      margin-top: 3px; display: flex; gap: 1rem; flex-wrap: wrap;
-    }
-    .meeting-rsvp {
-      flex-shrink: 0;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.08em;
-      text-transform: uppercase;
-      border: 1px solid var(--civic);
-      padding: 5px 10px; cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      background: transparent; color: var(--civic);
-    }
-    .meeting-rsvp:hover, .meeting-rsvp.rsvpd { background: var(--civic); color: white; }
-
-    /* ── INFRASTRUCTURE ── */
-    .infra-panel {
-      grid-column: 1 / 3;
-      border: 1px solid var(--border);
-      background: white; padding: 1.25rem;
-      transition: background 0.3s;
-    }
-    .infra-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 0.75rem; margin-top: 1rem;
-    }
-    .infra-card {
-      border: 1px solid var(--border); padding: 1rem;
-      position: relative; overflow: hidden; cursor: pointer;
-      transition: box-shadow 0.2s, transform 0.2s, background 0.3s;
-      animation: fadeUp 0.5s ease both; background: var(--paper);
-    }
-    .infra-card:hover { box-shadow: 3px 3px 0 var(--ink); transform: translate(-1px, -1px); }
-    .infra-card::after {
-      content: ''; position: absolute; top: 0; right: 0;
-      width: 4px; height: 100%;
-    }
-    .infra-card.critical::after { background: var(--red-dot); }
-    .infra-card.warning::after  { background: var(--gold); }
-    .infra-card.ok::after       { background: var(--green-dot); }
-    .infra-icon  { font-size: 1.5rem; margin-bottom: 0.4rem; }
-    .infra-name  { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 600; }
-    .infra-status {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.07em;
-      text-transform: uppercase; margin-top: 2px;
-    }
-    .infra-card.critical .infra-status { color: var(--red-dot); }
-    .infra-card.warning  .infra-status { color: var(--gold); }
-    .infra-card.ok       .infra-status { color: var(--green-dot); }
-    .infra-last { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); margin-top: 4px; }
-    .report-btn {
-      margin-top: 0.75rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.08em;
-      text-transform: uppercase; border: 1px solid var(--border);
-      background: transparent; padding: 4px 10px; cursor: pointer;
-      display: block; width: 100%; transition: background 0.15s; color: var(--ink);
-    }
-    .report-btn:hover { background: var(--cream); }
-
-    /* ── TOAST ── */
-    .toast {
-      position: fixed; bottom: 2rem; right: 2rem;
-      background: var(--civic); color: white;
-      padding: 1rem 1.5rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem; letter-spacing: 0.05em;
-      border-left: 4px solid var(--gold);
-      box-shadow: 6px 6px 0 rgba(0,0,0,0.2);
-      transform: translateY(100px); opacity: 0;
-      transition: transform 0.4s cubic-bezier(.25,.8,.25,1), opacity 0.4s;
-      z-index: 1000; max-width: 320px;
-    }
-    .toast.show { transform: translateY(0); opacity: 1; }
-    .toast-title { font-weight: 500; margin-bottom: 2px; font-size: 0.8rem; }
-
-    /* ── FOOTER ── */
-    .footer {
-      background: var(--ink); color: var(--cream);
-      padding: 2rem; margin-top: 3rem;
-      display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2rem;
-    }
-    .footer-brand {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.3rem; font-weight: 800;
-      letter-spacing: -0.02em; margin-bottom: 0.5rem;
-    }
-    .footer-desc { font-size: 0.85rem; color: rgba(237,231,214,0.6); line-height: 1.6; }
-    .footer-col-title {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem;
-    }
-    .footer-links { list-style: none; }
-    .footer-links li { font-size: 0.85rem; color: rgba(237,231,214,0.7); margin-bottom: 0.4rem; cursor: pointer; }
-    .footer-links li:hover { color: white; }
-    .footer-links a { color: rgba(237,231,214,0.7); text-decoration: none; }
-    .footer-links a:hover { color: white; }
-    .footer-bottom {
-      background: black; color: rgba(237,231,214,0.4);
-      padding: 0.75rem 2rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.06em;
-      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
-    }
-
-    /* ── MODAL ── */
-    .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(13,13,13,0.7);
-      z-index: 500; display: none;
-      align-items: center; justify-content: center;
-      backdrop-filter: blur(4px);
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--paper);
-      border: 2px solid var(--ink);
-      padding: 2rem; max-width: 560px; width: 90%;
-      box-shadow: 8px 8px 0 var(--ink);
-      animation: slideIn 0.3s cubic-bezier(.25,.8,.25,1);
-    }
-    @keyframes slideIn {
-      from { transform: translateY(30px); opacity: 0; }
-      to   { transform: translateY(0);    opacity: 1; }
-    }
-    .modal-title { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem; }
-    .modal-body  { color: var(--muted); line-height: 1.7; font-size: 0.9rem; }
-    .modal-close { float: right; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--muted); margin-top: -0.5rem; }
-    .modal-actions { margin-top: 1.5rem; display: flex; gap: 0.75rem; }
-    .btn-primary {
-      background: var(--civic); color: white; border: none;
-      padding: 0.6rem 1.5rem; font-family: 'DM Mono', monospace;
-      font-size: 0.75rem; letter-spacing: 0.08em;
-      text-transform: uppercase; cursor: pointer; transition: background 0.15s;
-    }
-    .btn-primary:hover { background: var(--accent); }
-    .btn-secondary {
-      background: transparent; color: var(--ink);
-      border: 1px solid var(--ink); padding: 0.6rem 1.5rem;
-      font-family: 'DM Mono', monospace; font-size: 0.75rem;
-      letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
-    }
-
-    /* ── HERO VISUAL ── */
-    .hero-right { display: flex; align-items: center; justify-content: center; }
-    .hero-visual { width: 100%; max-width: 400px; aspect-ratio: 1; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      .hero { grid-template-columns: 1fr; }
-      .hero-right { display: none; }
-      .main-grid { grid-template-columns: 1fr; }
-      .budget-panel { grid-column: 1; grid-row: auto; }
-      .infra-panel { grid-column: 1; }
-      .footer { grid-template-columns: 1fr; }
-      .masthead-nav { display: none; }
-      .hamburger { display: block; }
-      .meeting-details { flex-direction: column; gap: 0.25rem; }
+      --ink:#ddebd5; --paper:#0c1610; --cream:#121e16;
+      --muted:#7a9e88; --border:#243320; --white:#172012;
+    }
+    /* ══════════════════════════════════════════
+       RESET
+    ══════════════════════════════════════════ */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Lora',Georgia,serif;background:var(--paper);color:var(--ink);min-height:100vh;overflow-x:hidden;transition:background var(--t),color var(--t)}
+    body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9000}
+    a{color:inherit;text-decoration:none}
+    button{font-family:inherit;cursor:pointer}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    /* ══════════════════════════════════════════
+       ANIMATIONS
+    ══════════════════════════════════════════ */
+    @keyframes fadeUp  {from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn  {from{opacity:0}to{opacity:1}}
+    @keyframes slideIn {from{transform:translateY(22px);opacity:0}to{transform:translateY(0);opacity:1}}
+    @keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(200,75,47,.7)}70%{box-shadow:0 0 0 8px rgba(200,75,47,0)}100%{box-shadow:0 0 0 0 rgba(200,75,47,0)}}
+    @keyframes blink   {50%{opacity:0}}
+    @keyframes ticker  {from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @keyframes shimmer {to{background-position:-200% 0}}
+    @keyframes spin    {to{transform:rotate(360deg)}}
+    /* ══════════════════════════════════════════
+       SKIP LINK
+    ══════════════════════════════════════════ */
+    .skip-link{position:absolute;top:-999px;left:1rem;background:var(--civic);color:#fff;padding:.5rem 1rem;font-family:'DM Mono',monospace;font-size:.8rem;z-index:10000;border-radius:2px}
+    .skip-link:focus{top:1rem}
+    /* ══════════════════════════════════════════
+       PROGRESS BAR
+    ══════════════════════════════════════════ */
+    .progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--accent);z-index:9999;width:0%;transition:width .3s ease,opacity .4s}
+    /* ══════════════════════════════════════════
+       ANNOUNCE BAR
+    ══════════════════════════════════════════ */
+    .announce-bar{background:var(--accent);color:#fff;padding:.4rem 2rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:.75rem}
+    .announce-dot{width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1.2s steps(1) infinite;flex-shrink:0}
+    .announce-msg{flex:1}
+    .announce-close{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;margin-left:auto;padding:0 .25rem}
+    .announce-close:hover{color:#fff}
+    /* ══════════════════════════════════════════
+       MASTHEAD
+    ══════════════════════════════════════════ */
+    .masthead{background:var(--civic);color:var(--paper);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--gold);position:sticky;top:0;z-index:500;height:64px;gap:1rem}
+    .masthead-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+    .pulse-dot{width:10px;height:10px;background:var(--accent);border-radius:50%;animation:pulseRing 1.8s ease-out infinite}
+    .masthead-nav{display:flex;gap:0;font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+    .masthead-nav a{color:rgba(245,240,232,.6);padding:.4rem .9rem;border-radius:2px;transition:color var(--t),background var(--t)}
+    .masthead-nav a:hover,.masthead-nav a.active{color:#fff;background:rgba(255,255,255,.1)}
+    .masthead-right{display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+    .live-badge{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;background:var(--accent);color:#fff;padding:3px 10px;border-radius:2px;display:flex;align-items:center;gap:6px}
+    .live-badge::before{content:'';width:6px;height:6px;background:#fff;border-radius:50%;animation:blink 1.2s steps(1) infinite}
+    .icon-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;width:34px;height:34px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:.95rem;transition:background var(--t)}
+    .icon-btn:hover{background:rgba(255,255,255,.2)}
+    .hamburger{display:none}
+    /* ══════════════════════════════════════════
+       MOBILE NAV
+    ══════════════════════════════════════════ */
+    .mobile-nav{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:var(--civic);z-index:490;flex-direction:column;padding:2rem;overflow-y:auto}
+    .mobile-nav.open{display:flex;animation:fadeIn .2s ease}
+    .mobile-nav a{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:rgba(245,240,232,.65);padding:1rem 0;border-bottom:1px solid rgba(255,255,255,.08);transition:color var(--t)}
+    .mobile-nav a:hover{color:#fff}
+    .mobile-nav-close{position:absolute;top:1rem;right:1.5rem;background:none;border:none;color:rgba(255,255,255,.4);font-size:1.5rem}
+    /* ══════════════════════════════════════════
+       DATELINE
+    ══════════════════════════════════════════ */
+    .dateline-bar{background:var(--cream);border-bottom:1px solid var(--border);padding:.45rem 2rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;color:var(--muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;transition:background var(--t)}
+    .city-selector{display:flex;align-items:center;gap:.5rem}
+    .city-selector select{font-family:'DM Mono',monospace;font-size:.65rem;background:transparent;border:1px solid var(--border);color:var(--ink);padding:2px 6px;cursor:pointer}
+    .city-selector select:focus{outline:2px solid var(--accent)}
+    /* ══════════════════════════════════════════
+       HERO
+    ══════════════════════════════════════════ */
+    .hero{padding:3.5rem 2rem 2.5rem;max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center}
+    .hero-left{animation:fadeUp .6s ease both}
+    .hero-eyebrow{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+    .hero-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--accent)}
+    .hero-headline{font-family:'Syne',sans-serif;font-size:clamp(2.8rem,5.5vw,5rem);font-weight:800;line-height:.98;letter-spacing:-.04em}
+    .hero-headline .l2{color:var(--accent)}
+    .hero-headline .l3{color:var(--civic)}
+    body.dark .hero-headline .l3{color:var(--green)}
+    .hero-sub{margin-top:1.25rem;font-size:1rem;color:var(--muted);line-height:1.75;max-width:46ch}
+    .cta-row{display:flex;gap:.75rem;margin-top:1.75rem;flex-wrap:wrap}
+    .btn{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;padding:.75rem 1.5rem;border:2px solid transparent;transition:all var(--t);cursor:pointer;display:inline-flex;align-items:center;gap:.5rem;border-radius:2px}
+    .btn-primary{background:var(--civic);color:#fff;border-color:var(--civic)}
+    .btn-primary:hover{background:var(--accent);border-color:var(--accent);transform:translate(-2px,-2px);box-shadow:var(--shadow-sm)}
+    .btn-outline{background:transparent;color:var(--ink);border-color:var(--border)}
+    .btn-outline:hover{border-color:var(--ink);transform:translate(-2px,-2px);box-shadow:var(--shadow-sm)}
+    .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:2rem}
+    .stat-card{border:1px solid var(--border);padding:1rem;background:var(--white);position:relative;overflow:hidden;animation:fadeUp .5s ease both;transition:box-shadow var(--t),transform var(--t),background var(--t)}
+    .stat-card:hover{box-shadow:var(--shadow-md);transform:translate(-2px,-2px)}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent)}
+    .stat-card:nth-child(2)::before{background:var(--gold)}
+    .stat-card:nth-child(3)::before{background:var(--green)}
+    .stat-card:nth-child(1){animation-delay:.1s}
+    .stat-card:nth-child(2){animation-delay:.2s}
+    .stat-card:nth-child(3){animation-delay:.3s}
+    .stat-number{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--civic);line-height:1}
+    body.dark .stat-number{color:var(--green)}
+    .stat-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+    .stat-trend{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--green);margin-top:2px}
+    .hero-right{animation:fadeUp .7s ease .2s both;display:flex;align-items:center;justify-content:center}
+    .hero-visual{width:100%;max-width:420px;aspect-ratio:1}
+    /* ══════════════════════════════════════════
+       TICKER
+    ══════════════════════════════════════════ */
+    .ticker-wrap{background:var(--civic);color:var(--paper);overflow:hidden;padding:.55rem 0;position:relative}
+    .ticker-wrap::before,.ticker-wrap::after{content:'';position:absolute;top:0;width:60px;height:100%;z-index:2}
+    .ticker-wrap::before{left:0;background:linear-gradient(to right,var(--civic),transparent)}
+    .ticker-wrap::after{right:0;background:linear-gradient(to left,var(--civic),transparent)}
+    .ticker-inner{display:flex;gap:4rem;animation:ticker 32s linear infinite;white-space:nowrap}
+    .ticker-inner:hover{animation-play-state:paused}
+    .ticker-item{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.06em;display:flex;align-items:center;gap:.5rem}
+    .tdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+    .tdot.green{background:var(--green)}.tdot.red{background:var(--red)}.tdot.yellow{background:var(--yellow)}
+    /* ══════════════════════════════════════════
+       SEARCH
+    ══════════════════════════════════════════ */
+    .search-wrap{padding:1.25rem 2rem 0;max-width:1240px;margin:0 auto;position:relative;z-index:200}
+    .search-bar{display:flex;border:2px solid var(--ink);background:var(--white);max-width:600px;transition:box-shadow var(--t),background var(--t)}
+    .search-bar:focus-within{box-shadow:var(--shadow-md)}
+    .search-bar input{flex:1;border:none;outline:none;padding:.7rem 1rem;font-family:'DM Mono',monospace;font-size:.8rem;background:transparent;color:var(--ink)}
+    .search-bar input::placeholder{color:var(--muted)}
+    .search-clear{background:none;border:none;color:var(--muted);padding:0 .75rem;font-size:1rem;display:none;align-items:center}
+    .search-clear.vis{display:flex}
+    .search-bar button.search-btn{background:var(--civic);color:#fff;border:none;padding:0 1.4rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;transition:background var(--t)}
+    .search-bar button.search-btn:hover{background:var(--accent)}
+    .search-results{position:absolute;top:100%;left:0;width:600px;max-height:320px;overflow-y:auto;background:var(--white);border:2px solid var(--ink);border-top:none;display:none;z-index:300;box-shadow:var(--shadow-lg)}
+    .search-results.open{display:block;animation:fadeIn .15s ease}
+    .sri{padding:.7rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;font-family:'DM Mono',monospace;font-size:.72rem;display:flex;align-items:center;gap:.75rem;transition:background var(--t)}
+    .sri:last-child{border-bottom:none}
+    .sri:hover,.sri.focused{background:var(--cream)}
+    .srt{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:2px;flex-shrink:0;font-weight:500}
+    .srt-vote{background:#fce4ec;color:var(--red)}.srt-meeting{background:#e8f5e9;color:var(--green)}
+    .srt-infra{background:#fff8e1;color:var(--yellow)}.srt-budget{background:#e3f2fd;color:#1565c0}
+    .sri mark{background:rgba(212,168,71,.3);border-radius:1px}
+    .search-empty{padding:1.5rem;text-align:center;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted)}
+    /* ══════════════════════════════════════════
+       MAIN GRID
+    ══════════════════════════════════════════ */
+    .main-grid{max-width:1240px;margin:1.5rem auto;padding:0 2rem;display:grid;grid-template-columns:2fr 1fr;grid-template-rows:auto auto auto;gap:1.5rem}
+    /* ══════════════════════════════════════════
+       SECTION HEADER
+    ══════════════════════════════════════════ */
+    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:2px solid var(--ink)}
+    .section-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:.5rem}
+    .section-count{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+    /* ══════════════════════════════════════════
+       ALERT BANNER
+    ══════════════════════════════════════════ */
+    .alert-banner{grid-column:1/3;border-left:4px solid var(--red);background:rgba(200,75,47,.06);padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;font-size:.88rem;animation:fadeUp .4s ease both}
+    body.dark .alert-banner{background:rgba(200,75,47,.14)}
+    .alert-icon{font-size:1.2rem;flex-shrink:0}
+    .alert-text{flex:1}
+    .alert-text strong{font-family:'Syne',sans-serif;display:block;margin-bottom:2px}
+    .alert-dismiss{background:none;border:none;color:var(--muted);font-size:1.1rem;padding:0 .25rem}
+    .alert-dismiss:hover{color:var(--ink)}
+    /* ══════════════════════════════════════════
+       VOTE TRACKER
+    ══════════════════════════════════════════ */
+    .vote-tracker{grid-column:1;grid-row:1}
+    .filter-tabs{display:flex;border:1px solid var(--border);overflow:hidden;background:var(--white);margin-bottom:1rem}
+    .ftab{flex:1;background:transparent;border:none;border-right:1px solid var(--border);font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:.5rem .25rem;cursor:pointer;transition:all var(--t);display:flex;align-items:center;justify-content:center;gap:4px}
+    .ftab:last-child{border-right:none}
+    .ftab:hover{background:var(--cream);color:var(--ink)}
+    .ftab.active{background:var(--civic);color:#fff}
+    .ftab-count{background:rgba(255,255,255,.2);font-size:.55rem;padding:1px 5px;border-radius:10px}
+    .ftab:not(.active) .ftab-count{background:var(--cream);color:var(--muted)}
+    .vote-card{border:1px solid var(--border);background:var(--white);padding:1.25rem;margin-bottom:.6rem;display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:start;cursor:pointer;transition:box-shadow var(--t),transform var(--t),background var(--t);animation:fadeUp .4s ease both;position:relative}
+    .vote-card:hover{box-shadow:var(--shadow-md);transform:translate(-2px,-2px)}
+    .vote-card.hidden{display:none}
+    .vote-card:nth-child(1){animation-delay:.05s}.vote-card:nth-child(2){animation-delay:.1s}
+    .vote-card:nth-child(3){animation-delay:.15s}.vote-card:nth-child(4){animation-delay:.2s}
+    .vote-card:nth-child(5){animation-delay:.25s}
+    .status-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:bold;flex-shrink:0}
+    .status-icon.pass{background:#e8f5e9;color:var(--green);border:2px solid var(--green)}
+    .status-icon.fail{background:#fce4ec;color:var(--red);border:2px solid var(--red)}
+    .status-icon.pend{background:#fff8e1;color:var(--yellow);border:2px solid var(--yellow)}
+    .status-icon.live{background:#e8f5e9;color:var(--green);border:2px solid var(--green);animation:pulseRing 1.8s ease-out infinite}
+    .vote-title{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:600;line-height:1.35;margin-bottom:.3rem}
+    .vote-meta{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;display:flex;gap:.75rem;flex-wrap:wrap}
+    .vote-desc{margin-top:.6rem;font-size:.85rem;color:var(--muted);line-height:1.65;display:none}
+    .vote-card.expanded .vote-desc{display:block;animation:fadeIn .2s ease}
+    .vote-bar-wrap{margin-top:.75rem;display:none}
+    .vote-card.expanded .vote-bar-wrap{display:block}
+    .vote-bar-labels{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);margin-bottom:5px}
+    .vote-bar-track{height:10px;background:var(--cream);border-radius:2px;overflow:hidden;display:flex}
+    .vote-bar-yes{background:var(--green);transition:width 1s cubic-bezier(.25,.8,.25,1)}
+    .vote-bar-no{background:var(--red);transition:width 1s cubic-bezier(.25,.8,.25,1)}
+    .vote-bar-pct{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);margin-top:4px;text-align:right}
+    .vote-actions{margin-top:.75rem;display:none;gap:.5rem;flex-wrap:wrap}
+    .vote-card.expanded .vote-actions{display:flex}
+    .vab{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);background:transparent;color:var(--muted);padding:4px 10px;transition:all var(--t);border-radius:2px}
+    .vab:hover{background:var(--civic);color:#fff;border-color:var(--civic)}
+    .impact-tag{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:2px;white-space:nowrap;align-self:start;font-weight:500}
+    .tag-high{background:#fce4ec;color:var(--red)}.tag-medium{background:#fff8e1;color:var(--yellow)}.tag-low{background:#e8f5e9;color:var(--green)}
+    /* ══════════════════════════════════════════
+       BUDGET
+    ══════════════════════════════════════════ */
+    .budget-panel{grid-column:2;grid-row:1/3}
+    .budget-inner{border:1px solid var(--border);background:var(--white);padding:1.25rem;position:sticky;top:74px;transition:background var(--t)}
+    .budget-total{text-align:center;padding:1rem 0;border-bottom:1px solid var(--border);margin-bottom:1rem}
+    .budget-total-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    .budget-total-num{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--civic);line-height:1.1}
+    body.dark .budget-total-num{color:var(--green)}
+    .budget-total-sub{font-size:.78rem;color:var(--muted);font-style:italic;margin-top:3px}
+    .donut-wrap{position:relative;width:100px;height:100px;display:flex;align-items:center;justify-content:center;margin:1rem auto}
+    .budget-donut{width:100px;height:100px;transform:rotate(-90deg)}
+    .donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+    .budget-item{margin-bottom:.9rem}
+    .budget-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+    .budget-item-name{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+    .budget-item-right{display:flex;align-items:center;gap:.5rem}
+    .budget-item-pct{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem}
+    .budget-item-amt{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted)}
+    .budget-track{height:7px;background:var(--cream);border-radius:2px;overflow:hidden;cursor:pointer;position:relative}
+    .budget-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.25,.8,.25,1)}
+    .budget-actions{display:flex;gap:.5rem;margin-top:1rem}
+    .bact{flex:1;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);background:transparent;color:var(--muted);padding:6px;transition:all var(--t);border-radius:2px}
+    .bact:hover{background:var(--civic);color:#fff;border-color:var(--civic)}
+    /* ══════════════════════════════════════════
+       MEETINGS
+    ══════════════════════════════════════════ */
+    .meetings-panel{grid-column:1;grid-row:2}
+    .meeting-card{border:1px solid var(--border);background:var(--white);padding:1rem 1.25rem;margin-bottom:.5rem;display:flex;gap:1rem;align-items:center;transition:box-shadow var(--t),transform var(--t),background var(--t);animation:fadeUp .4s ease both}
+    .meeting-card:hover{box-shadow:var(--shadow-md);transform:translate(-2px,-2px)}
+    .meeting-card:nth-child(1){animation-delay:.05s}.meeting-card:nth-child(2){animation-delay:.1s}.meeting-card:nth-child(3){animation-delay:.15s}
+    .meeting-date-box{flex-shrink:0;width:54px;height:54px;background:var(--civic);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Syne',sans-serif;transition:background var(--t)}
+    .meeting-date-box.today{background:var(--accent)}
+    .meeting-date-box .month{font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+    .meeting-date-box .day{font-size:1.5rem;font-weight:800;line-height:1}
+    .meeting-info{flex:1;min-width:0}
+    .meeting-title{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:600}
+    .meeting-details{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;margin-top:4px;display:flex;gap:1rem;flex-wrap:wrap}
+    .meeting-badge{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;background:var(--cream);color:var(--muted);padding:2px 7px;border-radius:2px;white-space:nowrap;margin-top:5px;display:inline-block}
+    .meeting-badge.today-badge{background:#fce4ec;color:var(--red)}
+    .meeting-rsvp{flex-shrink:0;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--civic);padding:6px 12px;cursor:pointer;transition:all var(--t);background:transparent;color:var(--civic);border-radius:2px}
+    .meeting-rsvp:hover,.meeting-rsvp.rsvpd{background:var(--civic);color:#fff}
+    .meeting-rsvp.rsvpd{background:var(--green);border-color:var(--green)}
+    /* ══════════════════════════════════════════
+       INFRASTRUCTURE
+    ══════════════════════════════════════════ */
+    .infra-panel{grid-column:1/3}
+    .infra-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.25rem}
+    .isc{border:1px solid var(--border);padding:.85rem;background:var(--white);display:flex;align-items:center;gap:.75rem;transition:background var(--t)}
+    .isc-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+    .isc-dot.critical{background:var(--red);animation:pulseRing 1.8s ease-out infinite}
+    .isc-dot.warning{background:var(--yellow)}.isc-dot.ok{background:var(--green)}
+    .isc-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    .isc-count{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-left:auto}
+    .isc.critical .isc-count{color:var(--red)}.isc.warning .isc-count{color:var(--yellow)}.isc.ok .isc-count{color:var(--green)}
+    .infra-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.75rem}
+    .infra-card{border:1px solid var(--border);padding:1rem;position:relative;overflow:hidden;cursor:pointer;background:var(--white);transition:box-shadow var(--t),transform var(--t),background var(--t);animation:fadeUp .4s ease both}
+    .infra-card:hover{box-shadow:var(--shadow-md);transform:translate(-2px,-2px)}
+    .infra-card::after{content:'';position:absolute;top:0;right:0;width:4px;height:100%}
+    .infra-card.critical::after{background:var(--red)}.infra-card.warning::after{background:var(--yellow)}.infra-card.ok::after{background:var(--green)}
+    .infra-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.5rem}
+    .infra-icon{font-size:1.6rem}
+    .infra-pulse{width:8px;height:8px;border-radius:50%;margin-top:4px}
+    .infra-card.critical .infra-pulse{background:var(--red);animation:pulseRing 1.8s ease-out infinite}
+    .infra-card.warning .infra-pulse{background:var(--yellow)}.infra-card.ok .infra-pulse{background:var(--green)}
+    .infra-name{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:600}
+    .infra-status{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+    .infra-card.critical .infra-status{color:var(--red)}.infra-card.warning .infra-status{color:var(--yellow)}.infra-card.ok .infra-status{color:var(--green)}
+    .infra-last{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);margin-top:4px}
+    .infra-prog{margin-top:.6rem}
+    .infra-prog-track{height:4px;background:var(--cream);border-radius:2px;overflow:hidden}
+    .infra-prog-fill{height:100%;border-radius:2px;transition:width 1s ease}
+    .infra-card.critical .infra-prog-fill{background:var(--red)}.infra-card.warning .infra-prog-fill{background:var(--yellow)}.infra-card.ok .infra-prog-fill{background:var(--green)}
+    .report-btn{margin-top:.75rem;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);background:transparent;color:var(--muted);padding:5px 10px;cursor:pointer;display:block;width:100%;transition:all var(--t);border-radius:2px}
+    .report-btn:hover{background:var(--civic);color:#fff;border-color:var(--civic)}
+    /* ══════════════════════════════════════════
+       ACTIVITY FEED
+    ══════════════════════════════════════════ */
+    .activity-panel{grid-column:2;grid-row:3}
+    .activity-inner{border:1px solid var(--border);background:var(--white);padding:1.25rem;transition:background var(--t)}
+    .activity-item{display:flex;gap:.75rem;padding:.6rem 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .activity-item:last-child{border-bottom:none}
+    .activity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+    .activity-text{font-size:.82rem;line-height:1.4}
+    .activity-time{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);margin-top:2px}
+    /* ══════════════════════════════════════════
+       TOAST
+    ══════════════════════════════════════════ */
+    .toast-container{position:fixed;bottom:1.5rem;right:1.5rem;z-index:2000;display:flex;flex-direction:column;gap:.5rem;max-width:320px}
+    .toast{background:var(--civic);color:#fff;padding:.9rem 1.25rem;font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.04em;border-left:4px solid var(--gold);box-shadow:var(--shadow-lg);transform:translateX(120%);opacity:0;transition:transform .35s cubic-bezier(.25,.8,.25,1),opacity .35s;display:flex;gap:.75rem;align-items:flex-start}
+    .toast.show{transform:translateX(0);opacity:1}
+    .toast-content{flex:1}
+    .toast-title{font-weight:500;font-size:.78rem;margin-bottom:2px}
+    .toast-body{opacity:.8;font-size:.68rem;line-height:1.4}
+    .toast-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:1rem;padding:0;flex-shrink:0}
+    .toast-close:hover{color:#fff}
+    /* ══════════════════════════════════════════
+       MODAL
+    ══════════════════════════════════════════ */
+    .modal-overlay{position:fixed;inset:0;background:rgba(13,13,13,.75);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:1rem}
+    .modal-overlay.open{display:flex;animation:fadeIn .2s ease}
+    .modal{background:var(--paper);border:2px solid var(--ink);padding:2rem;max-width:580px;width:100%;box-shadow:var(--shadow-lg);animation:slideIn .3s cubic-bezier(.25,.8,.25,1);position:relative;max-height:90vh;overflow-y:auto}
+    .modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem}
+    .modal-tag{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+    .modal-title{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:800;padding-right:1rem}
+    .modal-close{background:none;border:none;font-size:1.2rem;color:var(--muted);flex-shrink:0;padding:0}
+    .modal-close:hover{color:var(--ink)}
+    .modal-body{color:var(--muted);line-height:1.75;font-size:.88rem}
+    .modal-body strong{color:var(--ink)}
+    .modal-hr{border:none;border-top:1px solid var(--border);margin:1rem 0}
+    .modal-actions{margin-top:1.25rem;display:flex;gap:.75rem;flex-wrap:wrap}
+    /* ══════════════════════════════════════════
+       BACK TO TOP
+    ══════════════════════════════════════════ */
+    .back-top{position:fixed;bottom:1.5rem;left:1.5rem;z-index:400;width:40px;height:40px;background:var(--civic);color:#fff;border:none;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s,transform var(--t),background var(--t);box-shadow:var(--shadow-md)}
+    .back-top.vis{opacity:1;pointer-events:all}
+    .back-top:hover{transform:translateY(-3px);background:var(--accent)}
+    /* ══════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════ */
+    .footer{background:var(--ink);color:var(--cream);padding:2.5rem 2rem;margin-top:3rem;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem}
+    .footer-brand{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
+    .footer-desc{font-size:.83rem;color:rgba(237,231,214,.55);line-height:1.7;max-width:32ch}
+    .footer-social{display:flex;gap:.5rem;margin-top:1rem}
+    .footer-social a{width:32px;height:32px;border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.5);transition:all var(--t);border-radius:2px}
+    .footer-social a:hover{background:rgba(255,255,255,.1);color:#fff}
+    .footer-col-title{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.85rem}
+    .footer-links{list-style:none}
+    .footer-links li{margin-bottom:.4rem}
+    .footer-links a{font-size:.83rem;color:rgba(237,231,214,.6);transition:color var(--t)}
+    .footer-links a:hover{color:#fff}
+    .footer-bottom{background:#000;color:rgba(237,231,214,.35);padding:.75rem 2rem;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+    .footer-bottom a{color:rgba(237,231,214,.4)}
+    .footer-bottom a:hover{color:rgba(237,231,214,.7)}
+    /* ══════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════ */
+    @media(max-width:1024px){
+      .main-grid{grid-template-columns:1fr}
+      .budget-panel,.infra-panel,.activity-panel,.alert-banner{grid-column:1}
+      .budget-inner{position:static}
+      .footer{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:768px){
+      .hero{grid-template-columns:1fr;padding:2rem 1.25rem 1.5rem}
+      .hero-right{display:none}
+      .main-grid,.search-wrap{padding:0 1.25rem}
+      .search-wrap{padding-top:1rem}
+      .dateline-bar,.masthead{padding-left:1.25rem;padding-right:1.25rem}
+      .masthead-nav{display:none}
+      .hamburger{display:flex}
+      .hero-stats{grid-template-columns:repeat(3,1fr);gap:.5rem}
+      .infra-summary{grid-template-columns:1fr}
+      .footer{grid-template-columns:1fr;padding:1.5rem 1.25rem}
+      .footer-bottom{padding:.75rem 1.25rem}
+      .search-results{width:calc(100vw - 2.5rem)}
+      .meeting-details{flex-direction:column;gap:2px}
+      .cta-row{flex-direction:column}
+      .modal{padding:1.25rem}
+    }
+    @media(max-width:480px){
+      .hero-stats{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- ANNOUNCE -->
+  <div class="announce-bar" id="announceBar">
+    <span class="announce-dot"></span>
+    <span class="announce-msg">🗳️ VOTE IN PROGRESS — Dorchester Zoning Amendment currently in session · Boston City Council</span>
+    <button class="announce-close" onclick="this.closest('.announce-bar').remove()" aria-label="Dismiss">✕</button>
+  </div>
 
   <!-- MASTHEAD -->
-  <header class="masthead">
-    <div class="masthead-logo">
-      <span class="pulse-dot"></span>
-      CivicWatch
-    </div>
-    <nav class="masthead-nav">
-      <a href="#votes">Votes</a>
-      <a href="#budget">Budget</a>
-      <a href="#meetings">Meetings</a>
-      <a href="#infra">Infrastructure</a>
+  <header class="masthead" role="banner">
+    <div class="masthead-logo"><span class="pulse-dot" aria-hidden="true"></span>CivicWatch</div>
+    <nav class="masthead-nav" aria-label="Main navigation">
+      <a href="#votes"    class="nav-link">Votes</a>
+      <a href="#budget"   class="nav-link">Budget</a>
+      <a href="#meetings" class="nav-link">Meetings</a>
+      <a href="#infra"    class="nav-link">Infrastructure</a>
+      <a href="#activity" class="nav-link">Activity</a>
     </nav>
     <div class="masthead-right">
       <span class="live-badge">Live Data</span>
-      <button class="dark-toggle" id="darkToggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
-      <button class="hamburger" id="hamburger" aria-label="Open navigation">☰</button>
+      <button class="icon-btn" id="darkToggle" aria-label="Toggle dark mode">🌙</button>
+      <button class="icon-btn hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">☰</button>
     </div>
   </header>
 
   <!-- MOBILE NAV -->
-  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" aria-hidden="true">
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">✕</button>
     <a href="#votes"    onclick="closeMobileNav()">Votes</a>
     <a href="#budget"   onclick="closeMobileNav()">Budget</a>
     <a href="#meetings" onclick="closeMobileNav()">Meetings</a>
     <a href="#infra"    onclick="closeMobileNav()">Infrastructure</a>
+    <a href="#activity" onclick="closeMobileNav()">Activity</a>
   </nav>
 
   <!-- DATELINE -->
   <div class="dateline-bar">
-    <span id="dateline-text">Loading...</span>
+    <span id="dateline-text" aria-live="polite">Loading…</span>
     <div class="city-selector">
-      <span>CITY:</span>
+      <span aria-hidden="true">CITY:</span>
       <select id="citySelect" onchange="changeCity(this.value)" aria-label="Select city">
         <option value="boston">Boston, MA</option>
         <option value="nyc">New York, NY</option>
@@ -748,143 +442,172 @@
         <option value="la">Los Angeles, CA</option>
         <option value="houston">Houston, TX</option>
         <option value="seattle">Seattle, WA</option>
+        <option value="denver">Denver, CO</option>
+        <option value="miami">Miami, FL</option>
       </select>
     </div>
   </div>
 
   <!-- HERO -->
-  <section class="hero" aria-label="Dashboard overview">
+  <section class="hero" aria-labelledby="hero-title">
     <div class="hero-left">
-      <h1 class="hero-headline">
-        Your city.<br>
-        <span class="accent-word">Fully</span><br>
-        transparent.
-      </h1>
-      <p class="hero-subline">
-        CivicWatch tracks every vote, budget line, public meeting, and infrastructure alert — all in one real-time dashboard. Democracy works better when people actually know what's happening.
-      </p>
+      <div class="hero-eyebrow">Civic Transparency Platform</div>
+      <h1 class="hero-headline" id="hero-title">Your city.<br><span class="l2">Fully</span><br><span class="l3">transparent.</span></h1>
+      <p class="hero-sub">CivicWatch aggregates every vote, budget line, public meeting, and infrastructure alert into one real-time dashboard. Democracy works better when people actually know what's happening.</p>
+      <div class="cta-row">
+        <a href="#votes" class="btn btn-primary">View Active Votes ↓</a>
+        <a href="https://github.com/neodragon-tuff/CivicWatch" target="_blank" rel="noopener" class="btn btn-outline">⭐ Star on GitHub</a>
+      </div>
       <div class="hero-stats">
-        <div class="stat-card">
-          <div class="stat-number" id="stat-votes">24</div>
-          <div class="stat-label">Active Votes</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number" id="stat-meetings">7</div>
-          <div class="stat-label">Upcoming Meetings</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number" id="stat-alerts">3</div>
-          <div class="stat-label">Infra Alerts</div>
-        </div>
+        <div class="stat-card" role="status" aria-live="polite"><div class="stat-number" id="stat-votes">0</div><div class="stat-label">Active Votes</div><div class="stat-trend" id="trend-votes"></div></div>
+        <div class="stat-card" role="status" aria-live="polite"><div class="stat-number" id="stat-meetings">0</div><div class="stat-label">Upcoming Meetings</div><div class="stat-trend" id="trend-meetings"></div></div>
+        <div class="stat-card" role="status" aria-live="polite"><div class="stat-number" id="stat-alerts">0</div><div class="stat-label">Infra Alerts</div><div class="stat-trend" id="trend-alerts"></div></div>
       </div>
     </div>
     <div class="hero-right" aria-hidden="true">
-      <svg class="hero-visual" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="bg-grad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#e8f5e9" />
-            <stop offset="100%" stop-color="#f5f0e8" />
-          </radialGradient>
-        </defs>
-        <circle cx="200" cy="200" r="195" fill="url(#bg-grad)" stroke="#c8bfaa" stroke-width="1"/>
-        <line x1="200" y1="20" x2="200" y2="380" stroke="#c8bfaa" stroke-width="0.5" stroke-dasharray="4 4"/>
-        <line x1="20" y1="200" x2="380" y2="200" stroke="#c8bfaa" stroke-width="0.5" stroke-dasharray="4 4"/>
-        <circle cx="200" cy="200" r="60"  fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
-        <circle cx="200" cy="200" r="110" fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
-        <circle cx="200" cy="200" r="160" fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
-        <circle cx="200" cy="90"  r="10" fill="#1a3a2a" class="data-pulse"/>
-        <circle cx="310" cy="155" r="7"  fill="#c84b2f"/>
-        <circle cx="280" cy="310" r="12" fill="#d4a847"/>
-        <circle cx="120" cy="290" r="8"  fill="#1a3a2a"/>
-        <circle cx="100" cy="150" r="10" fill="#c84b2f" class="data-pulse"/>
-        <line x1="200" y1="90"  x2="310" y2="155" stroke="#1a3a2a" stroke-width="1" opacity="0.3"/>
-        <line x1="310" y1="155" x2="280" y2="310" stroke="#c84b2f" stroke-width="1" opacity="0.3"/>
-        <line x1="280" y1="310" x2="120" y2="290" stroke="#d4a847" stroke-width="1" opacity="0.3"/>
-        <line x1="120" y1="290" x2="100" y2="150" stroke="#1a3a2a" stroke-width="1" opacity="0.3"/>
-        <line x1="100" y1="150" x2="200" y2="90"  stroke="#c84b2f" stroke-width="1" opacity="0.3"/>
-        <circle cx="200" cy="200" r="20" fill="#1a3a2a"/>
-        <circle cx="200" cy="200" r="8"  fill="#c84b2f"/>
-        <text x="200" y="68"  font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">VOTES</text>
-        <text x="338" y="160" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">BUDGET</text>
-        <text x="290" y="336" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">MEETINGS</text>
-        <text x="100" y="336" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">INFRA</text>
-        <text x="62"  y="148" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">ALERTS</text>
-        <style>
-          .data-pulse { animation: svgPulse 2s ease-out infinite; }
-          @keyframes svgPulse { 0%,100% { r: 10; opacity: 1; } 50% { r: 14; opacity: 0.6; } }
-        </style>
+      <svg class="hero-visual" viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
+        <defs><radialGradient id="bg-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e8f5e9"/><stop offset="100%" stop-color="#f5f0e8"/></radialGradient></defs>
+        <circle cx="210" cy="210" r="205" fill="url(#bg-grad)" stroke="#c8bfaa" stroke-width="1"/>
+        <line x1="210" y1="20" x2="210" y2="400" stroke="#c8bfaa" stroke-width="0.5" stroke-dasharray="4 4"/>
+        <line x1="20" y1="210" x2="400" y2="210" stroke="#c8bfaa" stroke-width="0.5" stroke-dasharray="4 4"/>
+        <circle cx="210" cy="210" r="60" fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
+        <circle cx="210" cy="210" r="110" fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
+        <circle cx="210" cy="210" r="165" fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
+        <circle cx="210" cy="95" r="11" fill="#1a3a2a" class="dp"/>
+        <circle cx="322" cy="162" r="8" fill="#c84b2f"/>
+        <circle cx="294" cy="320" r="13" fill="#d4a847"/>
+        <circle cx="128" cy="305" r="9" fill="#1a3a2a"/>
+        <circle cx="108" cy="158" r="11" fill="#c84b2f" class="dp"/>
+        <line x1="210" y1="95" x2="322" y2="162" stroke="#1a3a2a" stroke-width="1" opacity="0.25"/>
+        <line x1="322" y1="162" x2="294" y2="320" stroke="#c84b2f" stroke-width="1" opacity="0.25"/>
+        <line x1="294" y1="320" x2="128" y2="305" stroke="#d4a847" stroke-width="1" opacity="0.25"/>
+        <line x1="128" y1="305" x2="108" y2="158" stroke="#1a3a2a" stroke-width="1" opacity="0.25"/>
+        <line x1="108" y1="158" x2="210" y2="95" stroke="#c84b2f" stroke-width="1" opacity="0.25"/>
+        <circle cx="210" cy="210" r="22" fill="#1a3a2a"/>
+        <circle cx="210" cy="210" r="9" fill="#c84b2f"/>
+        <text x="210" y="73" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">VOTES</text>
+        <text x="350" y="168" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">BUDGET</text>
+        <text x="304" y="346" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">MEETINGS</text>
+        <text x="106" y="346" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">INFRA</text>
+        <text x="68" y="156" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">ALERTS</text>
+        <style>.dp{animation:dp 2.2s ease-in-out infinite}@keyframes dp{0%,100%{opacity:1}50%{opacity:.5}}</style>
       </svg>
     </div>
   </section>
 
   <!-- TICKER -->
-  <div class="ticker-wrap" aria-label="Live updates ticker" role="marquee">
+  <div class="ticker-wrap" role="marquee" aria-label="Live updates" aria-live="off">
     <div class="ticker-inner" id="ticker"></div>
   </div>
 
   <!-- SEARCH -->
-  <div class="search-wrap">
-    <div class="search-bar" role="search">
-      <input type="text" id="searchInput" placeholder="Search votes, projects, meetings…" aria-label="Search civic data" autocomplete="off" />
-      <button onclick="handleSearch()" aria-label="Submit search">Search</button>
+  <div class="search-wrap" role="search">
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search votes, meetings, infrastructure…" aria-label="Search civic data" autocomplete="off" spellcheck="false"/>
+      <button class="search-clear" id="searchClear" aria-label="Clear search">✕</button>
+      <button class="search-btn" onclick="triggerSearch()" aria-label="Search">Search</button>
     </div>
     <div class="search-results" id="searchResults" role="listbox" aria-label="Search results"></div>
   </div>
 
-  <!-- MAIN GRID -->
-  <main class="main-grid">
+  <!-- MAIN -->
+  <main class="main-grid" id="main-content">
+
+    <!-- ALERT BANNER -->
+    <div class="alert-banner" id="alertBanner" role="alert" aria-live="assertive">
+      <span class="alert-icon">🚨</span>
+      <div class="alert-text">
+        <strong id="alertTitle">Water Boil Advisory — Zone 4 Active</strong>
+        <span id="alertBody">Boston Water &amp; Sewer Commission advises Zone 4 residents (East Boston) to boil water before use. Updated 2h ago.</span>
+      </div>
+      <button class="alert-dismiss" onclick="this.closest('.alert-banner').remove()" aria-label="Dismiss">✕</button>
+    </div>
 
     <!-- VOTES -->
-    <section class="vote-tracker" id="votes" aria-labelledby="votes-title">
+    <section class="vote-tracker" id="votes" aria-labelledby="votes-heading">
       <div class="section-header">
-        <span class="section-title" id="votes-title">Active Council Votes</span>
+        <span class="section-title" id="votes-heading">🗳️ Active Council Votes</span>
         <span class="section-count" id="vote-count" aria-live="polite">Loading…</span>
       </div>
-      <div id="vote-list"></div>
+      <div class="filter-tabs" role="tablist" aria-label="Filter votes by status">
+        <button class="ftab active" role="tab" aria-selected="true"  data-filter="all"  onclick="filterVotes('all',this)" >All <span class="ftab-count" id="tc-all">0</span></button>
+        <button class="ftab"        role="tab" aria-selected="false" data-filter="live" onclick="filterVotes('live',this)">Live <span class="ftab-count" id="tc-live">0</span></button>
+        <button class="ftab"        role="tab" aria-selected="false" data-filter="pend" onclick="filterVotes('pend',this)">Pending <span class="ftab-count" id="tc-pend">0</span></button>
+        <button class="ftab"        role="tab" aria-selected="false" data-filter="pass" onclick="filterVotes('pass',this)">Passed <span class="ftab-count" id="tc-pass">0</span></button>
+        <button class="ftab"        role="tab" aria-selected="false" data-filter="fail" onclick="filterVotes('fail',this)">Failed <span class="ftab-count" id="tc-fail">0</span></button>
+      </div>
+      <div id="vote-list" role="list"></div>
     </section>
 
     <!-- BUDGET -->
-    <section class="budget-panel" id="budget" aria-labelledby="budget-title">
+    <section class="budget-panel" id="budget" aria-labelledby="budget-heading">
       <div class="section-header">
-        <span class="section-title" id="budget-title">Annual Budget</span>
+        <span class="section-title" id="budget-heading">💰 Annual Budget</span>
         <span class="section-count" id="fiscal-year">FY 2026</span>
       </div>
-      <div class="budget-panel-inner">
+      <div class="budget-inner">
         <div class="budget-total">
           <div class="budget-total-label">Total Budget</div>
           <div class="budget-total-num" id="budget-total">—</div>
           <div class="budget-total-sub" id="budget-change">Loading…</div>
         </div>
-        <div class="budget-items" id="budget-items"></div>
-        <button class="export-btn" onclick="exportBudget()" aria-label="Export budget as CSV">⬇ Export Budget CSV</button>
+        <div class="donut-wrap">
+          <svg class="budget-donut" viewBox="0 0 100 100" id="donut-svg" aria-hidden="true"></svg>
+          <div class="donut-center">
+            <span style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.08em">TOTAL</span>
+            <span style="font-family:'Syne',sans-serif;font-size:.75rem;font-weight:800;color:var(--civic)">100%</span>
+          </div>
+        </div>
+        <div id="budget-items"></div>
+        <div class="budget-actions">
+          <button class="bact" onclick="exportBudgetCSV()">⬇ CSV</button>
+          <button class="bact" onclick="shareBudget()">⬡ Share</button>
+          <button class="bact" onclick="window.print()">⎙ Print</button>
+        </div>
       </div>
     </section>
 
     <!-- MEETINGS -->
-    <section class="meetings-panel" id="meetings" aria-labelledby="meetings-title">
+    <section class="meetings-panel" id="meetings" aria-labelledby="meetings-heading">
       <div class="section-header">
-        <span class="section-title" id="meetings-title">Upcoming Public Meetings</span>
+        <span class="section-title" id="meetings-heading">📅 Upcoming Public Meetings</span>
         <span class="section-count">OPEN TO ALL RESIDENTS</span>
       </div>
-      <div id="meeting-list"></div>
+      <div id="meeting-list" role="list"></div>
     </section>
 
-    <!-- INFRA -->
-    <section class="infra-panel" id="infra" aria-labelledby="infra-title">
+    <!-- INFRASTRUCTURE -->
+    <section class="infra-panel" id="infra" aria-labelledby="infra-heading">
       <div class="section-header">
-        <span class="section-title" id="infra-title">Infrastructure Status</span>
+        <span class="section-title" id="infra-heading">🏗️ Infrastructure Status</span>
         <span class="section-count" id="infra-critical" aria-live="polite">— CRITICAL</span>
       </div>
-      <div class="infra-grid" id="infra-grid"></div>
+      <div class="infra-summary" id="infra-summary" aria-label="Infrastructure summary"></div>
+      <div class="infra-grid" id="infra-grid" role="list"></div>
+    </section>
+
+    <!-- ACTIVITY -->
+    <section class="activity-panel" id="activity" aria-labelledby="activity-heading">
+      <div class="section-header">
+        <span class="section-title" id="activity-heading">⚡ Recent Activity</span>
+        <span class="section-count">LIVE FEED</span>
+      </div>
+      <div class="activity-inner">
+        <div id="activity-feed"></div>
+      </div>
     </section>
 
   </main>
 
   <!-- FOOTER -->
-  <footer class="footer">
+  <footer class="footer" role="contentinfo">
     <div>
-      <div class="footer-brand">CivicWatch</div>
-      <p class="footer-desc">Open-source civic transparency dashboard. Built for residents, by residents. Data sourced from public government APIs and city open-data portals.</p>
+      <div class="footer-brand"><span class="pulse-dot" style="background:var(--gold)" aria-hidden="true"></span>CivicWatch</div>
+      <p class="footer-desc">Open-source civic transparency dashboard. Built for residents, by residents. Data from public government APIs and city open-data portals.</p>
+      <div class="footer-social">
+        <a href="https://github.com/neodragon-tuff/CivicWatch" target="_blank" rel="noopener" aria-label="GitHub">GH</a>
+        <a href="https://neodragon-tuff.github.io/CivicWatch/" target="_blank" rel="noopener" aria-label="Live site">↗</a>
+      </div>
     </div>
     <div>
       <div class="footer-col-title">Resources</div>
@@ -892,6 +615,7 @@
         <li><a href="https://github.com/neodragon-tuff/CivicWatch/blob/main/API_SOURCES.md" target="_blank" rel="noopener">Open Data Sources</a></li>
         <li><a href="https://github.com/neodragon-tuff/CivicWatch" target="_blank" rel="noopener">Contribute on GitHub</a></li>
         <li><a href="https://github.com/neodragon-tuff/CivicWatch/issues" target="_blank" rel="noopener">Report a Bug</a></li>
+        <li><a href="https://github.com/neodragon-tuff/CivicWatch/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing Guide</a></li>
       </ul>
     </div>
     <div>
@@ -899,473 +623,550 @@
       <ul class="footer-links">
         <li><a href="https://github.com/neodragon-tuff/CivicWatch/blob/main/JOURNAL.md" target="_blank" rel="noopener">Dev Journal</a></li>
         <li><a href="https://github.com/neodragon-tuff/CivicWatch/blob/main/ROADMAP.md" target="_blank" rel="noopener">Roadmap</a></li>
-        <li><a href="https://github.com/neodragon-tuff/CivicWatch/blob/main/LICENSE" target="_blank" rel="noopener">License (MIT)</a></li>
+        <li><a href="https://github.com/neodragon-tuff/CivicWatch/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Cities</div>
+      <ul class="footer-links">
+        <li><a href="#" onclick="setCity('boston');return false">Boston, MA</a></li>
+        <li><a href="#" onclick="setCity('nyc');return false">New York, NY</a></li>
+        <li><a href="#" onclick="setCity('chicago');return false">Chicago, IL</a></li>
+        <li><a href="#" onclick="setCity('seattle');return false">Seattle, WA</a></li>
       </ul>
     </div>
   </footer>
   <div class="footer-bottom">
-    <span>© 2026 CivicWatch — Open Source MIT License</span>
-    <span>v1.1.0 — Phase 1 Day 1</span>
+    <span>© 2026 CivicWatch — Open Source MIT License — Built by <a href="https://github.com/neodragon-tuff" target="_blank" rel="noopener">@neodragon-tuff</a></span>
+    <span>v2.0.0 — Phase 1 Day 1</span>
   </div>
 
   <!-- MODAL -->
-  <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-el">
     <div class="modal" id="modal">
-      <button class="modal-close" onclick="closeModal()" aria-label="Close modal">✕</button>
-      <div class="modal-title" id="modal-title"></div>
-      <div class="modal-body"  id="modal-body"></div>
+      <div class="modal-header">
+        <div><div class="modal-tag" id="modal-tag"></div><h2 class="modal-title" id="modal-title-el"></h2></div>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+      </div>
+      <hr class="modal-hr"/>
+      <div class="modal-body" id="modal-body"></div>
       <div class="modal-actions">
-        <button class="btn-primary"   onclick="closeModal()">Got It</button>
-        <button class="btn-secondary" onclick="shareModal()">Share</button>
+        <button class="btn btn-primary" onclick="closeModal()">Got It</button>
+        <button class="btn btn-outline" onclick="shareCurrentModal()">⬡ Share</button>
       </div>
     </div>
   </div>
 
-  <!-- TOAST -->
-  <div class="toast" id="toast" role="status" aria-live="polite">
-    <div class="toast-title" id="toast-title"></div>
-    <div id="toast-body"></div>
-  </div>
+  <!-- TOASTS -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- BACK TO TOP -->
+  <button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
 
   <script>
-    // ── DATA ────────────────────────────────────────────────────────────────────
-    const CITY_DATA = {
-      boston: {
-        budget: { total: '$4.28B', change: '↑ 3.2% from FY2025', items: [
-          { name: 'Education',       pct: 34, amount: '$1.45B', color: '#1a3a2a' },
-          { name: 'Public Safety',   pct: 22, amount: '$941M',  color: '#c84b2f' },
-          { name: 'Infrastructure',  pct: 18, amount: '$770M',  color: '#d4a847' },
-          { name: 'Health & Human',  pct: 14, amount: '$599M',  color: '#2e7d4f' },
-          { name: 'Administration',  pct: 12, amount: '$513M',  color: '#6b6355' },
-        ]},
-        votes: [
-          { title: 'Zoning Amendment — Dorchester Mixed-Use District', status: 'live', impact: 'high', yea: 7, nay: 4, total: 13, date: 'Jun 2, 2026', body: 'City Council', desc: 'Proposes rezoning 14 city blocks in Dorchester to allow mixed-use residential and commercial development up to 8 stories. Critics argue it will accelerate gentrification; proponents cite housing shortage.' },
-          { title: 'Affordable Housing Trust Fund — $120M Allocation', status: 'pend', impact: 'high', yea: 9, nay: 2, total: 13, date: 'Jun 10, 2026', body: 'City Council', desc: 'Would allocate $120 million from the city\'s capital fund toward affordable housing construction, targeting families earning below 60% of AMI.' },
-          { title: 'MBTA Green Line Extension Funding Match', status: 'pass', impact: 'medium', yea: 11, nay: 1, total: 13, date: 'May 28, 2026', body: 'City Council', desc: 'Passed 11-1. Approves $47M city matching funds for the GLX Phase 2 extension to Medford/Tufts.' },
-          { title: 'Police Body Camera Expansion — Phase 3', status: 'fail', impact: 'medium', yea: 4, nay: 9, total: 13, date: 'May 21, 2026', body: 'City Council', desc: 'Failed 4-9. Would have expanded body camera requirements to all civilian interactions; motion tabled pending budget review.' },
-        ],
-        meetings: [
-          { month: 'JUN', day: '02', title: 'City Council Regular Session', location: 'City Hall, Chamber 1', time: '6:00 PM', agenda: '7 items', today: true },
-          { month: 'JUN', day: '08', title: 'Zoning Board of Appeals', location: '1 City Hall Sq, Rm 801', time: '9:30 AM', agenda: '12 cases', today: false },
-          { month: 'JUN', day: '14', title: 'Boston Planning & Dev Agency', location: 'City Hall Plaza', time: '2:00 PM', agenda: '5 projects', today: false },
-        ],
-        infra: [
-          { icon: '🌊', name: 'Water System',        status: 'critical', statusText: 'Boil Advisory — Zone 4',      last: 'Updated 2h ago' },
-          { icon: '🛣️', name: 'I-93 Southbound',    status: 'warning',  statusText: 'Resurfacing — Lane Reduction', last: 'Updated 1h ago' },
-          { icon: '🌉', name: 'Longfellow Bridge',   status: 'ok',       statusText: 'All Systems Normal',           last: 'Updated 30m ago' },
-          { icon: '⚡', name: 'Power Grid Sector 7', status: 'ok',       statusText: 'Operating at 94%',             last: 'Updated 15m ago' },
-          { icon: '🚌', name: 'Silver Line SL2',     status: 'warning',  statusText: 'Delays — Signal Issue',        last: 'Updated 45m ago' },
-          { icon: '♻️', name: 'Recycling Centers',   status: 'ok',       statusText: 'Fully Operational',            last: 'Updated 1h ago' },
-        ],
-        stats: { votes: 24, meetings: 7, alerts: 3 },
-      },
-      nyc: {
-        budget: { total: '$112.4B', change: '↑ 5.1% from FY2025', items: [
-          { name: 'Education',       pct: 38, amount: '$42.7B', color: '#1a3a2a' },
-          { name: 'Social Services', pct: 24, amount: '$26.9B', color: '#c84b2f' },
-          { name: 'Debt Service',    pct: 16, amount: '$17.9B', color: '#d4a847' },
-          { name: 'Health',          pct: 13, amount: '$14.6B', color: '#2e7d4f' },
-          { name: 'Other',           pct: 9,  amount: '$10.1B', color: '#6b6355' },
-        ]},
-        votes: [
-          { title: 'Congestion Pricing Phase 2 — Outer Boroughs', status: 'pend', impact: 'high', yea: 28, nay: 21, total: 51, date: 'Jun 15, 2026', body: 'City Council', desc: 'Would extend congestion pricing to Brooklyn and Queens business districts, raising an estimated $1.2B annually for transit.' },
-          { title: 'Mandatory Composting Expansion — All Boroughs', status: 'pass', impact: 'medium', yea: 41, nay: 8, total: 51, date: 'May 30, 2026', body: 'City Council', desc: 'Passed 41-8. All residential buildings must participate in the organic waste collection program by Jan 2027.' },
-          { title: 'NYPD Budget Reallocation — $500M to Mental Health', status: 'live', impact: 'high', yea: 22, nay: 18, total: 51, date: 'Jun 2, 2026', body: 'City Council', desc: 'Contentious vote currently in session. Would shift $500M from police overtime and equipment to mental health crisis response teams.' },
-        ],
-        meetings: [
-          { month: 'JUN', day: '03', title: 'NYC Council Land Use Committee', location: '250 Broadway, 14th Fl', time: '10:00 AM', agenda: '9 items', today: false },
-          { month: 'JUN', day: '07', title: 'MTA Board Meeting', location: '2 Broadway, Board Rm', time: '9:00 AM', agenda: '15 items', today: false },
-          { month: 'JUN', day: '11', title: 'Dept of City Planning', location: '120 Broadway', time: '3:00 PM', agenda: '6 projects', today: false },
-        ],
-        infra: [
-          { icon: '🚇', name: 'A/C/E Subway Line',  status: 'critical', statusText: 'Service Suspended Midtown', last: 'Updated 20m ago' },
-          { icon: '🌉', name: 'Brooklyn Bridge',     status: 'ok',       statusText: 'All Lanes Open',           last: 'Updated 1h ago' },
-          { icon: '⚡', name: 'ConEd Grid — Bronx', status: 'warning',  statusText: 'Load Shedding Risk',       last: 'Updated 40m ago' },
-          { icon: '🌊', name: 'DEP Water System',   status: 'ok',       statusText: 'Fully Operational',        last: 'Updated 2h ago' },
-        ],
-        stats: { votes: 31, meetings: 12, alerts: 5 },
-      },
-    };
-
-    ['chicago','la','houston','seattle'].forEach(c => {
-      CITY_DATA[c] = JSON.parse(JSON.stringify(CITY_DATA.boston));
-      const names = { chicago:'Chicago, IL', la:'Los Angeles, CA', houston:'Houston, TX', seattle:'Seattle, WA' };
-      CITY_DATA[c].cityName = names[c];
-    });
-
-    let currentCity = 'boston';
-    let currentModalTitle = '';
-
-    // ── INIT ────────────────────────────────────────────────────────────────────
-    document.addEventListener('DOMContentLoaded', () => {
-      updateDateline();
-      buildTicker();
-      renderCity('boston');
-      setupDarkMode();
-      setupSearch();
-      setTimeout(() => showToast('🗳️ Vote in Progress', 'Zoning Amendment — Dorchester is live now. Council votes in 2h.'), 2000);
-    });
-
-    // ── DARK MODE ───────────────────────────────────────────────────────────────
-    function setupDarkMode() {
-      const saved = localStorage.getItem('cw-dark');
-      if (saved === 'true') { document.body.classList.add('dark'); document.getElementById('darkToggle').textContent = '☀️'; }
-      document.getElementById('darkToggle').addEventListener('click', () => {
-        document.body.classList.toggle('dark');
-        const isDark = document.body.classList.contains('dark');
-        document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
-        localStorage.setItem('cw-dark', isDark);
-      });
+  /* ════════════════════════════════════════
+     DATA
+  ════════════════════════════════════════ */
+  const CITIES = {
+    boston:{
+      name:'Boston, MA',
+      budget:{total:'$4.28B',change:'↑ 3.2% from FY2025',items:[
+        {name:'Education',pct:34,amount:'$1.45B',color:'#1a3a2a'},
+        {name:'Public Safety',pct:22,amount:'$941M',color:'#c84b2f'},
+        {name:'Infrastructure',pct:18,amount:'$770M',color:'#d4a847'},
+        {name:'Health & Human',pct:14,amount:'$599M',color:'#2e7d4f'},
+        {name:'Administration',pct:12,amount:'$513M',color:'#6b6355'},
+      ]},
+      votes:[
+        {id:'b1',title:'Zoning Amendment — Dorchester Mixed-Use District',status:'live',impact:'high',yea:7,nay:4,total:13,date:'Jun 4, 2026',body:'City Council',desc:'Proposes rezoning 14 city blocks in Dorchester to allow mixed-use residential and commercial development up to 8 stories. Critics argue it will accelerate gentrification; proponents cite the acute housing shortage affecting 40,000+ residents on waiting lists.'},
+        {id:'b2',title:'Affordable Housing Trust Fund — $120M Allocation',status:'pend',impact:'high',yea:9,nay:2,total:13,date:'Jun 10, 2026',body:'City Council',desc:'Would allocate $120 million from the city capital fund toward affordable housing construction, targeting families earning below 60% of AMI. Projected to fund up to 800 new units over 3 years.'},
+        {id:'b3',title:'MBTA Green Line Extension — Phase 2 Funding',status:'pass',impact:'medium',yea:11,nay:1,total:13,date:'May 28, 2026',body:'City Council',desc:'Passed 11-1. Approves $47M city matching funds for GLX Phase 2 to Medford/Tufts. Expected to reduce commute times by 12 minutes for 28,000 daily riders.'},
+        {id:'b4',title:'Police Body Camera Expansion — Phase 3',status:'fail',impact:'medium',yea:4,nay:9,total:13,date:'May 21, 2026',body:'City Council',desc:'Failed 4-9. Would have expanded body camera requirements to all civilian interactions. Motion tabled pending Q3 2026 budget review.'},
+        {id:'b5',title:'Public School Curriculum Modernisation Act',status:'pend',impact:'high',yea:8,nay:3,total:13,date:'Jun 18, 2026',body:'School Committee',desc:'Proposes updating K-12 curriculum to include digital literacy, climate science, and financial education as mandatory subjects from Grade 5 onward. Estimated cost: $12M over two years.'},
+      ],
+      meetings:[
+        {month:'JUN',day:'04',title:'City Council Regular Session',location:'City Hall, Chamber 1',time:'6:00 PM',agenda:'7 items',today:true},
+        {month:'JUN',day:'08',title:'Zoning Board of Appeals',location:'1 City Hall Sq, Rm 801',time:'9:30 AM',agenda:'12 cases',today:false},
+        {month:'JUN',day:'14',title:'Boston Planning & Dev Agency',location:'City Hall Plaza',time:'2:00 PM',agenda:'5 projects',today:false},
+        {month:'JUN',day:'22',title:'Public Budget Hearing — FY2027',location:'Faneuil Hall, Main Hall',time:'10:00 AM',agenda:'1 item',today:false},
+      ],
+      infra:[
+        {icon:'🌊',name:'Water System',status:'critical',statusText:'Boil Advisory — Zone 4',last:'Updated 2h ago',health:30},
+        {icon:'🛣️',name:'I-93 Southbound',status:'warning',statusText:'Resurfacing — Lane Reduction',last:'Updated 1h ago',health:60},
+        {icon:'🌉',name:'Longfellow Bridge',status:'ok',statusText:'All Systems Normal',last:'Updated 30m ago',health:95},
+        {icon:'⚡',name:'Power Grid Sect. 7',status:'ok',statusText:'Operating at 94%',last:'Updated 15m ago',health:94},
+        {icon:'🚌',name:'Silver Line SL2',status:'warning',statusText:'Delays — Signal Issue',last:'Updated 45m ago',health:55},
+        {icon:'♻️',name:'Recycling Centers',status:'ok',statusText:'Fully Operational',last:'Updated 1h ago',health:98},
+      ],
+      stats:{votes:24,meetings:7,alerts:3},
+      trends:{votes:'↑ 4 new today',meetings:'Next: Today 6PM',alerts:'↓ 1 resolved'},
+      alert:{title:'Water Boil Advisory — Zone 4 Active',body:'Boston Water & Sewer Commission advises Zone 4 residents (East Boston) to boil water before use. Updated 2h ago.'},
+      activity:[
+        {color:'#c84b2f',text:'Vote opened: Dorchester Zoning Amendment now in session',time:'2 min ago'},
+        {color:'#d4a847',text:'Meeting reminder: City Council Regular Session today at 6:00 PM',time:'14 min ago'},
+        {color:'#c84b2f',text:'Alert issued: Water Boil Advisory extended to Zone 4B',time:'38 min ago'},
+        {color:'#2e7d4f',text:'Vote passed: MBTA Green Line Funding Match (11-1)',time:'2h ago'},
+        {color:'#d4a847',text:'Budget update: FY2026 final allocation published',time:'5h ago'},
+      ]
+    },
+    nyc:{
+      name:'New York, NY',
+      budget:{total:'$112.4B',change:'↑ 5.1% from FY2025',items:[
+        {name:'Education',pct:38,amount:'$42.7B',color:'#1a3a2a'},
+        {name:'Social Services',pct:24,amount:'$26.9B',color:'#c84b2f'},
+        {name:'Debt Service',pct:16,amount:'$17.9B',color:'#d4a847'},
+        {name:'Health',pct:13,amount:'$14.6B',color:'#2e7d4f'},
+        {name:'Other',pct:9,amount:'$10.1B',color:'#6b6355'},
+      ]},
+      votes:[
+        {id:'n1',title:'Congestion Pricing Phase 2 — Outer Boroughs',status:'pend',impact:'high',yea:28,nay:21,total:51,date:'Jun 15, 2026',body:'City Council',desc:'Would extend congestion pricing to Brooklyn and Queens business districts, raising an estimated $1.2B annually for transit improvements and road maintenance.'},
+        {id:'n2',title:'Mandatory Composting — All Boroughs',status:'pass',impact:'medium',yea:41,nay:8,total:51,date:'May 30, 2026',body:'City Council',desc:'Passed 41-8. All residential buildings must participate in organic waste collection by Jan 2027. Estimated to divert 250,000 tons of waste annually from landfill.'},
+        {id:'n3',title:'NYPD Budget Reallocation — $500M Mental Health',status:'live',impact:'high',yea:22,nay:18,total:51,date:'Jun 4, 2026',body:'City Council',desc:'Would shift $500M from police overtime and equipment to mental health crisis response teams. Currently in committee debate with strong public support.'},
+      ],
+      meetings:[
+        {month:'JUN',day:'06',title:'NYC Council Land Use Committee',location:'250 Broadway, 14th Fl',time:'10:00 AM',agenda:'9 items',today:false},
+        {month:'JUN',day:'10',title:'MTA Board Meeting',location:'2 Broadway, Board Rm',time:'9:00 AM',agenda:'15 items',today:false},
+        {month:'JUN',day:'16',title:'Dept of City Planning',location:'120 Broadway',time:'3:00 PM',agenda:'6 items',today:false},
+      ],
+      infra:[
+        {icon:'🚇',name:'A/C/E Subway Line',status:'critical',statusText:'Service Suspended Midtown',last:'Updated 20m ago',health:15},
+        {icon:'🌉',name:'Brooklyn Bridge',status:'ok',statusText:'All Lanes Open',last:'Updated 1h ago',health:99},
+        {icon:'⚡',name:'ConEd Grid — Bronx',status:'warning',statusText:'Load Shedding Risk',last:'Updated 40m ago',health:58},
+        {icon:'🌊',name:'DEP Water System',status:'ok',statusText:'Fully Operational',last:'Updated 2h ago',health:97},
+      ],
+      stats:{votes:31,meetings:12,alerts:5},
+      trends:{votes:'↑ 2 new today',meetings:'Next: Jun 6',alerts:'↑ 2 new'},
+      alert:{title:'A/C/E Subway Suspension — Midtown',body:'MTA service suspended between 34th St and 59th St due to track fire. Use 1/2/3 or shuttle buses. Updated 20m ago.'},
+      activity:[
+        {color:'#c84b2f',text:'Alert: A/C/E suspended between 34th and 59th St',time:'18 min ago'},
+        {color:'#d4a847',text:'Vote update: Mental Health reallocation proceeding to full council',time:'1h ago'},
+        {color:'#2e7d4f',text:'Passed: Mandatory composting now law — effective Jan 2027',time:'3h ago'},
+        {color:'#d4a847',text:'Meeting posted: MTA Board June 10 — 15 agenda items',time:'6h ago'},
+      ]
     }
+  };
+  ['chicago','la','houston','seattle','denver','miami'].forEach(c=>{
+    const t=JSON.parse(JSON.stringify(CITIES.boston));
+    const n={chicago:'Chicago, IL',la:'Los Angeles, CA',houston:'Houston, TX',seattle:'Seattle, WA',denver:'Denver, CO',miami:'Miami, FL'};
+    t.name=n[c]; CITIES[c]=t;
+  });
 
-    // ── MOBILE NAV ──────────────────────────────────────────────────────────────
-    document.getElementById('hamburger').addEventListener('click', () => {
-      document.getElementById('mobileNav').classList.toggle('open');
-    });
-    function closeMobileNav() { document.getElementById('mobileNav').classList.remove('open'); }
+  /* ════════════════════════════════════════
+     STATE
+  ════════════════════════════════════════ */
+  let city='boston', filter='all', modalCtx='', focusIdx=-1, tQueue=[], tBusy=false;
 
-    // ── DATELINE ────────────────────────────────────────────────────────────────
-    function updateDateline() {
-      const now = new Date();
-      const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' };
-      document.getElementById('dateline-text').textContent =
-        now.toLocaleDateString('en-US', opts).toUpperCase() + ' — DATA REFRESHED LIVE';
+  /* ════════════════════════════════════════
+     INIT
+  ════════════════════════════════════════ */
+  document.addEventListener('DOMContentLoaded',()=>{
+    initProgress(); initDark(); initMobileNav();
+    initSearch(); initScrollSpy(); initBackTop();
+    updateDateline(); buildTicker(); renderCity('boston');
+    setInterval(updateDateline,60000);
+    setTimeout(()=>toast('🗳️ Vote In Progress','Dorchester Zoning Amendment — council voting now. High community impact.'),1800);
+  });
+
+  /* ════════════════════════════════════════
+     PROGRESS BAR
+  ════════════════════════════════════════ */
+  function initProgress(){
+    const bar=document.getElementById('progressBar');
+    let w=0;
+    const iv=setInterval(()=>{w+=Math.random()*15;if(w>=90){clearInterval(iv);w=90}bar.style.width=w+'%'},80);
+    window.addEventListener('load',()=>{bar.style.width='100%';setTimeout(()=>{bar.style.opacity='0'},400)});
+  }
+
+  /* ════════════════════════════════════════
+     DARK MODE
+  ════════════════════════════════════════ */
+  function initDark(){
+    const btn=document.getElementById('darkToggle');
+    const apply=dark=>{document.body.classList.toggle('dark',dark);btn.textContent=dark?'☀️':'🌙';btn.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode')};
+    apply(localStorage.getItem('cw-dark')==='true');
+    btn.addEventListener('click',()=>{const d=!document.body.classList.contains('dark');apply(d);localStorage.setItem('cw-dark',d)});
+  }
+
+  /* ════════════════════════════════════════
+     MOBILE NAV
+  ════════════════════════════════════════ */
+  function initMobileNav(){
+    const nav=document.getElementById('mobileNav'),btn=document.getElementById('hamburger'),cls=document.getElementById('mobileNavClose');
+    const open=()=>{nav.classList.add('open');btn.setAttribute('aria-expanded','true');nav.setAttribute('aria-hidden','false')};
+    const close=()=>{nav.classList.remove('open');btn.setAttribute('aria-expanded','false');nav.setAttribute('aria-hidden','true')};
+    btn.addEventListener('click',()=>nav.classList.contains('open')?close():open());
+    cls.addEventListener('click',close);
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+  }
+  function closeMobileNav(){document.getElementById('mobileNav').classList.remove('open')}
+
+  /* ════════════════════════════════════════
+     SCROLL SPY
+  ════════════════════════════════════════ */
+  function initScrollSpy(){
+    const links=document.querySelectorAll('.masthead-nav .nav-link');
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting)links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id))});
+    },{rootMargin:'-20% 0px -70% 0px'});
+    ['votes','budget','meetings','infra','activity'].forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el)});
+  }
+
+  /* ════════════════════════════════════════
+     BACK TO TOP
+  ════════════════════════════════════════ */
+  function initBackTop(){
+    const btn=document.getElementById('backTop');
+    window.addEventListener('scroll',()=>btn.classList.toggle('vis',window.scrollY>400),{passive:true});
+  }
+
+  /* ════════════════════════════════════════
+     DATELINE
+  ════════════════════════════════════════ */
+  function updateDateline(){
+    const now=new Date();
+    document.getElementById('dateline-text').textContent=
+      now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'}).toUpperCase()+' — LIVE';
+  }
+
+  /* ════════════════════════════════════════
+     CITY
+  ════════════════════════════════════════ */
+  function changeCity(c){city=c;filter='all';renderCity(c);toast('📍 City Updated',`Now showing civic data for ${CITIES[c]?.name||c}`)}
+  function setCity(c){document.getElementById('citySelect').value=c;changeCity(c);window.scrollTo({top:0,behavior:'smooth'})}
+
+  function renderCity(c){
+    const d=CITIES[c]||CITIES.boston;
+    const s=d.stats||{votes:24,meetings:7,alerts:3};
+    animCount('stat-votes',s.votes); animCount('stat-meetings',s.meetings); animCount('stat-alerts',s.alerts);
+    document.getElementById('trend-votes').textContent=d.trends?.votes||'';
+    document.getElementById('trend-meetings').textContent=d.trends?.meetings||'';
+    document.getElementById('trend-alerts').textContent=d.trends?.alerts||'';
+    renderVotes(d.votes||[]);
+    renderBudget(d.budget||{});
+    renderMeetings(d.meetings||[]);
+    renderInfra(d.infra||[]);
+    renderActivity(d.activity||[]);
+    if(d.alert){
+      const ab=document.getElementById('alertBanner');
+      if(ab){document.getElementById('alertTitle').textContent=d.alert.title;document.getElementById('alertBody').textContent=d.alert.body;ab.style.display='flex'}
     }
+  }
 
-    function changeCity(city) {
-      currentCity = city;
-      renderCity(city);
-      const label = document.getElementById('citySelect').options[document.getElementById('citySelect').selectedIndex].text;
-      showToast('📍 City Changed', `Now showing civic data for ${label}`);
-    }
+  function animCount(id,target){
+    const el=document.getElementById(id);if(!el)return;
+    let n=0;const step=Math.ceil(target/25);
+    const iv=setInterval(()=>{n=Math.min(n+step,target);el.textContent=n;if(n>=target)clearInterval(iv)},35);
+  }
 
-    function renderCity(city) {
-      const d = CITY_DATA[city] || CITY_DATA.boston;
-      const stats = d.stats || { votes: 24, meetings: 7, alerts: 3 };
-      animateCount('stat-votes',    stats.votes);
-      animateCount('stat-meetings', stats.meetings);
-      animateCount('stat-alerts',   stats.alerts);
-      renderVotes(d.votes || []);
-      renderBudget(d.budget || {});
-      renderMeetings(d.meetings || []);
-      renderInfra(d.infra || []);
-    }
-
-    function animateCount(id, target) {
-      const el = document.getElementById(id);
-      let start = 0;
-      const step = Math.ceil(target / 20);
-      const timer = setInterval(() => {
-        start = Math.min(start + step, target);
-        el.textContent = start;
-        if (start >= target) clearInterval(timer);
-      }, 40);
-    }
-
-    // ── VOTES ───────────────────────────────────────────────────────────────────
-    function renderVotes(votes) {
-      const list = document.getElementById('vote-list');
-      document.getElementById('vote-count').textContent = `${votes.length} VOTES`;
-      list.innerHTML = '';
-      votes.forEach((v, i) => {
-        const yeaPct = Math.round((v.yea / v.total) * 100);
-        const naaPct = 100 - yeaPct;
-        const statusMap = {
-          live: { label: '●', cls: 'live' },
-          pend: { label: '◷', cls: 'pend' },
-          pass: { label: '✓', cls: 'pass' },
-          fail: { label: '✕', cls: 'fail' },
-        };
-        const s = statusMap[v.status];
-        const impactMap = { high: 'tag-high', medium: 'tag-medium', low: 'tag-low' };
-
-        const card = document.createElement('div');
-        card.className = 'vote-card';
-        card.setAttribute('tabindex', '0');
-        card.setAttribute('role', 'button');
-        card.setAttribute('aria-expanded', 'false');
-        card.setAttribute('aria-label', `Vote: ${v.title}`);
-        card.style.animationDelay = `${i * 0.05}s`;
-        card.innerHTML = `
-          <div class="vote-status-col">
-            <div class="status-icon ${s.cls}" aria-label="${v.status}">${s.label}</div>
-          </div>
-          <div class="vote-body">
-            <div class="vote-title">${v.title}</div>
-            <div class="vote-meta">
-              <span>${v.date}</span>
-              <span>${v.body}</span>
-              <span>${v.yea}–${v.nay} (of ${v.total})</span>
+  /* ════════════════════════════════════════
+     VOTES
+  ════════════════════════════════════════ */
+  function renderVotes(votes){
+    const list=document.getElementById('vote-list');
+    list.innerHTML='';
+    const counts={all:votes.length,live:0,pend:0,pass:0,fail:0};
+    votes.forEach(v=>counts[v.status]++);
+    Object.keys(counts).forEach(k=>{const el=document.getElementById('tc-'+k);if(el)el.textContent=counts[k]});
+    document.getElementById('vote-count').textContent=votes.length+' VOTES';
+    const sm={live:{l:'●',c:'live'},pend:{l:'◷',c:'pend'},pass:{l:'✓',c:'pass'},fail:{l:'✕',c:'fail'}};
+    const im={high:'tag-high',medium:'tag-medium',low:'tag-low'};
+    votes.forEach((v,i)=>{
+      const yp=Math.round(v.yea/v.total*100),np=100-yp;
+      const s=sm[v.status];
+      const card=document.createElement('div');
+      card.className='vote-card'+(filter!=='all'&&v.status!==filter?' hidden':'');
+      card.setAttribute('role','listitem');card.setAttribute('tabindex','0');
+      card.setAttribute('aria-expanded','false');card.setAttribute('data-status',v.status);
+      card.style.animationDelay=(i*.05)+'s';
+      card.innerHTML=`
+        <div><div class="status-icon ${s.c}" aria-label="${v.status}">${s.l}</div></div>
+        <div class="vote-body">
+          <div class="vote-title">${v.title}</div>
+          <div class="vote-meta"><span>📅 ${v.date}</span><span>🏛 ${v.body}</span><span>🗳 ${v.yea}–${v.nay} of ${v.total}</span></div>
+          <div class="vote-desc">${v.desc}</div>
+          <div class="vote-bar-wrap">
+            <div class="vote-bar-labels"><span style="color:var(--green)">YEA ${v.yea} (${yp}%)</span><span style="color:var(--red)">NAY ${v.nay} (${np}%)</span></div>
+            <div class="vote-bar-track" role="progressbar" aria-valuenow="${yp}" aria-valuemin="0" aria-valuemax="100" aria-label="Yea votes: ${yp}%">
+              <div class="vote-bar-yes" style="width:0%"></div><div class="vote-bar-no" style="width:0%"></div>
             </div>
-            <div class="vote-desc">${v.desc}</div>
-            <div class="vote-bar-wrap">
-              <div class="vote-bar-labels"><span>YEA ${v.yea}</span><span>NAY ${v.nay}</span></div>
-              <div class="vote-bar-track">
-                <div class="vote-bar-yes" style="width:0%" data-target="${yeaPct}"></div>
-                <div class="vote-bar-no"  style="width:0%" data-target="${naaPct}"></div>
-              </div>
-            </div>
-            <button class="vote-share-btn" onclick="shareVote(event, '${encodeURIComponent(v.title)}')">⬡ Share This Vote</button>
+            <div class="vote-bar-pct">${v.yea} of ${v.total} members voted Yea</div>
           </div>
-          <div>
-            <span class="vote-impact-tag ${impactMap[v.impact]}">${v.impact}</span>
+          <div class="vote-actions">
+            <button class="vab" onclick="shareVote(event,'${encodeURIComponent(v.title)}')">⬡ Share</button>
+            <button class="vab" onclick="subVote(event,'${encodeURIComponent(v.title)}')">🔔 Alert Me</button>
+            <button class="vab" onclick="voteModal(event,this)" data-v='${JSON.stringify(v).replace(/'/g,"&#39;")}'>Full Details</button>
           </div>
-        `;
+        </div>
+        <div><span class="impact-tag ${im[v.impact]}">${v.impact}</span></div>`;
+      const exp=()=>{
+        const ex=card.classList.toggle('expanded');
+        card.setAttribute('aria-expanded',ex);
+        if(ex)requestAnimationFrame(()=>{card.querySelector('.vote-bar-yes').style.width=yp+'%';card.querySelector('.vote-bar-no').style.width=np+'%'});
+      };
+      card.addEventListener('click',exp);
+      card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();exp()}});
+      list.appendChild(card);
+    });
+  }
 
-        const toggle = () => {
-          const expanded = card.classList.toggle('expanded');
-          card.setAttribute('aria-expanded', expanded);
-          if (expanded) {
-            requestAnimationFrame(() => {
-              card.querySelector('.vote-bar-yes').style.width = yeaPct + '%';
-              card.querySelector('.vote-bar-no').style.width  = naaPct + '%';
-            });
-          }
-        };
-        card.addEventListener('click', toggle);
-        card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
-        list.appendChild(card);
-      });
-    }
+  function filterVotes(f,btn){
+    filter=f;
+    document.querySelectorAll('.ftab').forEach(t=>{t.classList.remove('active');t.setAttribute('aria-selected','false')});
+    btn.classList.add('active');btn.setAttribute('aria-selected','true');
+    document.querySelectorAll('.vote-card').forEach(c=>c.classList.toggle('hidden',f!=='all'&&c.getAttribute('data-status')!==f));
+  }
 
-    function shareVote(e, encodedTitle) {
-      e.stopPropagation();
-      const title = decodeURIComponent(encodedTitle);
-      const url = `${window.location.origin}${window.location.pathname}#votes`;
-      if (navigator.share) {
-        navigator.share({ title: `CivicWatch — ${title}`, url });
-      } else {
-        navigator.clipboard.writeText(url).then(() =>
-          showToast('🔗 Link Copied', `Share link for "${title}" copied to clipboard.`)
-        );
-      }
-    }
+  function shareVote(e,enc){
+    e.stopPropagation();
+    const url=location.href.split('#')[0]+'#votes';
+    if(navigator.share)navigator.share({title:'CivicWatch — '+decodeURIComponent(enc),url});
+    else navigator.clipboard.writeText(url).then(()=>toast('🔗 Copied',`Link for "${decodeURIComponent(enc)}" copied.`));
+  }
+  function subVote(e,enc){e.stopPropagation();toast('🔔 Subscribed',`You'll be notified when "${decodeURIComponent(enc)}" is updated.`)}
+  function voteModal(e,btn){
+    e.stopPropagation();
+    const v=JSON.parse(btn.getAttribute('data-v').replace(/&#39;/g,"'"));
+    const yp=Math.round(v.yea/v.total*100);
+    openModal('Vote Details',v.title,`<strong>Status:</strong> ${v.status.toUpperCase()}<br><strong>Body:</strong> ${v.body}<br><strong>Date:</strong> ${v.date}<br><strong>Impact:</strong> ${v.impact}<br><br><strong>Vote Count:</strong> ${v.yea} Yea / ${v.nay} Nay of ${v.total} members (${yp}% in favour)<br><br>${v.desc}`);
+  }
 
-    // ── BUDGET ──────────────────────────────────────────────────────────────────
-    function renderBudget(budget) {
-      document.getElementById('budget-total').textContent  = budget.total || '—';
-      document.getElementById('budget-change').textContent = budget.change || '';
-      const container = document.getElementById('budget-items');
-      container.innerHTML = '';
-      (budget.items || []).forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'budget-item';
-        div.innerHTML = `
-          <div class="budget-item-header">
-            <span class="budget-item-name">${item.name}</span>
-            <span class="budget-item-pct" style="color:${item.color}">${item.pct}%</span>
-          </div>
-          <div class="budget-track" role="progressbar" aria-valuenow="${item.pct}" aria-valuemin="0" aria-valuemax="100" aria-label="${item.name}: ${item.pct}%">
-            <div class="budget-fill" style="width:0%;background:${item.color}" data-target="${item.pct}"></div>
-          </div>
-          <div class="budget-amount">${item.amount}</div>
-        `;
-        container.appendChild(div);
-        requestAnimationFrame(() => {
-          setTimeout(() => { div.querySelector('.budget-fill').style.width = item.pct + '%'; }, 200);
-        });
-      });
-    }
+  /* ════════════════════════════════════════
+     BUDGET
+  ════════════════════════════════════════ */
+  function renderBudget(b){
+    document.getElementById('budget-total').textContent=b.total||'—';
+    document.getElementById('budget-change').textContent=b.change||'';
+    const c=document.getElementById('budget-items');c.innerHTML='';
+    buildDonut(b.items||[]);
+    (b.items||[]).forEach((item,i)=>{
+      const div=document.createElement('div');div.className='budget-item';
+      div.innerHTML=`<div class="budget-item-header"><span class="budget-item-name">${item.name}</span><div class="budget-item-right"><span class="budget-item-amt">${item.amount}</span><span class="budget-item-pct" style="color:${item.color}">${item.pct}%</span></div></div><div class="budget-track" title="${item.name}: ${item.pct}%"><div class="budget-fill" style="width:0%;background:${item.color}"></div></div>`;
+      c.appendChild(div);
+      requestAnimationFrame(()=>setTimeout(()=>{div.querySelector('.budget-fill').style.width=item.pct+'%'},200+i*60));
+    });
+  }
 
-    function exportBudget() {
-      const d = CITY_DATA[currentCity] || CITY_DATA.boston;
-      const city = document.getElementById('citySelect').options[document.getElementById('citySelect').selectedIndex].text;
-      let csv = `CivicWatch Budget Export — ${city}\nDepartment,Percentage,Amount\n`;
-      (d.budget.items || []).forEach(item => {
-        csv += `"${item.name}",${item.pct}%,"${item.amount}"\n`;
-      });
-      csv += `\nTotal,100%,"${d.budget.total}"\n`;
-      csv += `Change,"${d.budget.change}"\n`;
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement('a');
-      a.href = url; a.download = `civicwatch-budget-${currentCity}.csv`;
-      a.click(); URL.revokeObjectURL(url);
-      showToast('⬇ Budget Exported', `${city} budget data saved as CSV.`);
-    }
+  function buildDonut(items){
+    const svg=document.getElementById('donut-svg');svg.innerHTML='';
+    const r=40,cx=50,cy=50,circ=2*Math.PI*r;let off=0;
+    items.forEach((item,i)=>{
+      const dash=(item.pct/100)*circ,gap=circ-dash;
+      const seg=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      seg.setAttribute('cx',cx);seg.setAttribute('cy',cy);seg.setAttribute('r',r);
+      seg.setAttribute('fill','none');seg.setAttribute('stroke',item.color);seg.setAttribute('stroke-width','18');
+      seg.setAttribute('stroke-dasharray',`0 ${circ}`);
+      seg.style.transition=`stroke-dasharray 1.2s ${i*.12}s cubic-bezier(.25,.8,.25,1)`;
+      svg.appendChild(seg);
+      const fo=off,fd=dash,fg=gap;
+      requestAnimationFrame(()=>setTimeout(()=>{seg.setAttribute('stroke-dashoffset',-fo);seg.setAttribute('stroke-dasharray',`${fd} ${fg}`)},300));
+      off+=dash;
+    });
+  }
 
-    // ── MEETINGS ────────────────────────────────────────────────────────────────
-    function renderMeetings(meetings) {
-      const list = document.getElementById('meeting-list');
-      list.innerHTML = '';
-      meetings.forEach((m, i) => {
-        const card = document.createElement('div');
-        card.className = 'meeting-card';
-        card.style.animationDelay = `${i * 0.05 + 0.1}s`;
-        card.innerHTML = `
-          <div class="meeting-date-box ${m.today ? 'today' : ''}" aria-label="${m.month} ${m.day}">
-            <span class="month">${m.month}</span>
-            <span class="day">${m.day}</span>
-          </div>
-          <div class="meeting-info">
-            <div class="meeting-title">${m.title}</div>
-            <div class="meeting-details">
-              <span>📍 ${m.location}</span>
-              <span>🕐 ${m.time}</span>
-              <span>📋 ${m.agenda}</span>
-            </div>
-          </div>
-          <button class="meeting-rsvp" onclick="rsvpMeeting(this, '${m.title.replace(/'/g,"\\'")}', event)" aria-label="RSVP to ${m.title}">RSVP</button>
-        `;
-        list.appendChild(card);
-      });
-    }
+  function exportBudgetCSV(){
+    const d=CITIES[city]||CITIES.boston;
+    let csv=`CivicWatch Budget — ${d.name}\nDepartment,Percentage,Amount\n`;
+    (d.budget.items||[]).forEach(i=>{csv+=`"${i.name}",${i.pct}%,"${i.amount}"\n`});
+    csv+=`\nTotal,100%,"${d.budget.total}"\nChange,"${d.budget.change}"\n`;
+    const a=document.createElement('a');
+    a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+    a.download=`civicwatch-budget-${city}.csv`;a.click();
+    toast('⬇ Exported',`Budget data for ${d.name} saved as CSV.`);
+  }
+  function shareBudget(){
+    const url=location.href.split('#')[0]+'#budget';
+    if(navigator.share)navigator.share({title:'CivicWatch Budget',url});
+    else navigator.clipboard.writeText(url).then(()=>toast('🔗 Copied','Budget link copied.'));
+  }
 
-    function rsvpMeeting(btn, title, e) {
-      if (e) e.stopPropagation();
-      btn.classList.toggle('rsvpd');
-      if (btn.classList.contains('rsvpd')) {
-        btn.textContent = 'GOING ✓';
-        showToast('📅 RSVP Confirmed', `You're registered for: ${title}`);
-      } else {
-        btn.textContent = 'RSVP';
-        showToast('📅 RSVP Removed', `You've unregistered from: ${title}`);
-      }
-    }
+  /* ════════════════════════════════════════
+     MEETINGS
+  ════════════════════════════════════════ */
+  function renderMeetings(meetings){
+    const list=document.getElementById('meeting-list');list.innerHTML='';
+    meetings.forEach((m,i)=>{
+      const card=document.createElement('div');card.className='meeting-card';card.setAttribute('role','listitem');card.style.animationDelay=(i*.07)+'s';
+      card.innerHTML=`
+        <div class="meeting-date-box ${m.today?'today':''}" aria-label="${m.month} ${m.day}">
+          <span class="month">${m.month}</span><span class="day">${m.day}</span>
+        </div>
+        <div class="meeting-info">
+          <div class="meeting-title">${m.title}</div>
+          <div class="meeting-details"><span>📍 ${m.location}</span><span>🕐 ${m.time}</span><span>📋 ${m.agenda}</span></div>
+          ${m.today?'<span class="meeting-badge today-badge">Today</span>':'<span class="meeting-badge">Upcoming</span>'}
+        </div>
+        <button class="meeting-rsvp" onclick="rsvp(this,'${m.title.replace(/'/g,"\\'")}')">RSVP</button>`;
+      list.appendChild(card);
+    });
+  }
 
-    // ── INFRASTRUCTURE ──────────────────────────────────────────────────────────
-    function renderInfra(items) {
-      const grid = document.getElementById('infra-grid');
-      grid.innerHTML = '';
-      const critical = items.filter(i => i.status === 'critical').length;
-      document.getElementById('infra-critical').textContent = `${critical} CRITICAL`;
-      items.forEach((item, i) => {
-        const card = document.createElement('div');
-        card.className = `infra-card ${item.status}`;
-        card.style.animationDelay = `${i * 0.04}s`;
-        card.setAttribute('tabindex', '0');
-        card.setAttribute('role', 'button');
-        card.setAttribute('aria-label', `${item.name}: ${item.statusText}`);
-        card.innerHTML = `
-          <div class="infra-icon" aria-hidden="true">${item.icon}</div>
-          <div class="infra-name">${item.name}</div>
-          <div class="infra-status">${item.statusText}</div>
-          <div class="infra-last">${item.last}</div>
-          <button class="report-btn" onclick="reportIssue(event, '${item.name.replace(/'/g,"\\'")}')">Report Issue</button>
-        `;
-        const openModal = () => openModalFn(item.name, `<strong>Status:</strong> ${item.statusText}<br><br>${item.last}<br><br>To report an issue with this infrastructure item, use the "Report Issue" button. Registered residents receive real-time email alerts.`);
-        card.addEventListener('click', openModal);
-        card.addEventListener('keydown', e => { if (e.key === 'Enter') openModal(); });
-        grid.appendChild(card);
-      });
-    }
+  function rsvp(btn,title){
+    btn.classList.toggle('rsvpd');
+    if(btn.classList.contains('rsvpd')){btn.textContent='✓ Going';toast('📅 RSVP Confirmed',`Registered for: ${title}`)}
+    else{btn.textContent='RSVP';toast('📅 Removed',`Removed from: ${title}`)}
+  }
 
-    function reportIssue(e, name) {
-      e.stopPropagation();
-      showToast('📝 Report Submitted', `Your issue report for "${name}" has been logged and forwarded to the city.`);
-    }
+  /* ════════════════════════════════════════
+     INFRASTRUCTURE
+  ════════════════════════════════════════ */
+  function renderInfra(items){
+    const grid=document.getElementById('infra-grid'),summ=document.getElementById('infra-summary');
+    grid.innerHTML='';
+    const counts={critical:0,warning:0,ok:0};
+    items.forEach(i=>counts[i.status]++);
+    document.getElementById('infra-critical').textContent=counts.critical+' CRITICAL';
+    summ.innerHTML=`
+      <div class="isc critical"><div class="isc-dot critical"></div><div><div class="isc-label">Critical</div></div><div class="isc-count">${counts.critical}</div></div>
+      <div class="isc warning"><div class="isc-dot warning"></div><div><div class="isc-label">Warning</div></div><div class="isc-count">${counts.warning}</div></div>
+      <div class="isc ok"><div class="isc-dot ok"></div><div><div class="isc-label">Operational</div></div><div class="isc-count">${counts.ok}</div></div>`;
+    items.forEach((item,i)=>{
+      const card=document.createElement('div');
+      card.className=`infra-card ${item.status}`;card.setAttribute('role','listitem');
+      card.setAttribute('tabindex','0');card.setAttribute('aria-label',`${item.name}: ${item.statusText}`);
+      card.style.animationDelay=(i*.05)+'s';
+      card.innerHTML=`
+        <div class="infra-card-header"><span class="infra-icon" aria-hidden="true">${item.icon}</span><span class="infra-pulse"></span></div>
+        <div class="infra-name">${item.name}</div>
+        <div class="infra-status">${item.statusText}</div>
+        <div class="infra-last">${item.last}</div>
+        <div class="infra-prog"><div class="infra-prog-track"><div class="infra-prog-fill" style="width:0%" data-h="${item.health||80}"></div></div></div>
+        <button class="report-btn" onclick="reportIssue(event,'${item.name.replace(/'/g,"\\'")}')">⚑ Report Issue</button>`;
+      const fn=()=>openModal('Infrastructure',item.name,`<strong>Status:</strong> ${item.statusText}<br><strong>Health Score:</strong> ${item.health||80}%<br><strong>Last Updated:</strong> ${item.last}<br><br>Use the Report button to submit a citizen issue report directly to the city maintenance team. Reports are reviewed within 24 hours.`);
+      card.addEventListener('click',fn);
+      card.addEventListener('keydown',e=>{if(e.key==='Enter')fn()});
+      grid.appendChild(card);
+      requestAnimationFrame(()=>setTimeout(()=>{const f=card.querySelector('.infra-prog-fill');if(f)f.style.width=(item.health||80)+'%'},300+i*80));
+    });
+  }
 
-    // ── SEARCH ──────────────────────────────────────────────────────────────────
-    function setupSearch() {
-      const input = document.getElementById('searchInput');
-      const results = document.getElementById('searchResults');
-      input.addEventListener('input', () => {
-        const q = input.value.trim().toLowerCase();
-        if (q.length < 2) { results.classList.remove('open'); return; }
-        const d = CITY_DATA[currentCity] || CITY_DATA.boston;
-        const hits = [];
-        (d.votes || []).forEach(v => {
-          if (v.title.toLowerCase().includes(q) || v.desc.toLowerCase().includes(q))
-            hits.push({ type: 'vote', label: v.title, anchor: '#votes' });
-        });
-        (d.meetings || []).forEach(m => {
-          if (m.title.toLowerCase().includes(q) || m.location.toLowerCase().includes(q))
-            hits.push({ type: 'meeting', label: m.title, anchor: '#meetings' });
-        });
-        (d.infra || []).forEach(item => {
-          if (item.name.toLowerCase().includes(q) || item.statusText.toLowerCase().includes(q))
-            hits.push({ type: 'infra', label: item.name, anchor: '#infra' });
-        });
+  function reportIssue(e,name){
+    e.stopPropagation();
+    toast('📝 Report Submitted',`Issue for "${name}" logged. Ref #CW-${Date.now().toString().slice(-5)}`);
+  }
 
-        results.innerHTML = '';
-        if (hits.length === 0) {
-          results.innerHTML = `<div class="search-no-results">No results for "${input.value}"</div>`;
-        } else {
-          hits.slice(0, 6).forEach(h => {
-            const el = document.createElement('div');
-            el.className = 'search-result-item';
-            el.setAttribute('role', 'option');
-            el.innerHTML = `<span class="search-result-type ${h.type}">${h.type}</span>${h.label}`;
-            el.addEventListener('click', () => {
-              document.querySelector(h.anchor).scrollIntoView({ behavior: 'smooth' });
-              results.classList.remove('open');
-              input.value = '';
-            });
-            results.appendChild(el);
-          });
-        }
-        results.classList.add('open');
-      });
-      document.addEventListener('click', e => {
-        if (!e.target.closest('.search-wrap')) results.classList.remove('open');
-      });
-    }
+  /* ════════════════════════════════════════
+     ACTIVITY
+  ════════════════════════════════════════ */
+  function renderActivity(items){
+    const feed=document.getElementById('activity-feed');if(!feed)return;
+    feed.innerHTML='';
+    items.forEach((item,i)=>{
+      const el=document.createElement('div');el.className='activity-item';
+      el.style.animation=`fadeUp .4s ease ${i*.07}s both`;
+      el.innerHTML=`<div class="activity-dot" style="background:${item.color}"></div><div><div class="activity-text">${item.text}</div><div class="activity-time">${item.time}</div></div>`;
+      feed.appendChild(el);
+    });
+  }
 
-    function handleSearch() {
-      const q = document.getElementById('searchInput').value.trim();
-      if (!q) return;
-      document.getElementById('searchResults').classList.toggle('open');
-    }
+  /* ════════════════════════════════════════
+     TICKER
+  ════════════════════════════════════════ */
+  function buildTicker(){
+    const items=[
+      {c:'red',t:'VOTE LIVE: Dorchester Zoning Amendment — Council in session'},
+      {c:'yellow',t:'MEETING TODAY: City Council Regular Session @ 6:00 PM — City Hall'},
+      {c:'red',t:'ALERT: Water Boil Advisory — Zone 4 (East Boston) remains active'},
+      {c:'green',t:'PASSED: MBTA Green Line Extension Funding Match 11-1'},
+      {c:'yellow',t:'BUDGET: FY2026 $4.28B — Education receives 34% share'},
+      {c:'yellow',t:'DELAYS: Silver Line SL2 running 8–12 min late — Signal Issue'},
+      {c:'green',t:'MEETING JUN 8: Zoning Board of Appeals — 12 cases on agenda'},
+      {c:'red',t:'VOTE PENDING: Affordable Housing Trust Fund $120M — Jun 10'},
+    ];
+    const ticker=document.getElementById('ticker');
+    [...items,...items].forEach(item=>{
+      const el=document.createElement('span');el.className='ticker-item';
+      el.innerHTML=`<span class="tdot ${item.c}" aria-hidden="true"></span>${item.t}`;
+      ticker.appendChild(el);
+    });
+  }
 
-    // ── TICKER ──────────────────────────────────────────────────────────────────
-    function buildTicker() {
-      const items = [
-        { color: 'red',    text: 'VOTE LIVE: Dorchester Zoning Amendment — Council in session' },
-        { color: 'yellow', text: 'MEETING TODAY: City Council Regular Session @ 6:00 PM — City Hall' },
-        { color: 'red',    text: 'ALERT: Water Boil Advisory — Zone 4 (East Boston) remains active' },
-        { color: 'green',  text: 'PASSED: MBTA Green Line Extension Funding 11-1' },
-        { color: 'yellow', text: 'BUDGET: FY2026 $4.28B approved — Education receives largest share at 34%' },
-        { color: 'yellow', text: 'DELAYS: Silver Line SL2 running 8–12 min late due to signal issue' },
-        { color: 'green',  text: 'MEETING JUN 8: Zoning Board of Appeals — 12 cases on agenda' },
-        { color: 'red',    text: 'VOTE PENDING: Affordable Housing Trust Fund $120M — Hearing Jun 10' },
-      ];
-      const ticker = document.getElementById('ticker');
-      [...items, ...items].forEach(item => {
-        const el = document.createElement('span');
-        el.className = 'ticker-item';
-        el.innerHTML = `<span class="ticker-dot ${item.color}" aria-hidden="true"></span>${item.text}`;
-        ticker.appendChild(el);
-      });
-    }
+  /* ════════════════════════════════════════
+     SEARCH
+  ════════════════════════════════════════ */
+  function initSearch(){
+    const input=document.getElementById('searchInput'),res=document.getElementById('searchResults'),clr=document.getElementById('searchClear');
+    input.addEventListener('input',()=>{
+      const q=input.value.trim();clr.classList.toggle('vis',q.length>0);
+      if(q.length<2){res.classList.remove('open');focusIdx=-1;return}doSearch(q);
+    });
+    clr.addEventListener('click',()=>{input.value='';input.focus();res.classList.remove('open');clr.classList.remove('vis')});
+    input.addEventListener('keydown',e=>{
+      const items=res.querySelectorAll('.sri');
+      if(e.key==='ArrowDown'){e.preventDefault();focusIdx=Math.min(focusIdx+1,items.length-1);hlResult(items)}
+      else if(e.key==='ArrowUp'){e.preventDefault();focusIdx=Math.max(focusIdx-1,0);hlResult(items)}
+      else if(e.key==='Enter'){if(focusIdx>=0&&items[focusIdx])items[focusIdx].click();else triggerSearch()}
+      else if(e.key==='Escape')res.classList.remove('open');
+    });
+    document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))res.classList.remove('open')});
+  }
 
-    // ── MODAL ───────────────────────────────────────────────────────────────────
-    function openModalFn(title, body) {
-      currentModalTitle = title;
-      document.getElementById('modal-title').textContent = title;
-      document.getElementById('modal-body').innerHTML = body;
-      document.getElementById('modalOverlay').classList.add('open');
-      document.getElementById('modal').querySelector('.modal-close').focus();
-    }
-    function closeModal(e) {
-      if (!e || e.target === document.getElementById('modalOverlay') || e.currentTarget?.classList?.contains('modal-close')) {
-        document.getElementById('modalOverlay').classList.remove('open');
-      }
-    }
-    function shareModal() {
-      const url = window.location.href;
-      if (navigator.share) {
-        navigator.share({ title: `CivicWatch — ${currentModalTitle}`, url });
-      } else {
-        navigator.clipboard.writeText(url).then(() => {
-          closeModal();
-          showToast('🔗 Link Copied', 'Page link copied to your clipboard.');
-        });
-      }
-    }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  function hlResult(items){items.forEach((el,i)=>el.classList.toggle('focused',i===focusIdx))}
 
-    // ── TOAST ───────────────────────────────────────────────────────────────────
-    let toastTimer;
-    function showToast(title, body) {
-      const t = document.getElementById('toast');
-      document.getElementById('toast-title').textContent = title;
-      document.getElementById('toast-body').textContent  = body;
-      t.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => t.classList.remove('show'), 4500);
-    }
+  function hl(text,q){return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),'<mark>$1</mark>')}
 
-    setInterval(updateDateline, 60000);
+  function doSearch(q){
+    const res=document.getElementById('searchResults'),d=CITIES[city]||CITIES.boston,ql=q.toLowerCase(),hits=[];
+    (d.votes||[]).forEach(v=>{if(v.title.toLowerCase().includes(ql)||v.desc.toLowerCase().includes(ql))hits.push({type:'vote',label:v.title,anchor:'#votes',sub:`${v.status} · ${v.date}`})});
+    (d.meetings||[]).forEach(m=>{if(m.title.toLowerCase().includes(ql)||m.location.toLowerCase().includes(ql))hits.push({type:'meeting',label:m.title,anchor:'#meetings',sub:`${m.month} ${m.day} · ${m.time}`})});
+    (d.infra||[]).forEach(item=>{if(item.name.toLowerCase().includes(ql)||item.statusText.toLowerCase().includes(ql))hits.push({type:'infra',label:item.name,anchor:'#infra',sub:item.statusText})});
+    (d.budget?.items||[]).forEach(item=>{if(item.name.toLowerCase().includes(ql))hits.push({type:'budget',label:item.name,anchor:'#budget',sub:`${item.pct}% — ${item.amount}`})});
+    res.innerHTML='';focusIdx=-1;
+    if(!hits.length){res.innerHTML=`<div class="search-empty">No results for "<strong>${q}</strong>"</div>`}
+    else hits.slice(0,8).forEach(h=>{
+      const el=document.createElement('div');el.className='sri';el.setAttribute('role','option');
+      el.innerHTML=`<span class="srt srt-${h.type}">${h.type}</span><div><div>${hl(h.label,q)}</div><div style="font-size:.6rem;color:var(--muted);margin-top:2px">${h.sub}</div></div>`;
+      el.addEventListener('click',()=>{document.querySelector(h.anchor)?.scrollIntoView({behavior:'smooth'});res.classList.remove('open');document.getElementById('searchInput').value='';document.getElementById('searchClear').classList.remove('vis')});
+      res.appendChild(el);
+    });
+    res.classList.add('open');
+  }
+
+  function triggerSearch(){const q=document.getElementById('searchInput').value.trim();if(q.length>=2)doSearch(q)}
+
+  /* ════════════════════════════════════════
+     MODAL
+  ════════════════════════════════════════ */
+  function openModal(tag,title,body){
+    modalCtx=title;
+    document.getElementById('modal-tag').textContent=tag;
+    document.getElementById('modal-title-el').textContent=title;
+    document.getElementById('modal-body').innerHTML=body;
+    const ov=document.getElementById('modalOverlay');
+    ov.classList.add('open');ov.setAttribute('aria-hidden','false');
+    document.querySelector('.modal-close').focus();
+    document.body.style.overflow='hidden';
+  }
+  function closeModal(){
+    const ov=document.getElementById('modalOverlay');
+    ov.classList.remove('open');ov.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  }
+  function shareCurrentModal(){
+    const url=location.href;
+    if(navigator.share)navigator.share({title:'CivicWatch — '+modalCtx,url});
+    else navigator.clipboard.writeText(url).then(()=>{closeModal();toast('🔗 Copied','Link copied to clipboard.')});
+  }
+  document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+  /* ════════════════════════════════════════
+     TOAST
+  ════════════════════════════════════════ */
+  function toast(title,body){tQueue.push({title,body});if(!tBusy)nextToast()}
+  function nextToast(){
+    if(!tQueue.length){tBusy=false;return}tBusy=true;
+    const{title,body}=tQueue.shift();
+    const c=document.getElementById('toastContainer');
+    const el=document.createElement('div');el.className='toast';
+    el.innerHTML=`<div class="toast-content"><div class="toast-title">${title}</div><div class="toast-body">${body}</div></div><button class="toast-close" onclick="dismissToast(this)" aria-label="Dismiss">✕</button>`;
+    c.appendChild(el);
+    requestAnimationFrame(()=>setTimeout(()=>el.classList.add('show'),20));
+    setTimeout(()=>dismissToast(el.querySelector('.toast-close'),el),5000);
+  }
+  function dismissToast(btn,override){
+    const el=override||btn.closest('.toast');if(!el)return;
+    el.classList.remove('show');setTimeout(()=>{el.remove();setTimeout(nextToast,100)},380);
+  }
   </script>
 </body>
 </html>
