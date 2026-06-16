@@ -3,213 +3,179 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CivicWatch — Know Your City</title>
-  <meta name="description" content="Real-time civic engagement dashboard. Track local votes, budgets, meetings, and infrastructure in your city."/>
-  <meta property="og:title" content="CivicWatch — Know Your City"/>
-  <meta property="og:description" content="The civic dashboard your city never built."/>
+  <title>CivicWatch India — जानो अपना शहर | Know Your City</title>
+  <meta name="description" content="India's real-time civic transparency dashboard. Track Lok Sabha & state assembly votes, budgets, municipal meetings, and infrastructure across Indian cities."/>
+  <meta property="og:title" content="CivicWatch India — Know Your City"/>
+  <meta property="og:description" content="India's civic dashboard — votes, budgets, meetings, infrastructure. In one place."/>
   <meta property="og:url" content="https://neodragon-tuff.github.io/CivicWatch/"/>
-  <meta property="og:type" content="website"/>
-  <meta name="twitter:card" content="summary_large_image"/>
   <meta name="theme-color" content="#1a3a2a"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
   <style>
-    /* ══════════════════════════════════════════
-       TOKENS
-    ══════════════════════════════════════════ */
-    :root {
-      --ink:#0d0d0d; --paper:#f5f0e8; --cream:#ede7d6;
-      --civic:#1a3a2a; --civic2:#245038;
-      --accent:#c84b2f; --gold:#d4a847;
-      --muted:#6b6355; --border:#c8bfaa;
-      --green:#2e7d4f; --red:#c84b2f; --yellow:#d4a847;
-      --white:#ffffff;
+    :root{
+      --ink:#0d0d0d;--paper:#f5f0e8;--cream:#ede7d6;
+      --civic:#1a3a2a;--accent:#c84b2f;--gold:#d4a847;
+      --saffron:#FF9933;--green:#138808;--navy:#000080;
+      --muted:#6b6355;--border:#c8bfaa;
+      --g:#138808;--r:#c84b2f;--y:#d4a847;--w:#fff;
       --shadow-sm:2px 2px 0 var(--ink);
       --shadow-md:4px 4px 0 var(--ink);
-      --shadow-lg:8px 8px 0 rgba(0,0,0,0.25);
+      --shadow-lg:8px 8px 0 rgba(0,0,0,.25);
       --t:.18s cubic-bezier(.25,.8,.25,1);
     }
-    body.dark {
-      --ink:#ddebd5; --paper:#0c1610; --cream:#121e16;
-      --muted:#7a9e88; --border:#243320; --white:#172012;
-    }
-    /* ══════════════════════════════════════════
-       RESET
-    ══════════════════════════════════════════ */
+    body.dark{--ink:#ddebd5;--paper:#0c1610;--cream:#121e16;--muted:#7a9e88;--border:#243320;--w:#172012}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{font-family:'Lora',Georgia,serif;background:var(--paper);color:var(--ink);min-height:100vh;overflow-x:hidden;transition:background var(--t),color var(--t)}
     body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9000}
     a{color:inherit;text-decoration:none}
     button{font-family:inherit;cursor:pointer}
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    /* ══════════════════════════════════════════
-       ANIMATIONS
-    ══════════════════════════════════════════ */
-    @keyframes fadeUp  {from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes fadeIn  {from{opacity:0}to{opacity:1}}
-    @keyframes slideIn {from{transform:translateY(22px);opacity:0}to{transform:translateY(0);opacity:1}}
-    @keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(200,75,47,.7)}70%{box-shadow:0 0 0 8px rgba(200,75,47,0)}100%{box-shadow:0 0 0 0 rgba(200,75,47,0)}}
-    @keyframes blink   {50%{opacity:0}}
-    @keyframes ticker  {from{transform:translateX(0)}to{transform:translateX(-50%)}}
-    @keyframes shimmer {to{background-position:-200% 0}}
-    @keyframes spin    {to{transform:rotate(360deg)}}
-    /* ══════════════════════════════════════════
-       SKIP LINK
-    ══════════════════════════════════════════ */
+    /* ANIMATIONS */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes slideIn{from{transform:translateY(22px);opacity:0}to{transform:translateY(0);opacity:1}}
+    @keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(255,153,51,.7)}70%{box-shadow:0 0 0 8px rgba(255,153,51,0)}100%{box-shadow:0 0 0 0 rgba(255,153,51,0)}}
+    @keyframes blink{50%{opacity:0}}
+    @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @keyframes ashoka{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    /* SKIP LINK */
     .skip-link{position:absolute;top:-999px;left:1rem;background:var(--civic);color:#fff;padding:.5rem 1rem;font-family:'DM Mono',monospace;font-size:.8rem;z-index:10000;border-radius:2px}
     .skip-link:focus{top:1rem}
-    /* ══════════════════════════════════════════
-       PROGRESS BAR
-    ══════════════════════════════════════════ */
-    .progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--accent);z-index:9999;width:0%;transition:width .3s ease,opacity .4s}
-    /* ══════════════════════════════════════════
-       ANNOUNCE BAR
-    ══════════════════════════════════════════ */
-    .announce-bar{background:var(--accent);color:#fff;padding:.4rem 2rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:.75rem}
-    .announce-dot{width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1.2s steps(1) infinite;flex-shrink:0}
+    /* PROGRESS BAR */
+    .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(to right,var(--saffron),var(--w),var(--green));z-index:9999;width:0%;transition:width .3s ease,opacity .4s}
+    /* TRICOLOUR TOP STRIP */
+    .tricolour-strip{height:4px;background:linear-gradient(to right,var(--saffron) 33.33%,white 33.33% 66.66%,var(--green) 66.66%)}
+    /* ANNOUNCE BAR */
+    .announce-bar{background:var(--navy);color:#fff;padding:.4rem 2rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:.75rem}
+    .announce-dot{width:6px;height:6px;border-radius:50%;background:var(--saffron);animation:blink 1.2s steps(1) infinite;flex-shrink:0}
     .announce-msg{flex:1}
     .announce-close{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;margin-left:auto;padding:0 .25rem}
     .announce-close:hover{color:#fff}
-    /* ══════════════════════════════════════════
-       MASTHEAD
-    ══════════════════════════════════════════ */
+    /* MASTHEAD */
     .masthead{background:var(--civic);color:var(--paper);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--gold);position:sticky;top:0;z-index:500;height:64px;gap:1rem}
-    .masthead-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;display:flex;align-items:center;gap:.5rem;flex-shrink:0}
-    .pulse-dot{width:10px;height:10px;background:var(--accent);border-radius:50%;animation:pulseRing 1.8s ease-out infinite}
-    .masthead-nav{display:flex;gap:0;font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
-    .masthead-nav a{color:rgba(245,240,232,.6);padding:.4rem .9rem;border-radius:2px;transition:color var(--t),background var(--t)}
+    .masthead-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-.02em;display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+    .logo-emblem{width:28px;height:28px;position:relative;display:flex;align-items:center;justify-content:center}
+    .logo-chakra{width:22px;height:22px;border:2px solid var(--saffron);border-radius:50%;display:flex;align-items:center;justify-content:center;animation:ashoka 8s linear infinite}
+    .logo-chakra-dot{width:4px;height:4px;background:var(--saffron);border-radius:50%}
+    .logo-text span{color:var(--saffron)}
+    .logo-hindi{font-size:.65rem;letter-spacing:.05em;color:rgba(237,231,214,.5);display:block;line-height:1;margin-top:1px}
+    .masthead-nav{display:flex;gap:0;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.07em;text-transform:uppercase}
+    .masthead-nav a{color:rgba(245,240,232,.6);padding:.4rem .85rem;border-radius:2px;transition:color var(--t),background var(--t)}
     .masthead-nav a:hover,.masthead-nav a.active{color:#fff;background:rgba(255,255,255,.1)}
     .masthead-right{display:flex;align-items:center;gap:.6rem;flex-shrink:0}
-    .live-badge{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;background:var(--accent);color:#fff;padding:3px 10px;border-radius:2px;display:flex;align-items:center;gap:6px}
+    .live-badge{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;background:var(--accent);color:#fff;padding:3px 10px;border-radius:2px;display:flex;align-items:center;gap:6px}
     .live-badge::before{content:'';width:6px;height:6px;background:#fff;border-radius:50%;animation:blink 1.2s steps(1) infinite}
     .icon-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;width:34px;height:34px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:.95rem;transition:background var(--t)}
     .icon-btn:hover{background:rgba(255,255,255,.2)}
     .hamburger{display:none}
-    /* ══════════════════════════════════════════
-       MOBILE NAV
-    ══════════════════════════════════════════ */
+    /* MOBILE NAV */
     .mobile-nav{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:var(--civic);z-index:490;flex-direction:column;padding:2rem;overflow-y:auto}
     .mobile-nav.open{display:flex;animation:fadeIn .2s ease}
     .mobile-nav a{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:rgba(245,240,232,.65);padding:1rem 0;border-bottom:1px solid rgba(255,255,255,.08);transition:color var(--t)}
     .mobile-nav a:hover{color:#fff}
     .mobile-nav-close{position:absolute;top:1rem;right:1.5rem;background:none;border:none;color:rgba(255,255,255,.4);font-size:1.5rem}
-    /* ══════════════════════════════════════════
-       DATELINE
-    ══════════════════════════════════════════ */
+    /* DATELINE */
     .dateline-bar{background:var(--cream);border-bottom:1px solid var(--border);padding:.45rem 2rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;color:var(--muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;transition:background var(--t)}
     .city-selector{display:flex;align-items:center;gap:.5rem}
     .city-selector select{font-family:'DM Mono',monospace;font-size:.65rem;background:transparent;border:1px solid var(--border);color:var(--ink);padding:2px 6px;cursor:pointer}
-    .city-selector select:focus{outline:2px solid var(--accent)}
-    /* ══════════════════════════════════════════
-       HERO
-    ══════════════════════════════════════════ */
+    .city-selector select:focus{outline:2px solid var(--saffron)}
+    /* HERO */
     .hero{padding:3.5rem 2rem 2.5rem;max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center}
     .hero-left{animation:fadeUp .6s ease both}
-    .hero-eyebrow{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
-    .hero-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--accent)}
-    .hero-headline{font-family:'Syne',sans-serif;font-size:clamp(2.8rem,5.5vw,5rem);font-weight:800;line-height:.98;letter-spacing:-.04em}
-    .hero-headline .l2{color:var(--accent)}
+    .hero-eyebrow{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--saffron);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+    .hero-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--saffron)}
+    .hero-headline{font-family:'Syne',sans-serif;font-size:clamp(2.6rem,5.5vw,4.8rem);font-weight:800;line-height:.98;letter-spacing:-.04em}
+    .hero-headline .l2{color:var(--saffron)}
     .hero-headline .l3{color:var(--civic)}
     body.dark .hero-headline .l3{color:var(--green)}
-    .hero-sub{margin-top:1.25rem;font-size:1rem;color:var(--muted);line-height:1.75;max-width:46ch}
+    .hero-sub{margin-top:1.25rem;font-size:1rem;color:var(--muted);line-height:1.75;max-width:48ch}
     .cta-row{display:flex;gap:.75rem;margin-top:1.75rem;flex-wrap:wrap}
     .btn{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;padding:.75rem 1.5rem;border:2px solid transparent;transition:all var(--t);cursor:pointer;display:inline-flex;align-items:center;gap:.5rem;border-radius:2px}
     .btn-primary{background:var(--civic);color:#fff;border-color:var(--civic)}
-    .btn-primary:hover{background:var(--accent);border-color:var(--accent);transform:translate(-2px,-2px);box-shadow:var(--shadow-sm)}
+    .btn-primary:hover{background:var(--saffron);border-color:var(--saffron);color:#000;transform:translate(-2px,-2px);box-shadow:var(--shadow-sm)}
     .btn-outline{background:transparent;color:var(--ink);border-color:var(--border)}
     .btn-outline:hover{border-color:var(--ink);transform:translate(-2px,-2px);box-shadow:var(--shadow-sm)}
+    .btn-rti{background:var(--navy);color:#fff;border-color:var(--navy)}
+    .btn-rti:hover{background:var(--saffron);border-color:var(--saffron);color:#000;transform:translate(-2px,-2px)}
     .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:2rem}
-    .stat-card{border:1px solid var(--border);padding:1rem;background:var(--white);position:relative;overflow:hidden;animation:fadeUp .5s ease both;transition:box-shadow var(--t),transform var(--t),background var(--t)}
+    .stat-card{border:1px solid var(--border);padding:1rem;background:var(--w);position:relative;overflow:hidden;animation:fadeUp .5s ease both;transition:box-shadow var(--t),transform var(--t),background var(--t)}
     .stat-card:hover{box-shadow:var(--shadow-md);transform:translate(-2px,-2px)}
-    .stat-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent)}
-    .stat-card:nth-child(2)::before{background:var(--gold)}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--saffron)}
+    .stat-card:nth-child(2)::before{background:var(--w)}
     .stat-card:nth-child(3)::before{background:var(--green)}
-    .stat-card:nth-child(1){animation-delay:.1s}
-    .stat-card:nth-child(2){animation-delay:.2s}
-    .stat-card:nth-child(3){animation-delay:.3s}
+    .stat-card:nth-child(1){animation-delay:.1s}.stat-card:nth-child(2){animation-delay:.2s}.stat-card:nth-child(3){animation-delay:.3s}
     .stat-number{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--civic);line-height:1}
     body.dark .stat-number{color:var(--green)}
     .stat-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:4px}
     .stat-trend{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--green);margin-top:2px}
     .hero-right{animation:fadeUp .7s ease .2s both;display:flex;align-items:center;justify-content:center}
     .hero-visual{width:100%;max-width:420px;aspect-ratio:1}
-    /* ══════════════════════════════════════════
-       TICKER
-    ══════════════════════════════════════════ */
+    /* RTI BANNER */
+    .rti-banner{background:var(--navy);color:#fff;padding:1rem 2rem;display:flex;align-items:center;gap:1.5rem;font-size:.85rem;flex-wrap:wrap}
+    .rti-banner-text{flex:1;line-height:1.5}
+    .rti-banner-text strong{font-family:'Syne',sans-serif;color:var(--saffron);display:block;margin-bottom:2px;font-size:1rem}
+    /* TICKER */
     .ticker-wrap{background:var(--civic);color:var(--paper);overflow:hidden;padding:.55rem 0;position:relative}
     .ticker-wrap::before,.ticker-wrap::after{content:'';position:absolute;top:0;width:60px;height:100%;z-index:2}
     .ticker-wrap::before{left:0;background:linear-gradient(to right,var(--civic),transparent)}
     .ticker-wrap::after{right:0;background:linear-gradient(to left,var(--civic),transparent)}
-    .ticker-inner{display:flex;gap:4rem;animation:ticker 32s linear infinite;white-space:nowrap}
+    .ticker-inner{display:flex;gap:4rem;animation:ticker 36s linear infinite;white-space:nowrap}
     .ticker-inner:hover{animation-play-state:paused}
     .ticker-item{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.06em;display:flex;align-items:center;gap:.5rem}
     .tdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-    .tdot.green{background:var(--green)}.tdot.red{background:var(--red)}.tdot.yellow{background:var(--yellow)}
-    /* ══════════════════════════════════════════
-       SEARCH
-    ══════════════════════════════════════════ */
+    .tdot.saffron{background:var(--saffron)}.tdot.green{background:var(--green)}.tdot.red{background:var(--r)}.tdot.white{background:#fff}
+    /* SEARCH */
     .search-wrap{padding:1.25rem 2rem 0;max-width:1240px;margin:0 auto;position:relative;z-index:200}
-    .search-bar{display:flex;border:2px solid var(--ink);background:var(--white);max-width:600px;transition:box-shadow var(--t),background var(--t)}
+    .search-bar{display:flex;border:2px solid var(--ink);background:var(--w);max-width:640px;transition:box-shadow var(--t),background var(--t)}
     .search-bar:focus-within{box-shadow:var(--shadow-md)}
     .search-bar input{flex:1;border:none;outline:none;padding:.7rem 1rem;font-family:'DM Mono',monospace;font-size:.8rem;background:transparent;color:var(--ink)}
     .search-bar input::placeholder{color:var(--muted)}
     .search-clear{background:none;border:none;color:var(--muted);padding:0 .75rem;font-size:1rem;display:none;align-items:center}
     .search-clear.vis{display:flex}
     .search-bar button.search-btn{background:var(--civic);color:#fff;border:none;padding:0 1.4rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;transition:background var(--t)}
-    .search-bar button.search-btn:hover{background:var(--accent)}
-    .search-results{position:absolute;top:100%;left:0;width:600px;max-height:320px;overflow-y:auto;background:var(--white);border:2px solid var(--ink);border-top:none;display:none;z-index:300;box-shadow:var(--shadow-lg)}
+    .search-bar button.search-btn:hover{background:var(--saffron);color:#000}
+    .search-results{position:absolute;top:100%;left:0;width:640px;max-height:360px;overflow-y:auto;background:var(--w);border:2px solid var(--ink);border-top:none;display:none;z-index:300;box-shadow:var(--shadow-lg)}
     .search-results.open{display:block;animation:fadeIn .15s ease}
     .sri{padding:.7rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;font-family:'DM Mono',monospace;font-size:.72rem;display:flex;align-items:center;gap:.75rem;transition:background var(--t)}
     .sri:last-child{border-bottom:none}
     .sri:hover,.sri.focused{background:var(--cream)}
     .srt{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:2px;flex-shrink:0;font-weight:500}
-    .srt-vote{background:#fce4ec;color:var(--red)}.srt-meeting{background:#e8f5e9;color:var(--green)}
-    .srt-infra{background:#fff8e1;color:var(--yellow)}.srt-budget{background:#e3f2fd;color:#1565c0}
-    .sri mark{background:rgba(212,168,71,.3);border-radius:1px}
+    .srt-vote{background:#fff3e0;color:var(--saffron)}.srt-meeting{background:#e8f5e9;color:var(--green)}
+    .srt-infra{background:#fce4ec;color:var(--r)}.srt-budget{background:#e3f2fd;color:var(--navy)}.srt-scheme{background:#f3e5f5;color:#6a1b9a}
+    .sri mark{background:rgba(255,153,51,.3);border-radius:1px}
     .search-empty{padding:1.5rem;text-align:center;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted)}
-    /* ══════════════════════════════════════════
-       MAIN GRID
-    ══════════════════════════════════════════ */
-    .main-grid{max-width:1240px;margin:1.5rem auto;padding:0 2rem;display:grid;grid-template-columns:2fr 1fr;grid-template-rows:auto auto auto;gap:1.5rem}
-    /* ══════════════════════════════════════════
-       SECTION HEADER
-    ══════════════════════════════════════════ */
+    /* MAIN GRID */
+    .main-grid{max-width:1240px;margin:1.5rem auto;padding:0 2rem;display:grid;grid-template-columns:2fr 1fr;grid-template-rows:auto;gap:1.5rem}
+    /* SECTION HEADER */
     .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:2px solid var(--ink)}
     .section-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:.5rem}
     .section-count{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
-    /* ══════════════════════════════════════════
-       ALERT BANNER
-    ══════════════════════════════════════════ */
-    .alert-banner{grid-column:1/3;border-left:4px solid var(--red);background:rgba(200,75,47,.06);padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;font-size:.88rem;animation:fadeUp .4s ease both}
-    body.dark .alert-banner{background:rgba(200,75,47,.14)}
+    /* ALERT BANNER */
+    .alert-banner{grid-column:1/3;border-left:4px solid var(--saffron);background:rgba(255,153,51,.08);padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;font-size:.88rem;animation:fadeUp .4s ease both}
+    body.dark .alert-banner{background:rgba(255,153,51,.15)}
     .alert-icon{font-size:1.2rem;flex-shrink:0}
     .alert-text{flex:1}
     .alert-text strong{font-family:'Syne',sans-serif;display:block;margin-bottom:2px}
     .alert-dismiss{background:none;border:none;color:var(--muted);font-size:1.1rem;padding:0 .25rem}
     .alert-dismiss:hover{color:var(--ink)}
-    /* ══════════════════════════════════════════
-       VOTE TRACKER
-    ══════════════════════════════════════════ */
+    /* PARLIAMENT VOTES */
     .vote-tracker{grid-column:1;grid-row:1}
-    .filter-tabs{display:flex;border:1px solid var(--border);overflow:hidden;background:var(--white);margin-bottom:1rem}
+    .filter-tabs{display:flex;border:1px solid var(--border);overflow:hidden;background:var(--w);margin-bottom:1rem}
     .ftab{flex:1;background:transparent;border:none;border-right:1px solid var(--border);font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:.5rem .25rem;cursor:pointer;transition:all var(--t);display:flex;align-items:center;justify-content:center;gap:4px}
     .ftab:last-child{border-right:none}
     .ftab:hover{background:var(--cream);color:var(--ink)}
     .ftab.active{background:var(--civic);color:#fff}
     .ftab-count{background:rgba(255,255,255,.2);font-size:.55rem;padding:1px 5px;border-radius:10px}
     .ftab:not(.active) .ftab-count{background:var(--cream);color:var(--muted)}
-    .vote-card{border:1px solid var(--border);background:var(--white);padding:1.25rem;margin-bottom:.6rem;display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:start;cursor:pointer;transition:box-shadow var(--t),transform var(--t),background var(--t);animation:fadeUp .4s ease both;position:relative}
+    .vote-card{border:1px solid var(--border);background:var(--w);padding:1.25rem;margin-bottom:.6rem;display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:start;cursor:pointer;transition:box-shadow var(--t),transform var(--t),background var(--t);animation:fadeUp .4s ease both;position:relative}
     .vote-card:hover{box-shadow:var(--shadow-md);transform:translate(-2px,-2px)}
     .vote-card.hidden{display:none}
-    .vote-card:nth-child(1){animation-delay:.05s}.vote-card:nth-child(2){animation-delay:.1s}
-    .vote-card:nth-child(3){animation-delay:.15s}.vote-card:nth-child(4){animation-delay:.2s}
-    .vote-card:nth-child(5){animation-delay:.25s}
+    .vote-card:nth-child(1){animation-delay:.05s}.vote-card:nth-child(2){animation-delay:.1s}.vote-card:nth-child(3){animation-delay:.15s}.vote-card:nth-child(4){animation-delay:.2s}.vote-card:nth-child(5){animation-delay:.25s}
     .status-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:bold;flex-shrink:0}
-    .status-icon.pass{background:#e8f5e9;color:var(--green);border:2px solid var(--green)}
-    .status-icon.fail{background:#fce4ec;color:var(--red);border:2px solid var(--red)}
-    .status-icon.pend{background:#fff8e1;color:var(--yellow);border:2px solid var(--yellow)}
-    .status-icon.live{background:#e8f5e9;color:var(--green);border:2px solid var(--green);animation:pulseRing 1.8s ease-out infinite}
+    .status-icon.pass{background:#e8f5e9;color:var(--g);border:2px solid var(--g)}
+    .status-icon.fail{background:#fce4ec;color:var(--r);border:2px solid var(--r)}
+    .status-icon.pend{background:#fff3e0;color:var(--saffron);border:2px solid var(--saffron)}
+    .status-icon.live{background:#e8f5e9;color:var(--g);border:2px solid var(--g);animation:pulseRing 1.8s ease-out infinite}
     .vote-title{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:600;line-height:1.35;margin-bottom:.3rem}
     .vote-meta{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;display:flex;gap:.75rem;flex-wrap:wrap}
     .vote-desc{margin-top:.6rem;font-size:.85rem;color:var(--muted);line-height:1.65;display:none}
@@ -218,23 +184,21 @@
     .vote-card.expanded .vote-bar-wrap{display:block}
     .vote-bar-labels{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);margin-bottom:5px}
     .vote-bar-track{height:10px;background:var(--cream);border-radius:2px;overflow:hidden;display:flex}
-    .vote-bar-yes{background:var(--green);transition:width 1s cubic-bezier(.25,.8,.25,1)}
-    .vote-bar-no{background:var(--red);transition:width 1s cubic-bezier(.25,.8,.25,1)}
+    .vote-bar-yes{background:var(--g);transition:width 1s cubic-bezier(.25,.8,.25,1)}
+    .vote-bar-no{background:var(--r);transition:width 1s cubic-bezier(.25,.8,.25,1)}
     .vote-bar-pct{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);margin-top:4px;text-align:right}
     .vote-actions{margin-top:.75rem;display:none;gap:.5rem;flex-wrap:wrap}
     .vote-card.expanded .vote-actions{display:flex}
     .vab{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);background:transparent;color:var(--muted);padding:4px 10px;transition:all var(--t);border-radius:2px}
     .vab:hover{background:var(--civic);color:#fff;border-color:var(--civic)}
     .impact-tag{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:2px;white-space:nowrap;align-self:start;font-weight:500}
-    .tag-high{background:#fce4ec;color:var(--red)}.tag-medium{background:#fff8e1;color:var(--yellow)}.tag-low{background:#e8f5e9;color:var(--green)}
-    /* ══════════════════════════════════════════
-       BUDGET
-    ══════════════════════════════════════════ */
-    .budget-panel{grid-column:2;grid-row:1/3}
-    .budget-inner{border:1px solid var(--border);background:var(--white);padding:1.25rem;position:sticky;top:74px;transition:background var(--t)}
+    .tag-high{background:#fce4ec;color:var(--r)}.tag-medium{background:#fff3e0;color:var(--saffron)}.tag-low{background:#e8f5e9;color:var(--g)}
+    /* BUDGET */
+    .budget-panel{grid-column:2;grid-row:1/4}
+    .budget-inner{border:1px solid var(--border);background:var(--w);padding:1.25rem;position:sticky;top:74px;transition:background var(--t)}
     .budget-total{text-align:center;padding:1rem 0;border-bottom:1px solid var(--border);margin-bottom:1rem}
     .budget-total-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-    .budget-total-num{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--civic);line-height:1.1}
+    .budget-total-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--civic);line-height:1.1}
     body.dark .budget-total-num{color:var(--green)}
     .budget-total-sub{font-size:.78rem;color:var(--muted);font-style:italic;margin-top:3px}
     .donut-wrap{position:relative;width:100px;height:100px;display:flex;align-items:center;justify-content:center;margin:1rem auto}
@@ -242,118 +206,125 @@
     .donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
     .budget-item{margin-bottom:.9rem}
     .budget-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-    .budget-item-name{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+    .budget-item-name{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
     .budget-item-right{display:flex;align-items:center;gap:.5rem}
-    .budget-item-pct{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem}
-    .budget-item-amt{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted)}
-    .budget-track{height:7px;background:var(--cream);border-radius:2px;overflow:hidden;cursor:pointer;position:relative}
+    .budget-item-pct{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem}
+    .budget-item-amt{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--muted)}
+    .budget-track{height:7px;background:var(--cream);border-radius:2px;overflow:hidden}
     .budget-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.25,.8,.25,1)}
     .budget-actions{display:flex;gap:.5rem;margin-top:1rem}
     .bact{flex:1;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);background:transparent;color:var(--muted);padding:6px;transition:all var(--t);border-radius:2px}
     .bact:hover{background:var(--civic);color:#fff;border-color:var(--civic)}
-    /* ══════════════════════════════════════════
-       MEETINGS
-    ══════════════════════════════════════════ */
-    .meetings-panel{grid-column:1;grid-row:2}
-    .meeting-card{border:1px solid var(--border);background:var(--white);padding:1rem 1.25rem;margin-bottom:.5rem;display:flex;gap:1rem;align-items:center;transition:box-shadow var(--t),transform var(--t),background var(--t);animation:fadeUp .4s ease both}
+    /* GOVT SCHEMES */
+    .schemes-panel{grid-column:1;grid-row:2}
+    .scheme-card{border:1px solid var(--border);background:var(--w);padding:1rem 1.25rem;margin-bottom:.5rem;display:flex;gap:1rem;align-items:center;transition:box-shadow var(--t),transform var(--t);animation:fadeUp .4s ease both}
+    .scheme-card:hover{box-shadow:var(--shadow-md);transform:translate(-2px,-2px)}
+    .scheme-icon{font-size:1.5rem;flex-shrink:0;width:44px;height:44px;background:var(--cream);display:flex;align-items:center;justify-content:center;border-radius:2px}
+    .scheme-info{flex:1}
+    .scheme-title{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:600}
+    .scheme-meta{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);text-transform:uppercase;margin-top:3px;display:flex;gap:.75rem;flex-wrap:wrap}
+    .scheme-tag{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:2px;background:var(--cream);color:var(--muted);white-space:nowrap}
+    .scheme-link{flex-shrink:0;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--civic);padding:5px 10px;color:var(--civic);border-radius:2px;transition:all var(--t)}
+    .scheme-link:hover{background:var(--civic);color:#fff}
+    /* MEETINGS */
+    .meetings-panel{grid-column:1;grid-row:3}
+    .meeting-card{border:1px solid var(--border);background:var(--w);padding:1rem 1.25rem;margin-bottom:.5rem;display:flex;gap:1rem;align-items:center;transition:box-shadow var(--t),transform var(--t),background var(--t);animation:fadeUp .4s ease both}
     .meeting-card:hover{box-shadow:var(--shadow-md);transform:translate(-2px,-2px)}
-    .meeting-card:nth-child(1){animation-delay:.05s}.meeting-card:nth-child(2){animation-delay:.1s}.meeting-card:nth-child(3){animation-delay:.15s}
-    .meeting-date-box{flex-shrink:0;width:54px;height:54px;background:var(--civic);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Syne',sans-serif;transition:background var(--t)}
-    .meeting-date-box.today{background:var(--accent)}
+    .meeting-date-box{flex-shrink:0;width:54px;height:54px;background:var(--civic);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Syne',sans-serif}
+    .meeting-date-box.today{background:var(--saffron);color:#000}
     .meeting-date-box .month{font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
     .meeting-date-box .day{font-size:1.5rem;font-weight:800;line-height:1}
     .meeting-info{flex:1;min-width:0}
     .meeting-title{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:600}
     .meeting-details{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;margin-top:4px;display:flex;gap:1rem;flex-wrap:wrap}
     .meeting-badge{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;background:var(--cream);color:var(--muted);padding:2px 7px;border-radius:2px;white-space:nowrap;margin-top:5px;display:inline-block}
-    .meeting-badge.today-badge{background:#fce4ec;color:var(--red)}
+    .meeting-badge.today-badge{background:#fff3e0;color:var(--saffron)}
+    .meeting-badge.live-badge-sm{background:#e8f5e9;color:var(--g)}
     .meeting-rsvp{flex-shrink:0;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--civic);padding:6px 12px;cursor:pointer;transition:all var(--t);background:transparent;color:var(--civic);border-radius:2px}
     .meeting-rsvp:hover,.meeting-rsvp.rsvpd{background:var(--civic);color:#fff}
-    .meeting-rsvp.rsvpd{background:var(--green);border-color:var(--green)}
-    /* ══════════════════════════════════════════
-       INFRASTRUCTURE
-    ══════════════════════════════════════════ */
+    .meeting-rsvp.rsvpd{background:var(--g);border-color:var(--g)}
+    /* INFRASTRUCTURE */
     .infra-panel{grid-column:1/3}
     .infra-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.25rem}
-    .isc{border:1px solid var(--border);padding:.85rem;background:var(--white);display:flex;align-items:center;gap:.75rem;transition:background var(--t)}
+    .isc{border:1px solid var(--border);padding:.85rem;background:var(--w);display:flex;align-items:center;gap:.75rem;transition:background var(--t)}
     .isc-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-    .isc-dot.critical{background:var(--red);animation:pulseRing 1.8s ease-out infinite}
-    .isc-dot.warning{background:var(--yellow)}.isc-dot.ok{background:var(--green)}
+    .isc-dot.critical{background:var(--r);animation:pulseRing 1.8s ease-out infinite}
+    .isc-dot.warning{background:var(--saffron)}.isc-dot.ok{background:var(--g)}
     .isc-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
     .isc-count{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-left:auto}
-    .isc.critical .isc-count{color:var(--red)}.isc.warning .isc-count{color:var(--yellow)}.isc.ok .isc-count{color:var(--green)}
+    .isc.critical .isc-count{color:var(--r)}.isc.warning .isc-count{color:var(--saffron)}.isc.ok .isc-count{color:var(--g)}
     .infra-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.75rem}
-    .infra-card{border:1px solid var(--border);padding:1rem;position:relative;overflow:hidden;cursor:pointer;background:var(--white);transition:box-shadow var(--t),transform var(--t),background var(--t);animation:fadeUp .4s ease both}
+    .infra-card{border:1px solid var(--border);padding:1rem;position:relative;overflow:hidden;cursor:pointer;background:var(--w);transition:box-shadow var(--t),transform var(--t),background var(--t);animation:fadeUp .4s ease both}
     .infra-card:hover{box-shadow:var(--shadow-md);transform:translate(-2px,-2px)}
     .infra-card::after{content:'';position:absolute;top:0;right:0;width:4px;height:100%}
-    .infra-card.critical::after{background:var(--red)}.infra-card.warning::after{background:var(--yellow)}.infra-card.ok::after{background:var(--green)}
+    .infra-card.critical::after{background:var(--r)}.infra-card.warning::after{background:var(--saffron)}.infra-card.ok::after{background:var(--g)}
     .infra-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.5rem}
     .infra-icon{font-size:1.6rem}
     .infra-pulse{width:8px;height:8px;border-radius:50%;margin-top:4px}
-    .infra-card.critical .infra-pulse{background:var(--red);animation:pulseRing 1.8s ease-out infinite}
-    .infra-card.warning .infra-pulse{background:var(--yellow)}.infra-card.ok .infra-pulse{background:var(--green)}
+    .infra-card.critical .infra-pulse{background:var(--r);animation:pulseRing 1.8s ease-out infinite}
+    .infra-card.warning .infra-pulse{background:var(--saffron)}.infra-card.ok .infra-pulse{background:var(--g)}
     .infra-name{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:600}
     .infra-status{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
-    .infra-card.critical .infra-status{color:var(--red)}.infra-card.warning .infra-status{color:var(--yellow)}.infra-card.ok .infra-status{color:var(--green)}
+    .infra-card.critical .infra-status{color:var(--r)}.infra-card.warning .infra-status{color:var(--saffron)}.infra-card.ok .infra-status{color:var(--g)}
     .infra-last{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);margin-top:4px}
     .infra-prog{margin-top:.6rem}
     .infra-prog-track{height:4px;background:var(--cream);border-radius:2px;overflow:hidden}
     .infra-prog-fill{height:100%;border-radius:2px;transition:width 1s ease}
-    .infra-card.critical .infra-prog-fill{background:var(--red)}.infra-card.warning .infra-prog-fill{background:var(--yellow)}.infra-card.ok .infra-prog-fill{background:var(--green)}
+    .infra-card.critical .infra-prog-fill{background:var(--r)}.infra-card.warning .infra-prog-fill{background:var(--saffron)}.infra-card.ok .infra-prog-fill{background:var(--g)}
     .report-btn{margin-top:.75rem;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);background:transparent;color:var(--muted);padding:5px 10px;cursor:pointer;display:block;width:100%;transition:all var(--t);border-radius:2px}
     .report-btn:hover{background:var(--civic);color:#fff;border-color:var(--civic)}
-    /* ══════════════════════════════════════════
-       ACTIVITY FEED
-    ══════════════════════════════════════════ */
-    .activity-panel{grid-column:2;grid-row:3}
-    .activity-inner{border:1px solid var(--border);background:var(--white);padding:1.25rem;transition:background var(--t)}
+    /* ACTIVITY */
+    .activity-panel{grid-column:2;grid-row:4}
+    .activity-inner{border:1px solid var(--border);background:var(--w);padding:1.25rem;transition:background var(--t)}
     .activity-item{display:flex;gap:.75rem;padding:.6rem 0;border-bottom:1px solid var(--border);align-items:flex-start}
     .activity-item:last-child{border-bottom:none}
     .activity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
     .activity-text{font-size:.82rem;line-height:1.4}
     .activity-time{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);margin-top:2px}
-    /* ══════════════════════════════════════════
-       TOAST
-    ══════════════════════════════════════════ */
+    /* QUICK LINKS */
+    .quicklinks-panel{grid-column:1;grid-row:4}
+    .quicklinks-inner{border:1px solid var(--border);background:var(--w);padding:1.25rem;transition:background var(--t)}
+    .ql-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+    .ql-btn{border:1px solid var(--border);background:transparent;padding:.75rem .5rem;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all var(--t);border-radius:2px;display:flex;flex-direction:column;align-items:center;gap:.3rem;text-align:center;line-height:1.3}
+    .ql-btn:hover{background:var(--civic);color:#fff;border-color:var(--civic);transform:translate(-1px,-1px);box-shadow:var(--shadow-sm)}
+    .ql-icon{font-size:1.2rem}
+    /* TOAST */
     .toast-container{position:fixed;bottom:1.5rem;right:1.5rem;z-index:2000;display:flex;flex-direction:column;gap:.5rem;max-width:320px}
-    .toast{background:var(--civic);color:#fff;padding:.9rem 1.25rem;font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.04em;border-left:4px solid var(--gold);box-shadow:var(--shadow-lg);transform:translateX(120%);opacity:0;transition:transform .35s cubic-bezier(.25,.8,.25,1),opacity .35s;display:flex;gap:.75rem;align-items:flex-start}
+    .toast{background:var(--civic);color:#fff;padding:.9rem 1.25rem;font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.04em;border-left:4px solid var(--saffron);box-shadow:var(--shadow-lg);transform:translateX(120%);opacity:0;transition:transform .35s cubic-bezier(.25,.8,.25,1),opacity .35s;display:flex;gap:.75rem;align-items:flex-start}
     .toast.show{transform:translateX(0);opacity:1}
     .toast-content{flex:1}
     .toast-title{font-weight:500;font-size:.78rem;margin-bottom:2px}
     .toast-body{opacity:.8;font-size:.68rem;line-height:1.4}
     .toast-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:1rem;padding:0;flex-shrink:0}
     .toast-close:hover{color:#fff}
-    /* ══════════════════════════════════════════
-       MODAL
-    ══════════════════════════════════════════ */
+    /* MODAL */
     .modal-overlay{position:fixed;inset:0;background:rgba(13,13,13,.75);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:1rem}
     .modal-overlay.open{display:flex;animation:fadeIn .2s ease}
     .modal{background:var(--paper);border:2px solid var(--ink);padding:2rem;max-width:580px;width:100%;box-shadow:var(--shadow-lg);animation:slideIn .3s cubic-bezier(.25,.8,.25,1);position:relative;max-height:90vh;overflow-y:auto}
     .modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem}
-    .modal-tag{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
-    .modal-title{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:800;padding-right:1rem}
+    .modal-tag{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--saffron);margin-bottom:4px}
+    .modal-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;padding-right:1rem}
     .modal-close{background:none;border:none;font-size:1.2rem;color:var(--muted);flex-shrink:0;padding:0}
     .modal-close:hover{color:var(--ink)}
     .modal-body{color:var(--muted);line-height:1.75;font-size:.88rem}
     .modal-body strong{color:var(--ink)}
     .modal-hr{border:none;border-top:1px solid var(--border);margin:1rem 0}
     .modal-actions{margin-top:1.25rem;display:flex;gap:.75rem;flex-wrap:wrap}
-    /* ══════════════════════════════════════════
-       BACK TO TOP
-    ══════════════════════════════════════════ */
-    .back-top{position:fixed;bottom:1.5rem;left:1.5rem;z-index:400;width:40px;height:40px;background:var(--civic);color:#fff;border:none;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s,transform var(--t),background var(--t);box-shadow:var(--shadow-md)}
+    /* BACK TO TOP */
+    .back-top{position:fixed;bottom:1.5rem;left:1.5rem;z-index:400;width:40px;height:40px;background:var(--navy);color:#fff;border:none;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s,transform var(--t),background var(--t);box-shadow:var(--shadow-md)}
     .back-top.vis{opacity:1;pointer-events:all}
-    .back-top:hover{transform:translateY(-3px);background:var(--accent)}
-    /* ══════════════════════════════════════════
-       FOOTER
-    ══════════════════════════════════════════ */
+    .back-top:hover{transform:translateY(-3px);background:var(--saffron);color:#000}
+    /* FOOTER */
     .footer{background:var(--ink);color:var(--cream);padding:2.5rem 2rem;margin-top:3rem;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem}
-    .footer-brand{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
-    .footer-desc{font-size:.83rem;color:rgba(237,231,214,.55);line-height:1.7;max-width:32ch}
+    .footer-brand{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.6rem;display:flex;align-items:center;gap:.6rem}
+    .footer-tricolour{display:flex;gap:3px;align-items:center}
+    .ft-s{width:8px;height:8px;border-radius:50%}
+    .footer-desc{font-size:.83rem;color:rgba(237,231,214,.55);line-height:1.7;max-width:32ch;margin-top:.5rem}
+    .footer-disclaimer{font-size:.72rem;color:rgba(237,231,214,.35);line-height:1.5;margin-top:.75rem;font-style:italic;font-family:'DM Mono',monospace}
     .footer-social{display:flex;gap:.5rem;margin-top:1rem}
     .footer-social a{width:32px;height:32px;border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.5);transition:all var(--t);border-radius:2px}
     .footer-social a:hover{background:rgba(255,255,255,.1);color:#fff}
-    .footer-col-title{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.85rem}
+    .footer-col-title{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--saffron);margin-bottom:.85rem}
     .footer-links{list-style:none}
     .footer-links li{margin-bottom:.4rem}
     .footer-links a{font-size:.83rem;color:rgba(237,231,214,.6);transition:color var(--t)}
@@ -361,12 +332,10 @@
     .footer-bottom{background:#000;color:rgba(237,231,214,.35);padding:.75rem 2rem;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
     .footer-bottom a{color:rgba(237,231,214,.4)}
     .footer-bottom a:hover{color:rgba(237,231,214,.7)}
-    /* ══════════════════════════════════════════
-       RESPONSIVE
-    ══════════════════════════════════════════ */
+    /* RESPONSIVE */
     @media(max-width:1024px){
       .main-grid{grid-template-columns:1fr}
-      .budget-panel,.infra-panel,.activity-panel,.alert-banner{grid-column:1}
+      .budget-panel,.infra-panel,.activity-panel,.alert-banner,.quicklinks-panel{grid-column:1}
       .budget-inner{position:static}
       .footer{grid-template-columns:1fr 1fr}
     }
@@ -386,35 +355,48 @@
       .meeting-details{flex-direction:column;gap:2px}
       .cta-row{flex-direction:column}
       .modal{padding:1.25rem}
+      .ql-grid{grid-template-columns:repeat(2,1fr)}
+      .rti-banner{padding:.75rem 1.25rem}
     }
     @media(max-width:480px){
       .hero-stats{grid-template-columns:1fr}
+      .ql-grid{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
   <div class="progress-bar" id="progressBar"></div>
+  <div class="tricolour-strip"></div>
 
-  <!-- ANNOUNCE -->
+  <!-- ANNOUNCE BAR -->
   <div class="announce-bar" id="announceBar">
     <span class="announce-dot"></span>
-    <span class="announce-msg">🗳️ VOTE IN PROGRESS — Dorchester Zoning Amendment currently in session · Boston City Council</span>
+    <span class="announce-msg">🏛️ PARLIAMENT SESSION LIVE — Lok Sabha: Women's Reservation Bill Amendment debate ongoing · New Delhi</span>
     <button class="announce-close" onclick="this.closest('.announce-bar').remove()" aria-label="Dismiss">✕</button>
   </div>
 
   <!-- MASTHEAD -->
   <header class="masthead" role="banner">
-    <div class="masthead-logo"><span class="pulse-dot" aria-hidden="true"></span>CivicWatch</div>
+    <div class="masthead-logo logo-text">
+      <div class="logo-emblem">
+        <div class="logo-chakra"><div class="logo-chakra-dot"></div></div>
+      </div>
+      <div>
+        <span>Civic<span>Watch</span> India</span>
+        <span class="logo-hindi">नागरिक पारदर्शिता</span>
+      </div>
+    </div>
     <nav class="masthead-nav" aria-label="Main navigation">
-      <a href="#votes"    class="nav-link">Votes</a>
-      <a href="#budget"   class="nav-link">Budget</a>
+      <a href="#votes"    class="nav-link">Parliament</a>
+      <a href="#schemes"  class="nav-link">Schemes</a>
       <a href="#meetings" class="nav-link">Meetings</a>
       <a href="#infra"    class="nav-link">Infrastructure</a>
+      <a href="#budget"   class="nav-link">Budget</a>
       <a href="#activity" class="nav-link">Activity</a>
     </nav>
     <div class="masthead-right">
-      <span class="live-badge">Live Data</span>
+      <span class="live-badge">Live</span>
       <button class="icon-btn" id="darkToggle" aria-label="Toggle dark mode">🌙</button>
       <button class="icon-btn hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">☰</button>
     </div>
@@ -423,10 +405,11 @@
   <!-- MOBILE NAV -->
   <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" aria-hidden="true">
     <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">✕</button>
-    <a href="#votes"    onclick="closeMobileNav()">Votes</a>
-    <a href="#budget"   onclick="closeMobileNav()">Budget</a>
+    <a href="#votes"    onclick="closeMobileNav()">Parliament</a>
+    <a href="#schemes"  onclick="closeMobileNav()">Schemes</a>
     <a href="#meetings" onclick="closeMobileNav()">Meetings</a>
     <a href="#infra"    onclick="closeMobileNav()">Infrastructure</a>
+    <a href="#budget"   onclick="closeMobileNav()">Budget</a>
     <a href="#activity" onclick="closeMobileNav()">Activity</a>
   </nav>
 
@@ -434,16 +417,16 @@
   <div class="dateline-bar">
     <span id="dateline-text" aria-live="polite">Loading…</span>
     <div class="city-selector">
-      <span aria-hidden="true">CITY:</span>
-      <select id="citySelect" onchange="changeCity(this.value)" aria-label="Select city">
-        <option value="boston">Boston, MA</option>
-        <option value="nyc">New York, NY</option>
-        <option value="chicago">Chicago, IL</option>
-        <option value="la">Los Angeles, CA</option>
-        <option value="houston">Houston, TX</option>
-        <option value="seattle">Seattle, WA</option>
-        <option value="denver">Denver, CO</option>
-        <option value="miami">Miami, FL</option>
+      <span aria-hidden="true">CITY / STATE:</span>
+      <select id="citySelect" onchange="changeCity(this.value)" aria-label="Select city or state">
+        <option value="delhi">New Delhi (National Capital)</option>
+        <option value="mumbai">Mumbai, Maharashtra</option>
+        <option value="bengaluru">Bengaluru, Karnataka</option>
+        <option value="chennai">Chennai, Tamil Nadu</option>
+        <option value="kolkata">Kolkata, West Bengal</option>
+        <option value="hyderabad">Hyderabad, Telangana</option>
+        <option value="pune">Pune, Maharashtra</option>
+        <option value="ahmedabad">Ahmedabad, Gujarat</option>
       </select>
     </div>
   </div>
@@ -451,49 +434,74 @@
   <!-- HERO -->
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero-left">
-      <div class="hero-eyebrow">Civic Transparency Platform</div>
-      <h1 class="hero-headline" id="hero-title">Your city.<br><span class="l2">Fully</span><br><span class="l3">transparent.</span></h1>
-      <p class="hero-sub">CivicWatch aggregates every vote, budget line, public meeting, and infrastructure alert into one real-time dashboard. Democracy works better when people actually know what's happening.</p>
+      <div class="hero-eyebrow">नागरिक पारदर्शिता मंच · Civic Transparency Platform</div>
+      <h1 class="hero-headline" id="hero-title">Your India.<br><span class="l2">Fully</span><br><span class="l3">transparent.</span></h1>
+      <p class="hero-sub">CivicWatch India tracks every Parliament vote, Union Budget allocation, municipal meeting, government scheme, and infrastructure alert — in one real-time dashboard. Informed citizens build stronger democracies.</p>
       <div class="cta-row">
-        <a href="#votes" class="btn btn-primary">View Active Votes ↓</a>
-        <a href="https://github.com/neodragon-tuff/CivicWatch" target="_blank" rel="noopener" class="btn btn-outline">⭐ Star on GitHub</a>
+        <a href="#votes" class="btn btn-primary">View Parliament Votes ↓</a>
+        <a href="https://rti.india.gov.in" target="_blank" rel="noopener" class="btn btn-rti">File RTI Request →</a>
+        <a href="https://github.com/neodragon-tuff/CivicWatch" target="_blank" rel="noopener" class="btn btn-outline">Contribute on GitHub</a>
       </div>
       <div class="hero-stats">
-        <div class="stat-card" role="status" aria-live="polite"><div class="stat-number" id="stat-votes">0</div><div class="stat-label">Active Votes</div><div class="stat-trend" id="trend-votes"></div></div>
-        <div class="stat-card" role="status" aria-live="polite"><div class="stat-number" id="stat-meetings">0</div><div class="stat-label">Upcoming Meetings</div><div class="stat-trend" id="trend-meetings"></div></div>
+        <div class="stat-card" role="status" aria-live="polite"><div class="stat-number" id="stat-votes">0</div><div class="stat-label">Active Bills</div><div class="stat-trend" id="trend-votes"></div></div>
+        <div class="stat-card" role="status" aria-live="polite"><div class="stat-number" id="stat-meetings">0</div><div class="stat-label">Public Meetings</div><div class="stat-trend" id="trend-meetings"></div></div>
         <div class="stat-card" role="status" aria-live="polite"><div class="stat-number" id="stat-alerts">0</div><div class="stat-label">Infra Alerts</div><div class="stat-trend" id="trend-alerts"></div></div>
       </div>
     </div>
     <div class="hero-right" aria-hidden="true">
       <svg class="hero-visual" viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
-        <defs><radialGradient id="bg-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e8f5e9"/><stop offset="100%" stop-color="#f5f0e8"/></radialGradient></defs>
-        <circle cx="210" cy="210" r="205" fill="url(#bg-grad)" stroke="#c8bfaa" stroke-width="1"/>
-        <line x1="210" y1="20" x2="210" y2="400" stroke="#c8bfaa" stroke-width="0.5" stroke-dasharray="4 4"/>
-        <line x1="20" y1="210" x2="400" y2="210" stroke="#c8bfaa" stroke-width="0.5" stroke-dasharray="4 4"/>
-        <circle cx="210" cy="210" r="60" fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
-        <circle cx="210" cy="210" r="110" fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
+        <defs>
+          <radialGradient id="bg-g" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#e8f5e9"/>
+            <stop offset="100%" stop-color="#f5f0e8"/>
+          </radialGradient>
+        </defs>
+        <circle cx="210" cy="210" r="205" fill="url(#bg-g)" stroke="#c8bfaa" stroke-width="1"/>
+        <!-- Ashoka Chakra inspired -->
+        <circle cx="210" cy="210" r="80" fill="none" stroke="#000080" stroke-width="2" opacity="0.15"/>
+        <circle cx="210" cy="210" r="130" fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
         <circle cx="210" cy="210" r="165" fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
-        <circle cx="210" cy="95" r="11" fill="#1a3a2a" class="dp"/>
-        <circle cx="322" cy="162" r="8" fill="#c84b2f"/>
-        <circle cx="294" cy="320" r="13" fill="#d4a847"/>
-        <circle cx="128" cy="305" r="9" fill="#1a3a2a"/>
-        <circle cx="108" cy="158" r="11" fill="#c84b2f" class="dp"/>
-        <line x1="210" y1="95" x2="322" y2="162" stroke="#1a3a2a" stroke-width="1" opacity="0.25"/>
-        <line x1="322" y1="162" x2="294" y2="320" stroke="#c84b2f" stroke-width="1" opacity="0.25"/>
-        <line x1="294" y1="320" x2="128" y2="305" stroke="#d4a847" stroke-width="1" opacity="0.25"/>
-        <line x1="128" y1="305" x2="108" y2="158" stroke="#1a3a2a" stroke-width="1" opacity="0.25"/>
-        <line x1="108" y1="158" x2="210" y2="95" stroke="#c84b2f" stroke-width="1" opacity="0.25"/>
-        <circle cx="210" cy="210" r="22" fill="#1a3a2a"/>
-        <circle cx="210" cy="210" r="9" fill="#c84b2f"/>
-        <text x="210" y="73" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">VOTES</text>
-        <text x="350" y="168" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">BUDGET</text>
-        <text x="304" y="346" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">MEETINGS</text>
-        <text x="106" y="346" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">INFRA</text>
-        <text x="68" y="156" font-family="DM Mono" font-size="9" fill="#6b6355" text-anchor="middle" letter-spacing="1">ALERTS</text>
-        <style>.dp{animation:dp 2.2s ease-in-out infinite}@keyframes dp{0%,100%{opacity:1}50%{opacity:.5}}</style>
+        <!-- 24 spokes simplified as 8 -->
+        <line x1="210" y1="130" x2="210" y2="290" stroke="#000080" stroke-width="0.6" opacity="0.2"/>
+        <line x1="130" y1="210" x2="290" y2="210" stroke="#000080" stroke-width="0.6" opacity="0.2"/>
+        <line x1="153" y1="153" x2="267" y2="267" stroke="#000080" stroke-width="0.6" opacity="0.2"/>
+        <line x1="267" y1="153" x2="153" y2="267" stroke="#000080" stroke-width="0.6" opacity="0.2"/>
+        <!-- Data nodes -->
+        <circle cx="210" cy="80" r="11" fill="#FF9933" class="dp"/>
+        <circle cx="330" cy="162" r="8"  fill="#138808"/>
+        <circle cx="300" cy="320" r="13" fill="#000080"/>
+        <circle cx="120" cy="305" r="9"  fill="#FF9933"/>
+        <circle cx="105" cy="158" r="11" fill="#138808" class="dp"/>
+        <!-- Connecting lines -->
+        <line x1="210" y1="80"  x2="330" y2="162" stroke="#FF9933" stroke-width="1" opacity="0.3"/>
+        <line x1="330" y1="162" x2="300" y2="320" stroke="#138808" stroke-width="1" opacity="0.3"/>
+        <line x1="300" y1="320" x2="120" y2="305" stroke="#000080" stroke-width="1" opacity="0.3"/>
+        <line x1="120" y1="305" x2="105" y2="158" stroke="#FF9933" stroke-width="1" opacity="0.3"/>
+        <line x1="105" y1="158" x2="210" y2="80"  stroke="#138808" stroke-width="1" opacity="0.3"/>
+        <!-- Center Ashoka Chakra -->
+        <circle cx="210" cy="210" r="22" fill="#000080"/>
+        <circle cx="210" cy="210" r="9"  fill="#FF9933"/>
+        <circle cx="210" cy="210" r="3"  fill="#fff"/>
+        <!-- Labels -->
+        <text x="210" y="60"  font-family="DM Mono" font-size="8" fill="#6b6355" text-anchor="middle" letter-spacing="1">LOK SABHA</text>
+        <text x="358" y="168" font-family="DM Mono" font-size="8" fill="#6b6355" text-anchor="middle" letter-spacing="1">BUDGET</text>
+        <text x="310" y="348" font-family="DM Mono" font-size="8" fill="#6b6355" text-anchor="middle" letter-spacing="1">SCHEMES</text>
+        <text x="100" y="348" font-family="DM Mono" font-size="8" fill="#6b6355" text-anchor="middle" letter-spacing="1">INFRA</text>
+        <text x="62"  y="155" font-family="DM Mono" font-size="8" fill="#6b6355" text-anchor="middle" letter-spacing="1">ALERTS</text>
+        <style>.dp{animation:dp 2.2s ease-in-out infinite}@keyframes dp{0%,100%{opacity:1}50%{opacity:.4}}</style>
       </svg>
     </div>
   </section>
+
+  <!-- RTI BANNER -->
+  <div class="rti-banner">
+    <div class="rti-banner-text">
+      <strong>🔍 Right to Information Act, 2005</strong>
+      Every Indian citizen has the right to request information from any public authority. File your RTI online — responses required within 30 days.
+    </div>
+    <a href="https://rti.india.gov.in" target="_blank" rel="noopener" class="btn btn-outline" style="border-color:var(--saffron);color:var(--saffron);flex-shrink:0">File RTI Online →</a>
+    <a href="https://rtionline.gov.in" target="_blank" rel="noopener" class="btn btn-outline" style="border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.7);flex-shrink:0">RTI Status Tracker →</a>
+  </div>
 
   <!-- TICKER -->
   <div class="ticker-wrap" role="marquee" aria-label="Live updates" aria-live="off">
@@ -503,38 +511,38 @@
   <!-- SEARCH -->
   <div class="search-wrap" role="search">
     <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="Search votes, meetings, infrastructure…" aria-label="Search civic data" autocomplete="off" spellcheck="false"/>
+      <input type="text" id="searchInput" placeholder="Search bills, schemes, meetings, infrastructure, cities…" aria-label="Search civic data" autocomplete="off" spellcheck="false"/>
       <button class="search-clear" id="searchClear" aria-label="Clear search">✕</button>
       <button class="search-btn" onclick="triggerSearch()" aria-label="Search">Search</button>
     </div>
     <div class="search-results" id="searchResults" role="listbox" aria-label="Search results"></div>
   </div>
 
-  <!-- MAIN -->
+  <!-- MAIN CONTENT -->
   <main class="main-grid" id="main-content">
 
     <!-- ALERT BANNER -->
     <div class="alert-banner" id="alertBanner" role="alert" aria-live="assertive">
-      <span class="alert-icon">🚨</span>
+      <span class="alert-icon">⚠️</span>
       <div class="alert-text">
-        <strong id="alertTitle">Water Boil Advisory — Zone 4 Active</strong>
-        <span id="alertBody">Boston Water &amp; Sewer Commission advises Zone 4 residents (East Boston) to boil water before use. Updated 2h ago.</span>
+        <strong id="alertTitle">Delhi AQI Alert — Very Poor Air Quality</strong>
+        <span id="alertBody">Delhi NCR AQI reached 312 (Very Poor) this morning. GRAP Stage 3 restrictions active. Schools advised to consider online classes. Source: CPCB, updated 1h ago.</span>
       </div>
       <button class="alert-dismiss" onclick="this.closest('.alert-banner').remove()" aria-label="Dismiss">✕</button>
     </div>
 
-    <!-- VOTES -->
+    <!-- PARLIAMENT VOTES -->
     <section class="vote-tracker" id="votes" aria-labelledby="votes-heading">
       <div class="section-header">
-        <span class="section-title" id="votes-heading">🗳️ Active Council Votes</span>
+        <span class="section-title" id="votes-heading">🏛️ Parliament & Assembly Bills</span>
         <span class="section-count" id="vote-count" aria-live="polite">Loading…</span>
       </div>
-      <div class="filter-tabs" role="tablist" aria-label="Filter votes by status">
-        <button class="ftab active" role="tab" aria-selected="true"  data-filter="all"  onclick="filterVotes('all',this)" >All <span class="ftab-count" id="tc-all">0</span></button>
-        <button class="ftab"        role="tab" aria-selected="false" data-filter="live" onclick="filterVotes('live',this)">Live <span class="ftab-count" id="tc-live">0</span></button>
+      <div class="filter-tabs" role="tablist" aria-label="Filter bills by status">
+        <button class="ftab active" role="tab" aria-selected="true"  data-filter="all"  onclick="filterVotes('all',this)">All <span class="ftab-count" id="tc-all">0</span></button>
+        <button class="ftab"        role="tab" aria-selected="false" data-filter="live" onclick="filterVotes('live',this)">In Session <span class="ftab-count" id="tc-live">0</span></button>
         <button class="ftab"        role="tab" aria-selected="false" data-filter="pend" onclick="filterVotes('pend',this)">Pending <span class="ftab-count" id="tc-pend">0</span></button>
         <button class="ftab"        role="tab" aria-selected="false" data-filter="pass" onclick="filterVotes('pass',this)">Passed <span class="ftab-count" id="tc-pass">0</span></button>
-        <button class="ftab"        role="tab" aria-selected="false" data-filter="fail" onclick="filterVotes('fail',this)">Failed <span class="ftab-count" id="tc-fail">0</span></button>
+        <button class="ftab"        role="tab" aria-selected="false" data-filter="fail" onclick="filterVotes('fail',this)">Defeated <span class="ftab-count" id="tc-fail">0</span></button>
       </div>
       <div id="vote-list" role="list"></div>
     </section>
@@ -542,36 +550,45 @@
     <!-- BUDGET -->
     <section class="budget-panel" id="budget" aria-labelledby="budget-heading">
       <div class="section-header">
-        <span class="section-title" id="budget-heading">💰 Annual Budget</span>
-        <span class="section-count" id="fiscal-year">FY 2026</span>
+        <span class="section-title" id="budget-heading">💰 Union Budget</span>
+        <span class="section-count" id="fiscal-year">FY 2025–26</span>
       </div>
       <div class="budget-inner">
         <div class="budget-total">
-          <div class="budget-total-label">Total Budget</div>
+          <div class="budget-total-label">Total Budget Outlay</div>
           <div class="budget-total-num" id="budget-total">—</div>
           <div class="budget-total-sub" id="budget-change">Loading…</div>
         </div>
         <div class="donut-wrap">
           <svg class="budget-donut" viewBox="0 0 100 100" id="donut-svg" aria-hidden="true"></svg>
           <div class="donut-center">
-            <span style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.08em">TOTAL</span>
-            <span style="font-family:'Syne',sans-serif;font-size:.75rem;font-weight:800;color:var(--civic)">100%</span>
+            <span style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--muted);letter-spacing:.08em">TOTAL</span>
+            <span style="font-family:'Syne',sans-serif;font-size:.7rem;font-weight:800;color:var(--civic)">100%</span>
           </div>
         </div>
         <div id="budget-items"></div>
         <div class="budget-actions">
           <button class="bact" onclick="exportBudgetCSV()">⬇ CSV</button>
           <button class="bact" onclick="shareBudget()">⬡ Share</button>
-          <button class="bact" onclick="window.print()">⎙ Print</button>
+          <a href="https://www.indiabudget.gov.in" target="_blank" rel="noopener" class="bact" style="display:flex;align-items:center;justify-content:center">Full Budget →</a>
         </div>
       </div>
+    </section>
+
+    <!-- GOVERNMENT SCHEMES -->
+    <section class="schemes-panel" id="schemes" aria-labelledby="schemes-heading">
+      <div class="section-header">
+        <span class="section-title" id="schemes-heading">📋 Active Government Schemes</span>
+        <span class="section-count">CENTRAL + STATE</span>
+      </div>
+      <div id="scheme-list"></div>
     </section>
 
     <!-- MEETINGS -->
     <section class="meetings-panel" id="meetings" aria-labelledby="meetings-heading">
       <div class="section-header">
-        <span class="section-title" id="meetings-heading">📅 Upcoming Public Meetings</span>
-        <span class="section-count">OPEN TO ALL RESIDENTS</span>
+        <span class="section-title" id="meetings-heading">📅 Public Meetings & Hearings</span>
+        <span class="section-count">OPEN TO ALL CITIZENS</span>
       </div>
       <div id="meeting-list" role="list"></div>
     </section>
@@ -582,8 +599,19 @@
         <span class="section-title" id="infra-heading">🏗️ Infrastructure Status</span>
         <span class="section-count" id="infra-critical" aria-live="polite">— CRITICAL</span>
       </div>
-      <div class="infra-summary" id="infra-summary" aria-label="Infrastructure summary"></div>
+      <div class="infra-summary" id="infra-summary"></div>
       <div class="infra-grid" id="infra-grid" role="list"></div>
+    </section>
+
+    <!-- QUICK LINKS -->
+    <section class="quicklinks-panel" aria-labelledby="ql-heading">
+      <div class="section-header">
+        <span class="section-title" id="ql-heading">🔗 Citizen Services</span>
+        <span class="section-count">OFFICIAL GOV LINKS</span>
+      </div>
+      <div class="quicklinks-inner">
+        <div class="ql-grid" id="ql-grid"></div>
+      </div>
     </section>
 
     <!-- ACTIVITY -->
@@ -602,48 +630,60 @@
   <!-- FOOTER -->
   <footer class="footer" role="contentinfo">
     <div>
-      <div class="footer-brand"><span class="pulse-dot" style="background:var(--gold)" aria-hidden="true"></span>CivicWatch</div>
-      <p class="footer-desc">Open-source civic transparency dashboard. Built for residents, by residents. Data from public government APIs and city open-data portals.</p>
+      <div class="footer-brand">
+        <div class="footer-tricolour">
+          <div class="ft-s" style="background:var(--saffron)"></div>
+          <div class="ft-s" style="background:#fff"></div>
+          <div class="ft-s" style="background:var(--green)"></div>
+        </div>
+        CivicWatch India
+      </div>
+      <p class="footer-desc">Open-source civic transparency platform for Indian citizens. Data from Parliament, state assemblies, municipal corporations, and government open-data portals.</p>
+      <p class="footer-disclaimer">This is an independent civic project. Not affiliated with the Government of India or any political party. Data is sourced from official public records.</p>
       <div class="footer-social">
         <a href="https://github.com/neodragon-tuff/CivicWatch" target="_blank" rel="noopener" aria-label="GitHub">GH</a>
         <a href="https://neodragon-tuff.github.io/CivicWatch/" target="_blank" rel="noopener" aria-label="Live site">↗</a>
       </div>
     </div>
     <div>
-      <div class="footer-col-title">Resources</div>
+      <div class="footer-col-title">Official Sources</div>
       <ul class="footer-links">
-        <li><a href="https://github.com/neodragon-tuff/CivicWatch/blob/main/API_SOURCES.md" target="_blank" rel="noopener">Open Data Sources</a></li>
-        <li><a href="https://github.com/neodragon-tuff/CivicWatch" target="_blank" rel="noopener">Contribute on GitHub</a></li>
-        <li><a href="https://github.com/neodragon-tuff/CivicWatch/issues" target="_blank" rel="noopener">Report a Bug</a></li>
-        <li><a href="https://github.com/neodragon-tuff/CivicWatch/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing Guide</a></li>
+        <li><a href="https://sansad.in" target="_blank" rel="noopener">Sansad.in — Parliament</a></li>
+        <li><a href="https://egramswaraj.gov.in" target="_blank" rel="noopener">eGramSwaraj Portal</a></li>
+        <li><a href="https://data.gov.in" target="_blank" rel="noopener">data.gov.in — Open Data</a></li>
+        <li><a href="https://rti.india.gov.in" target="_blank" rel="noopener">RTI Online Portal</a></li>
+        <li><a href="https://www.indiabudget.gov.in" target="_blank" rel="noopener">Union Budget Portal</a></li>
       </ul>
     </div>
     <div>
-      <div class="footer-col-title">Project</div>
+      <div class="footer-col-title">Citizen Services</div>
+      <ul class="footer-links">
+        <li><a href="https://www.mygov.in" target="_blank" rel="noopener">MyGov India</a></li>
+        <li><a href="https://pgportal.gov.in" target="_blank" rel="noopener">Grievance Portal (PG)</a></li>
+        <li><a href="https://umang.gov.in" target="_blank" rel="noopener">UMANG App Services</a></li>
+        <li><a href="https://digilocker.gov.in" target="_blank" rel="noopener">DigiLocker</a></li>
+        <li><a href="https://www.digitalindia.gov.in" target="_blank" rel="noopener">Digital India</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">About Project</div>
       <ul class="footer-links">
         <li><a href="https://github.com/neodragon-tuff/CivicWatch/blob/main/JOURNAL.md" target="_blank" rel="noopener">Dev Journal</a></li>
         <li><a href="https://github.com/neodragon-tuff/CivicWatch/blob/main/ROADMAP.md" target="_blank" rel="noopener">Roadmap</a></li>
+        <li><a href="https://github.com/neodragon-tuff/CivicWatch/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contribute</a></li>
         <li><a href="https://github.com/neodragon-tuff/CivicWatch/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-title">Cities</div>
-      <ul class="footer-links">
-        <li><a href="#" onclick="setCity('boston');return false">Boston, MA</a></li>
-        <li><a href="#" onclick="setCity('nyc');return false">New York, NY</a></li>
-        <li><a href="#" onclick="setCity('chicago');return false">Chicago, IL</a></li>
-        <li><a href="#" onclick="setCity('seattle');return false">Seattle, WA</a></li>
+        <li><a href="https://github.com/neodragon-tuff/CivicWatch/issues" target="_blank" rel="noopener">Report Issue</a></li>
       </ul>
     </div>
   </footer>
   <div class="footer-bottom">
-    <span>© 2026 CivicWatch — Open Source MIT License — Built by <a href="https://github.com/neodragon-tuff" target="_blank" rel="noopener">@neodragon-tuff</a></span>
-    <span>v2.0.0 — Phase 1 Day 1</span>
+    <span>© 2026 CivicWatch India — Open Source MIT License — Built by <a href="https://github.com/neodragon-tuff" target="_blank" rel="noopener">@neodragon-tuff</a> · सत्यमेव जयते</span>
+    <span>v3.0.0 — India Edition — Phase 1 Day 1</span>
   </div>
 
   <!-- MODAL -->
   <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-el">
-    <div class="modal" id="modal">
+    <div class="modal">
       <div class="modal-header">
         <div><div class="modal-tag" id="modal-tag"></div><h2 class="modal-title" id="modal-title-el"></h2></div>
         <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
@@ -657,192 +697,200 @@
     </div>
   </div>
 
-  <!-- TOASTS -->
   <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="false"></div>
-
-  <!-- BACK TO TOP -->
   <button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
 
   <script>
-  /* ════════════════════════════════════════
-     DATA
-  ════════════════════════════════════════ */
+  /* ══════════════════════════════════════
+     INDIA CIVIC DATA
+  ══════════════════════════════════════ */
   const CITIES = {
-    boston:{
-      name:'Boston, MA',
-      budget:{total:'$4.28B',change:'↑ 3.2% from FY2025',items:[
-        {name:'Education',pct:34,amount:'$1.45B',color:'#1a3a2a'},
-        {name:'Public Safety',pct:22,amount:'$941M',color:'#c84b2f'},
-        {name:'Infrastructure',pct:18,amount:'$770M',color:'#d4a847'},
-        {name:'Health & Human',pct:14,amount:'$599M',color:'#2e7d4f'},
-        {name:'Administration',pct:12,amount:'$513M',color:'#6b6355'},
+    delhi:{
+      name:'New Delhi (NCT)',
+      budget:{total:'₹50.65 Lakh Cr',change:'↑ 11.1% from FY2024-25',items:[
+        {name:'Rural Development',pct:19,amount:'₹9.62 L Cr',color:'#138808'},
+        {name:'Defence',pct:13,amount:'₹6.22 L Cr',color:'#000080'},
+        {name:'Education',pct:10,amount:'₹5.07 L Cr',color:'#FF9933'},
+        {name:'Health',pct:7,amount:'₹3.55 L Cr',color:'#c84b2f'},
+        {name:'Infrastructure',pct:16,amount:'₹8.10 L Cr',color:'#d4a847'},
+        {name:'Other Ministries',pct:35,amount:'₹17.73 L Cr',color:'#6b6355'},
       ]},
       votes:[
-        {id:'b1',title:'Zoning Amendment — Dorchester Mixed-Use District',status:'live',impact:'high',yea:7,nay:4,total:13,date:'Jun 4, 2026',body:'City Council',desc:'Proposes rezoning 14 city blocks in Dorchester to allow mixed-use residential and commercial development up to 8 stories. Critics argue it will accelerate gentrification; proponents cite the acute housing shortage affecting 40,000+ residents on waiting lists.'},
-        {id:'b2',title:'Affordable Housing Trust Fund — $120M Allocation',status:'pend',impact:'high',yea:9,nay:2,total:13,date:'Jun 10, 2026',body:'City Council',desc:'Would allocate $120 million from the city capital fund toward affordable housing construction, targeting families earning below 60% of AMI. Projected to fund up to 800 new units over 3 years.'},
-        {id:'b3',title:'MBTA Green Line Extension — Phase 2 Funding',status:'pass',impact:'medium',yea:11,nay:1,total:13,date:'May 28, 2026',body:'City Council',desc:'Passed 11-1. Approves $47M city matching funds for GLX Phase 2 to Medford/Tufts. Expected to reduce commute times by 12 minutes for 28,000 daily riders.'},
-        {id:'b4',title:'Police Body Camera Expansion — Phase 3',status:'fail',impact:'medium',yea:4,nay:9,total:13,date:'May 21, 2026',body:'City Council',desc:'Failed 4-9. Would have expanded body camera requirements to all civilian interactions. Motion tabled pending Q3 2026 budget review.'},
-        {id:'b5',title:'Public School Curriculum Modernisation Act',status:'pend',impact:'high',yea:8,nay:3,total:13,date:'Jun 18, 2026',body:'School Committee',desc:'Proposes updating K-12 curriculum to include digital literacy, climate science, and financial education as mandatory subjects from Grade 5 onward. Estimated cost: $12M over two years.'},
+        {id:'d1',title:'Women\'s Reservation (Constitution 128th Amendment) Bill',status:'live',impact:'high',yea:428,nay:2,total:543,date:'Jun 4, 2026',body:'Lok Sabha',desc:'Reserves 33% of seats in Lok Sabha and State Legislative Assemblies for women. The amendment has wide cross-party support and is being debated clause by clause. Implementation subject to delimitation exercise after Census 2027.'},
+        {id:'d2',title:'Digital Personal Data Protection Rules 2026',status:'pend',impact:'high',yea:0,nay:0,total:543,date:'Jun 18, 2026',body:'Lok Sabha',desc:'Establishes rules under the DPDP Act 2023. Specifies consent framework, Data Fiduciary obligations, and creates a Data Protection Board. Public comments received: 22,000+. Privacy advocates raise concerns over government exemptions.'},
+        {id:'d3',title:'Waqf (Amendment) Bill 2024',status:'pend',impact:'high',yea:0,nay:0,total:543,date:'Jun 25, 2026',body:'Joint Parliamentary Committee',desc:'Proposes extensive changes to the Waqf Act 1995. Currently before JPC for detailed examination. Opposition parties have raised concerns; government says it aims to improve Waqf Board governance and accountability.'},
+        {id:'d4',title:'One Nation One Election Bill',status:'pend',impact:'high',yea:0,nay:0,total:543,date:'Jul 1, 2026',body:'Constitution Amendment',desc:'Proposes simultaneous elections to Lok Sabha and all State Assemblies. Referred to Joint Committee headed by Ram Nath Kovind. Critics cite federal concerns; supporters cite cost-efficiency of ₹4,000+ crore per election cycle.'},
+        {id:'d5',title:'Banking Laws (Amendment) Bill 2024',status:'pass',impact:'medium',yea:302,nay:185,total:543,date:'May 20, 2026',body:'Lok Sabha',desc:'Passed 302-185. Amends RBI Act and Banking Regulation Act to allow up to 4 nominees per account, directs unclaimed dividends to IEPF, and updates audit provisions for public sector banks.'},
       ],
       meetings:[
-        {month:'JUN',day:'04',title:'City Council Regular Session',location:'City Hall, Chamber 1',time:'6:00 PM',agenda:'7 items',today:true},
-        {month:'JUN',day:'08',title:'Zoning Board of Appeals',location:'1 City Hall Sq, Rm 801',time:'9:30 AM',agenda:'12 cases',today:false},
-        {month:'JUN',day:'14',title:'Boston Planning & Dev Agency',location:'City Hall Plaza',time:'2:00 PM',agenda:'5 projects',today:false},
-        {month:'JUN',day:'22',title:'Public Budget Hearing — FY2027',location:'Faneuil Hall, Main Hall',time:'10:00 AM',agenda:'1 item',today:false},
+        {month:'JUN',day:'04',title:'NDMC Public Grievance Session',location:'Palika Kendra, Sansad Marg',time:'10:00 AM',agenda:'47 grievances',today:true},
+        {month:'JUN',day:'08',title:'DDA Draft Master Plan 2041 Hearing',location:'Vikas Sadan, INA',time:'11:00 AM',agenda:'Objections & suggestions',today:false},
+        {month:'JUN',day:'12',title:'Delhi Jal Board Board Meeting',location:'Varunalaya Phase-II, Karol Bagh',time:'3:00 PM',agenda:'8 agenda items',today:false},
+        {month:'JUN',day:'15',title:'MCD Standing Committee',location:'Civic Centre, Minto Road',time:'11:30 AM',agenda:'Annual budget review',today:false},
+        {month:'JUN',day:'20',title:'Environment Compensation Committee',location:'EPCA Office, Khan Market',time:'2:30 PM',agenda:'GRAP review',today:false},
       ],
       infra:[
-        {icon:'🌊',name:'Water System',status:'critical',statusText:'Boil Advisory — Zone 4',last:'Updated 2h ago',health:30},
-        {icon:'🛣️',name:'I-93 Southbound',status:'warning',statusText:'Resurfacing — Lane Reduction',last:'Updated 1h ago',health:60},
-        {icon:'🌉',name:'Longfellow Bridge',status:'ok',statusText:'All Systems Normal',last:'Updated 30m ago',health:95},
-        {icon:'⚡',name:'Power Grid Sect. 7',status:'ok',statusText:'Operating at 94%',last:'Updated 15m ago',health:94},
-        {icon:'🚌',name:'Silver Line SL2',status:'warning',statusText:'Delays — Signal Issue',last:'Updated 45m ago',health:55},
-        {icon:'♻️',name:'Recycling Centers',status:'ok',statusText:'Fully Operational',last:'Updated 1h ago',health:98},
+        {icon:'🌫️',name:'Air Quality (AQI)',status:'critical',statusText:'AQI 312 — Very Poor',last:'Updated 1h ago',health:10,link:'https://app.cpcbccr.com'},
+        {icon:'🚇',name:'Delhi Metro Network',status:'ok',statusText:'All Lines Operational',last:'Updated 30m ago',health:96,link:'https://www.delhimetrorail.com'},
+        {icon:'🌊',name:'Delhi Jal Board Supply',status:'warning',statusText:'Low Pressure — South Delhi',last:'Updated 2h ago',health:55,link:'https://delhijalboard.delhi.gov.in'},
+        {icon:'🛣️',name:'NH-48 (Delhi–Gurugram)',status:'warning',statusText:'Congestion — Mahipalpur',last:'Updated 45m ago',health:50,link:'https://tis.nhai.gov.in'},
+        {icon:'⚡',name:'BRPL Power Supply',status:'ok',statusText:'Normal Operations',last:'Updated 20m ago',health:94,link:'https://www.bsesdelhi.com'},
+        {icon:'🚦',name:'Traffic Management',status:'warning',statusText:'Heavy — Connaught Place',last:'Updated 15m ago',health:45,link:'https://traffic.delhipolice.gov.in'},
       ],
-      stats:{votes:24,meetings:7,alerts:3},
-      trends:{votes:'↑ 4 new today',meetings:'Next: Today 6PM',alerts:'↓ 1 resolved'},
-      alert:{title:'Water Boil Advisory — Zone 4 Active',body:'Boston Water & Sewer Commission advises Zone 4 residents (East Boston) to boil water before use. Updated 2h ago.'},
+      schemes:[
+        {icon:'🏠',title:'PM Awas Yojana — Urban',desc:'Affordable housing for EWS/LIG/MIG families. ₹2.5 lakh central assistance per unit.',meta:['Beneficiaries: 1.18 Cr','Deadline: Dec 2024'],link:'https://pmaymis.gov.in',tag:'Housing'},
+        {icon:'💊',title:'Ayushman Bharat – PM-JAY',desc:'Health cover of ₹5 lakh per family per year for 55 Cr+ beneficiaries from poor/vulnerable families.',meta:['Coverage: ₹5 Lakh / yr','Hospitals: 29,000+'],link:'https://pmjay.gov.in',tag:'Health'},
+        {icon:'🌾',title:'PM-KISAN Samman Nidhi',desc:'₹6,000 per year direct income support for all land-holding farmer families, in 3 equal instalments.',meta:['Farmers: 11.3 Cr','Outlay: ₹60,000 Cr'],link:'https://pmkisan.gov.in',tag:'Agriculture'},
+        {icon:'🎓',title:'PM Vidyalakshmi Scheme',desc:'Collateral-free education loans for meritorious students at govt & private institutions up to ₹10 lakh.',meta:['New 2024–25','Rate: 3% subvention'],link:'https://www.education.gov.in',tag:'Education'},
+        {icon:'🏭',title:'Production Linked Incentive (PLI)',desc:'₹1.97 lakh crore incentive scheme across 14 key sectors to boost domestic manufacturing and exports.',meta:['14 sectors','Investment: ₹3 L Cr+'],link:'https://www.pli.gov.in',tag:'Industry'},
+      ],
+      stats:{votes:38,meetings:12,alerts:4},
+      trends:{votes:'3 in session today',meetings:'Next: Today 10AM',alerts:'↑ AQI worsening'},
+      alert:{title:'Delhi AQI Alert — Very Poor Air Quality (AQI 312)',body:'Delhi NCR AQI reached 312 (Very Poor) this morning. GRAP Stage 3 restrictions active. Construction work banned. Schools advised to consider online classes. Source: CPCB, updated 1h ago.'},
       activity:[
-        {color:'#c84b2f',text:'Vote opened: Dorchester Zoning Amendment now in session',time:'2 min ago'},
-        {color:'#d4a847',text:'Meeting reminder: City Council Regular Session today at 6:00 PM',time:'14 min ago'},
-        {color:'#c84b2f',text:'Alert issued: Water Boil Advisory extended to Zone 4B',time:'38 min ago'},
-        {color:'#2e7d4f',text:'Vote passed: MBTA Green Line Funding Match (11-1)',time:'2h ago'},
-        {color:'#d4a847',text:'Budget update: FY2026 final allocation published',time:'5h ago'},
+        {color:'#FF9933',text:'Bill In Session: Women\'s Reservation 128th Amendment — Lok Sabha debate ongoing',time:'12 min ago'},
+        {color:'#c84b2f',text:'AQI Alert raised to Stage 3 — construction activities banned in NCR',time:'1h ago'},
+        {color:'#138808',text:'PM-KISAN 18th instalment: ₹20,000 Cr released to 9.26 Cr farmers',time:'3h ago'},
+        {color:'#000080',text:'DDA Master Plan 2041: Public hearing scheduled Jun 8 at Vikas Sadan',time:'5h ago'},
+        {color:'#d4a847',text:'Budget Update: ₹11,500 Cr allocated to Delhi Metro Phase 4 extension',time:'8h ago'},
       ]
     },
-    nyc:{
-      name:'New York, NY',
-      budget:{total:'$112.4B',change:'↑ 5.1% from FY2025',items:[
-        {name:'Education',pct:38,amount:'$42.7B',color:'#1a3a2a'},
-        {name:'Social Services',pct:24,amount:'$26.9B',color:'#c84b2f'},
-        {name:'Debt Service',pct:16,amount:'$17.9B',color:'#d4a847'},
-        {name:'Health',pct:13,amount:'$14.6B',color:'#2e7d4f'},
-        {name:'Other',pct:9,amount:'$10.1B',color:'#6b6355'},
+    mumbai:{
+      name:'Mumbai, Maharashtra',
+      budget:{total:'₹50.65 Lakh Cr',change:'↑ 11.1% from FY2024-25',items:[
+        {name:'Infrastructure',pct:22,amount:'₹11.14 L Cr',color:'#138808'},
+        {name:'Rural Dev.',pct:17,amount:'₹8.61 L Cr',color:'#FF9933'},
+        {name:'Defence',pct:13,amount:'₹6.22 L Cr',color:'#000080'},
+        {name:'Education',pct:10,amount:'₹5.07 L Cr',color:'#c84b2f'},
+        {name:'Health',pct:7,amount:'₹3.55 L Cr',color:'#d4a847'},
+        {name:'Other',pct:31,amount:'₹15.70 L Cr',color:'#6b6355'},
       ]},
       votes:[
-        {id:'n1',title:'Congestion Pricing Phase 2 — Outer Boroughs',status:'pend',impact:'high',yea:28,nay:21,total:51,date:'Jun 15, 2026',body:'City Council',desc:'Would extend congestion pricing to Brooklyn and Queens business districts, raising an estimated $1.2B annually for transit improvements and road maintenance.'},
-        {id:'n2',title:'Mandatory Composting — All Boroughs',status:'pass',impact:'medium',yea:41,nay:8,total:51,date:'May 30, 2026',body:'City Council',desc:'Passed 41-8. All residential buildings must participate in organic waste collection by Jan 2027. Estimated to divert 250,000 tons of waste annually from landfill.'},
-        {id:'n3',title:'NYPD Budget Reallocation — $500M Mental Health',status:'live',impact:'high',yea:22,nay:18,total:51,date:'Jun 4, 2026',body:'City Council',desc:'Would shift $500M from police overtime and equipment to mental health crisis response teams. Currently in committee debate with strong public support.'},
+        {id:'m1',title:'Maharashtra Uniform Civil Code Bill 2026',status:'live',impact:'high',yea:0,nay:0,total:288,date:'Jun 5, 2026',body:'Maharashtra Vidhan Sabha',desc:'State government proposes to implement UCC in Maharashtra pending Supreme Court review of the central legislation. Bill addresses marriage, divorce, adoption, and inheritance laws uniformly across communities.'},
+        {id:'m2',title:'BMC Revised Development Plan 2034 Approval',status:'pend',impact:'high',yea:0,nay:0,total:236,date:'Jun 20, 2026',body:'BMC General Body',desc:'The revised DP 2034 includes new FSI norms, slum rehabilitation clusters, coastal road connectivity, and revised CRZ boundaries. 1.4 lakh public objections received and reviewed.'},
+        {id:'m3',title:'Mumbai Metro Rail Phase 3 Funding',status:'pass',impact:'medium',yea:198,nay:38,total:236,date:'May 15, 2026',body:'BMC General Body',desc:'Passed 198-38. Approves ₹15,000 Cr municipal contribution to Metro 3 (Colaba-BKC-SEEPZ) operations and Metro 7 extension toward Bhiwandi.'},
       ],
       meetings:[
-        {month:'JUN',day:'06',title:'NYC Council Land Use Committee',location:'250 Broadway, 14th Fl',time:'10:00 AM',agenda:'9 items',today:false},
-        {month:'JUN',day:'10',title:'MTA Board Meeting',location:'2 Broadway, Board Rm',time:'9:00 AM',agenda:'15 items',today:false},
-        {month:'JUN',day:'16',title:'Dept of City Planning',location:'120 Broadway',time:'3:00 PM',agenda:'6 items',today:false},
+        {month:'JUN',day:'05',title:'BMC Standing Committee — Budget Review',location:'BMC Headquarters, Fort',time:'11:00 AM',agenda:'12 items',today:true},
+        {month:'JUN',day:'10',title:'MMRDA Regional Plan Consultation',location:'World Trade Centre, Cuffe Parade',time:'10:00 AM',agenda:'DP amendments',today:false},
+        {month:'JUN',day:'18',title:'Mumbai Port Authority Meeting',location:'Shoorji Vallabhdas Marg, Ballard Estate',time:'3:00 PM',agenda:'Port expansion',today:false},
+        {month:'JUN',day:'24',title:'Dharavi Redevelopment Public Hearing',location:'Municipal School, Dharavi',time:'4:00 PM',agenda:'Resident objections',today:false},
       ],
       infra:[
-        {icon:'🚇',name:'A/C/E Subway Line',status:'critical',statusText:'Service Suspended Midtown',last:'Updated 20m ago',health:15},
-        {icon:'🌉',name:'Brooklyn Bridge',status:'ok',statusText:'All Lanes Open',last:'Updated 1h ago',health:99},
-        {icon:'⚡',name:'ConEd Grid — Bronx',status:'warning',statusText:'Load Shedding Risk',last:'Updated 40m ago',health:58},
-        {icon:'🌊',name:'DEP Water System',status:'ok',statusText:'Fully Operational',last:'Updated 2h ago',health:97},
+        {icon:'🚇',name:'Mumbai Metro Lines',status:'ok',statusText:'Lines 1,2A,7 Operational',last:'Updated 20m ago',health:88,link:'https://www.mmrcl.com'},
+        {icon:'🚂',name:'Central Railway Local',status:'warning',statusText:'Delays — Kalyan Section',last:'Updated 30m ago',health:58,link:'https://www.cr.indianrailways.gov.in'},
+        {icon:'🌊',name:'MCGM Water Supply',status:'ok',statusText:'Full Supply Restored',last:'Updated 1h ago',health:92,link:'https://www.mcgm.gov.in'},
+        {icon:'🛣️',name:'Mumbai–Pune Expressway',status:'ok',statusText:'Normal Traffic Flow',last:'Updated 45m ago',health:95,link:'https://msrdc.org'},
+        {icon:'⚡',name:'Adani Electricity – Mumbai',status:'ok',statusText:'Normal Operations',last:'Updated 30m ago',health:97,link:'https://aeml.com'},
+        {icon:'✈️',name:'CSIA (Terminal 2)',status:'warning',statusText:'Runway 09/27 Maintenance',last:'Updated 2h ago',health:65,link:'https://www.csia.in'},
       ],
-      stats:{votes:31,meetings:12,alerts:5},
-      trends:{votes:'↑ 2 new today',meetings:'Next: Jun 6',alerts:'↑ 2 new'},
-      alert:{title:'A/C/E Subway Suspension — Midtown',body:'MTA service suspended between 34th St and 59th St due to track fire. Use 1/2/3 or shuttle buses. Updated 20m ago.'},
+      schemes:[
+        {icon:'🏘️',title:'Slum Rehabilitation Authority (SRA)',desc:'Free housing for slum dwellers in Mumbai through developer cross-subsidy model.',meta:['Active Projects: 4,200+','Coverage: 60L residents'],link:'https://sra.gov.in',tag:'Housing'},
+        {icon:'🚌',title:'BEST Electric Bus Expansion',desc:'BEST undertaking rolling out 2,100 electric buses by Dec 2026 across Mumbai.',meta:['Routes: 500+','Zero Emission'],link:'https://www.bestundertaking.com',tag:'Transport'},
+        {icon:'🌊',title:'Coastal Road Project Phase 2',desc:'Marine Lines to Worli connectivity via undersea tunnel — Phase 2 from Worli to Versova.',meta:['Length: 8.6 km','Investment: ₹9,800 Cr'],link:'https://mumbaicoastalroad.com',tag:'Infrastructure'},
+      ],
+      stats:{votes:22,meetings:8,alerts:2},
+      trends:{votes:'1 in session today',meetings:'Next: Today 11AM',alerts:'↓ Improving'},
+      alert:{title:'Central Railway Delays — Kalyan to CST',body:'Central Railway suburban services delayed by 15-20 min on Kalyan-CST section due to overhead wire snapping near Thane. Alternate routes advised. Updated 30m ago.'},
       activity:[
-        {color:'#c84b2f',text:'Alert: A/C/E suspended between 34th and 59th St',time:'18 min ago'},
-        {color:'#d4a847',text:'Vote update: Mental Health reallocation proceeding to full council',time:'1h ago'},
-        {color:'#2e7d4f',text:'Passed: Mandatory composting now law — effective Jan 2027',time:'3h ago'},
-        {color:'#d4a847',text:'Meeting posted: MTA Board June 10 — 15 agenda items',time:'6h ago'},
+        {color:'#FF9933',text:'Maharashtra UCC Bill: Vidhan Sabha session starts — cross-party debate expected',time:'8 min ago'},
+        {color:'#d4a847',text:'BEST adds 50 electric buses on Routes 1, 6, 340 from today',time:'2h ago'},
+        {color:'#138808',text:'Dharavi Redevelopment: 1,200 residents receive allotment letters',time:'4h ago'},
+        {color:'#c84b2f',text:'CR Delay Alert: Kalyan-CST services affected — wire snapping at Thane',time:'30 min ago'},
       ]
     }
   };
-  ['chicago','la','houston','seattle','denver','miami'].forEach(c=>{
-    const t=JSON.parse(JSON.stringify(CITIES.boston));
-    const n={chicago:'Chicago, IL',la:'Los Angeles, CA',houston:'Houston, TX',seattle:'Seattle, WA',denver:'Denver, CO',miami:'Miami, FL'};
+  // Clone template for other cities
+  ['bengaluru','chennai','kolkata','hyderabad','pune','ahmedabad'].forEach(c=>{
+    const t=JSON.parse(JSON.stringify(CITIES.delhi));
+    const n={bengaluru:'Bengaluru, Karnataka',chennai:'Chennai, Tamil Nadu',kolkata:'Kolkata, West Bengal',hyderabad:'Hyderabad, Telangana',pune:'Pune, Maharashtra',ahmedabad:'Ahmedabad, Gujarat'};
     t.name=n[c]; CITIES[c]=t;
   });
 
-  /* ════════════════════════════════════════
-     STATE
-  ════════════════════════════════════════ */
-  let city='boston', filter='all', modalCtx='', focusIdx=-1, tQueue=[], tBusy=false;
+  /* STATE */
+  let city='delhi',filter='all',modalCtx='',focusIdx=-1,tQueue=[],tBusy=false;
 
-  /* ════════════════════════════════════════
-     INIT
-  ════════════════════════════════════════ */
+  /* QUICK LINKS DATA */
+  const QUICK_LINKS=[
+    {icon:'🗳️',label:'Voter Portal',url:'https://voters.eci.gov.in'},
+    {icon:'📝',label:'File RTI',url:'https://rti.india.gov.in'},
+    {icon:'📋',label:'Grievance Portal',url:'https://pgportal.gov.in'},
+    {icon:'🏥',label:'Ayushman Bharat',url:'https://pmjay.gov.in'},
+    {icon:'🏠',label:'PM Awas Yojana',url:'https://pmaymis.gov.in'},
+    {icon:'🌾',label:'PM-KISAN',url:'https://pmkisan.gov.in'},
+    {icon:'📊',label:'Open Data India',url:'https://data.gov.in'},
+    {icon:'💰',label:'Income Tax',url:'https://www.incometax.gov.in'},
+    {icon:'📜',label:'Parliament',url:'https://sansad.in'},
+    {icon:'🏛️',label:'Supreme Court',url:'https://main.sci.gov.in'},
+    {icon:'🎓',label:'Education Min.',url:'https://www.education.gov.in'},
+    {icon:'🛡️',label:'Cyber Crime',url:'https://cybercrime.gov.in'},
+  ];
+
+  /* INIT */
   document.addEventListener('DOMContentLoaded',()=>{
-    initProgress(); initDark(); initMobileNav();
-    initSearch(); initScrollSpy(); initBackTop();
-    updateDateline(); buildTicker(); renderCity('boston');
+    initProgress();initDark();initMobileNav();
+    initSearch();initScrollSpy();initBackTop();
+    updateDateline();buildTicker();
+    renderCity('delhi');renderQuickLinks();
     setInterval(updateDateline,60000);
-    setTimeout(()=>toast('🗳️ Vote In Progress','Dorchester Zoning Amendment — council voting now. High community impact.'),1800);
+    setTimeout(()=>toast('🏛️ Parliament In Session','Women\'s Reservation Bill 128th Amendment — Lok Sabha voting begins at 12:00 PM today.'),1800);
   });
 
-  /* ════════════════════════════════════════
-     PROGRESS BAR
-  ════════════════════════════════════════ */
   function initProgress(){
-    const bar=document.getElementById('progressBar');
-    let w=0;
+    const bar=document.getElementById('progressBar');let w=0;
     const iv=setInterval(()=>{w+=Math.random()*15;if(w>=90){clearInterval(iv);w=90}bar.style.width=w+'%'},80);
-    window.addEventListener('load',()=>{bar.style.width='100%';setTimeout(()=>{bar.style.opacity='0'},400)});
+    window.addEventListener('load',()=>{bar.style.width='100%';setTimeout(()=>bar.style.opacity='0',400)});
   }
 
-  /* ════════════════════════════════════════
-     DARK MODE
-  ════════════════════════════════════════ */
   function initDark(){
     const btn=document.getElementById('darkToggle');
-    const apply=dark=>{document.body.classList.toggle('dark',dark);btn.textContent=dark?'☀️':'🌙';btn.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode')};
+    const apply=d=>{document.body.classList.toggle('dark',d);btn.textContent=d?'☀️':'🌙'};
     apply(localStorage.getItem('cw-dark')==='true');
     btn.addEventListener('click',()=>{const d=!document.body.classList.contains('dark');apply(d);localStorage.setItem('cw-dark',d)});
   }
 
-  /* ════════════════════════════════════════
-     MOBILE NAV
-  ════════════════════════════════════════ */
   function initMobileNav(){
     const nav=document.getElementById('mobileNav'),btn=document.getElementById('hamburger'),cls=document.getElementById('mobileNavClose');
     const open=()=>{nav.classList.add('open');btn.setAttribute('aria-expanded','true');nav.setAttribute('aria-hidden','false')};
     const close=()=>{nav.classList.remove('open');btn.setAttribute('aria-expanded','false');nav.setAttribute('aria-hidden','true')};
     btn.addEventListener('click',()=>nav.classList.contains('open')?close():open());
     cls.addEventListener('click',close);
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'){close();closeModal()}});
   }
   function closeMobileNav(){document.getElementById('mobileNav').classList.remove('open')}
 
-  /* ════════════════════════════════════════
-     SCROLL SPY
-  ════════════════════════════════════════ */
   function initScrollSpy(){
     const links=document.querySelectorAll('.masthead-nav .nav-link');
     const obs=new IntersectionObserver(entries=>{
       entries.forEach(e=>{if(e.isIntersecting)links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id))});
     },{rootMargin:'-20% 0px -70% 0px'});
-    ['votes','budget','meetings','infra','activity'].forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el)});
+    ['votes','schemes','meetings','infra','budget','activity'].forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el)});
   }
 
-  /* ════════════════════════════════════════
-     BACK TO TOP
-  ════════════════════════════════════════ */
   function initBackTop(){
     const btn=document.getElementById('backTop');
     window.addEventListener('scroll',()=>btn.classList.toggle('vis',window.scrollY>400),{passive:true});
   }
 
-  /* ════════════════════════════════════════
-     DATELINE
-  ════════════════════════════════════════ */
   function updateDateline(){
     const now=new Date();
+    const ist=new Date(now.getTime()+(5.5*3600000));
     document.getElementById('dateline-text').textContent=
-      now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'}).toUpperCase()+' — LIVE';
+      ist.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Kolkata'}).toUpperCase()+' IST — LIVE';
   }
 
-  /* ════════════════════════════════════════
-     CITY
-  ════════════════════════════════════════ */
   function changeCity(c){city=c;filter='all';renderCity(c);toast('📍 City Updated',`Now showing civic data for ${CITIES[c]?.name||c}`)}
-  function setCity(c){document.getElementById('citySelect').value=c;changeCity(c);window.scrollTo({top:0,behavior:'smooth'})}
 
   function renderCity(c){
-    const d=CITIES[c]||CITIES.boston;
-    const s=d.stats||{votes:24,meetings:7,alerts:3};
-    animCount('stat-votes',s.votes); animCount('stat-meetings',s.meetings); animCount('stat-alerts',s.alerts);
+    const d=CITIES[c]||CITIES.delhi;
+    const s=d.stats||{votes:38,meetings:12,alerts:4};
+    animCount('stat-votes',s.votes);animCount('stat-meetings',s.meetings);animCount('stat-alerts',s.alerts);
     document.getElementById('trend-votes').textContent=d.trends?.votes||'';
     document.getElementById('trend-meetings').textContent=d.trends?.meetings||'';
     document.getElementById('trend-alerts').textContent=d.trends?.alerts||'';
     renderVotes(d.votes||[]);
     renderBudget(d.budget||{});
+    renderSchemes(d.schemes||[]);
     renderMeetings(d.meetings||[]);
     renderInfra(d.infra||[]);
     renderActivity(d.activity||[]);
@@ -858,39 +906,38 @@
     const iv=setInterval(()=>{n=Math.min(n+step,target);el.textContent=n;if(n>=target)clearInterval(iv)},35);
   }
 
-  /* ════════════════════════════════════════
-     VOTES
-  ════════════════════════════════════════ */
+  /* VOTES */
   function renderVotes(votes){
-    const list=document.getElementById('vote-list');
-    list.innerHTML='';
+    const list=document.getElementById('vote-list');list.innerHTML='';
     const counts={all:votes.length,live:0,pend:0,pass:0,fail:0};
     votes.forEach(v=>counts[v.status]++);
     Object.keys(counts).forEach(k=>{const el=document.getElementById('tc-'+k);if(el)el.textContent=counts[k]});
-    document.getElementById('vote-count').textContent=votes.length+' VOTES';
+    document.getElementById('vote-count').textContent=votes.length+' BILLS';
     const sm={live:{l:'●',c:'live'},pend:{l:'◷',c:'pend'},pass:{l:'✓',c:'pass'},fail:{l:'✕',c:'fail'}};
     const im={high:'tag-high',medium:'tag-medium',low:'tag-low'};
     votes.forEach((v,i)=>{
-      const yp=Math.round(v.yea/v.total*100),np=100-yp;
+      const yp=v.yea&&v.total?Math.round(v.yea/v.total*100):0;
+      const np=100-yp;
       const s=sm[v.status];
       const card=document.createElement('div');
       card.className='vote-card'+(filter!=='all'&&v.status!==filter?' hidden':'');
       card.setAttribute('role','listitem');card.setAttribute('tabindex','0');
       card.setAttribute('aria-expanded','false');card.setAttribute('data-status',v.status);
       card.style.animationDelay=(i*.05)+'s';
+      const showBar=v.yea>0;
       card.innerHTML=`
         <div><div class="status-icon ${s.c}" aria-label="${v.status}">${s.l}</div></div>
         <div class="vote-body">
           <div class="vote-title">${v.title}</div>
-          <div class="vote-meta"><span>📅 ${v.date}</span><span>🏛 ${v.body}</span><span>🗳 ${v.yea}–${v.nay} of ${v.total}</span></div>
+          <div class="vote-meta"><span>📅 ${v.date}</span><span>🏛️ ${v.body}</span>${v.yea>0?`<span>🗳️ ${v.yea}–${v.nay} of ${v.total}</span>`:''}</div>
           <div class="vote-desc">${v.desc}</div>
-          <div class="vote-bar-wrap">
-            <div class="vote-bar-labels"><span style="color:var(--green)">YEA ${v.yea} (${yp}%)</span><span style="color:var(--red)">NAY ${v.nay} (${np}%)</span></div>
-            <div class="vote-bar-track" role="progressbar" aria-valuenow="${yp}" aria-valuemin="0" aria-valuemax="100" aria-label="Yea votes: ${yp}%">
+          ${showBar?`<div class="vote-bar-wrap">
+            <div class="vote-bar-labels"><span style="color:var(--g)">AYES ${v.yea} (${yp}%)</span><span style="color:var(--r)">NOES ${v.nay} (${np}%)</span></div>
+            <div class="vote-bar-track" role="progressbar" aria-valuenow="${yp}" aria-valuemin="0" aria-valuemax="100">
               <div class="vote-bar-yes" style="width:0%"></div><div class="vote-bar-no" style="width:0%"></div>
             </div>
-            <div class="vote-bar-pct">${v.yea} of ${v.total} members voted Yea</div>
-          </div>
+            <div class="vote-bar-pct">${v.yea} of ${v.total} members voted Aye</div>
+          </div>`:''}
           <div class="vote-actions">
             <button class="vab" onclick="shareVote(event,'${encodeURIComponent(v.title)}')">⬡ Share</button>
             <button class="vab" onclick="subVote(event,'${encodeURIComponent(v.title)}')">🔔 Alert Me</button>
@@ -901,7 +948,7 @@
       const exp=()=>{
         const ex=card.classList.toggle('expanded');
         card.setAttribute('aria-expanded',ex);
-        if(ex)requestAnimationFrame(()=>{card.querySelector('.vote-bar-yes').style.width=yp+'%';card.querySelector('.vote-bar-no').style.width=np+'%'});
+        if(ex&&showBar)requestAnimationFrame(()=>{card.querySelector('.vote-bar-yes').style.width=yp+'%';card.querySelector('.vote-bar-no').style.width=np+'%'});
       };
       card.addEventListener('click',exp);
       card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();exp()}});
@@ -919,20 +966,18 @@
   function shareVote(e,enc){
     e.stopPropagation();
     const url=location.href.split('#')[0]+'#votes';
-    if(navigator.share)navigator.share({title:'CivicWatch — '+decodeURIComponent(enc),url});
+    if(navigator.share)navigator.share({title:'CivicWatch India — '+decodeURIComponent(enc),url});
     else navigator.clipboard.writeText(url).then(()=>toast('🔗 Copied',`Link for "${decodeURIComponent(enc)}" copied.`));
   }
-  function subVote(e,enc){e.stopPropagation();toast('🔔 Subscribed',`You'll be notified when "${decodeURIComponent(enc)}" is updated.`)}
+  function subVote(e,enc){e.stopPropagation();toast('🔔 Subscribed',`You'll be alerted when "${decodeURIComponent(enc)}" is updated.`)}
   function voteModal(e,btn){
     e.stopPropagation();
     const v=JSON.parse(btn.getAttribute('data-v').replace(/&#39;/g,"'"));
-    const yp=Math.round(v.yea/v.total*100);
-    openModal('Vote Details',v.title,`<strong>Status:</strong> ${v.status.toUpperCase()}<br><strong>Body:</strong> ${v.body}<br><strong>Date:</strong> ${v.date}<br><strong>Impact:</strong> ${v.impact}<br><br><strong>Vote Count:</strong> ${v.yea} Yea / ${v.nay} Nay of ${v.total} members (${yp}% in favour)<br><br>${v.desc}`);
+    const yp=v.yea&&v.total?Math.round(v.yea/v.total*100):0;
+    openModal('Parliament Bill',v.title,`<strong>Status:</strong> ${v.status.toUpperCase()}<br><strong>Legislative Body:</strong> ${v.body}<br><strong>Date:</strong> ${v.date}<br><strong>Impact:</strong> ${v.impact.toUpperCase()}<br>${v.yea>0?`<br><strong>Vote Count:</strong> ${v.yea} Ayes / ${v.nay} Noes of ${v.total} members (${yp}% in favour)<br>`:''}<br>${v.desc}<br><br><em>Source: <a href="https://sansad.in" target="_blank" rel="noopener" style="color:var(--saffron)">Sansad.in — Parliament of India</a></em>`);
   }
 
-  /* ════════════════════════════════════════
-     BUDGET
-  ════════════════════════════════════════ */
+  /* BUDGET */
   function renderBudget(b){
     document.getElementById('budget-total').textContent=b.total||'—';
     document.getElementById('budget-change').textContent=b.change||'';
@@ -964,24 +1009,39 @@
   }
 
   function exportBudgetCSV(){
-    const d=CITIES[city]||CITIES.boston;
-    let csv=`CivicWatch Budget — ${d.name}\nDepartment,Percentage,Amount\n`;
+    const d=CITIES[city]||CITIES.delhi;
+    let csv=`CivicWatch India Budget — ${d.name}\nDepartment,Percentage,Amount\n`;
     (d.budget.items||[]).forEach(i=>{csv+=`"${i.name}",${i.pct}%,"${i.amount}"\n`});
-    csv+=`\nTotal,100%,"${d.budget.total}"\nChange,"${d.budget.change}"\n`;
+    csv+=`\nTotal,100%,"${d.budget.total}"\nSource: indiabudget.gov.in\n`;
     const a=document.createElement('a');
     a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-    a.download=`civicwatch-budget-${city}.csv`;a.click();
-    toast('⬇ Exported',`Budget data for ${d.name} saved as CSV.`);
+    a.download=`civicwatch-india-budget-${city}.csv`;a.click();
+    toast('⬇ Exported',`Budget data exported as CSV.`);
   }
   function shareBudget(){
     const url=location.href.split('#')[0]+'#budget';
-    if(navigator.share)navigator.share({title:'CivicWatch Budget',url});
+    if(navigator.share)navigator.share({title:'CivicWatch India — Union Budget',url});
     else navigator.clipboard.writeText(url).then(()=>toast('🔗 Copied','Budget link copied.'));
   }
 
-  /* ════════════════════════════════════════
-     MEETINGS
-  ════════════════════════════════════════ */
+  /* SCHEMES */
+  function renderSchemes(schemes){
+    const list=document.getElementById('scheme-list');list.innerHTML='';
+    (schemes||[]).forEach((s,i)=>{
+      const card=document.createElement('div');card.className='scheme-card';card.style.animationDelay=(i*.07)+'s';
+      card.innerHTML=`
+        <div class="scheme-icon">${s.icon}</div>
+        <div class="scheme-info">
+          <div class="scheme-title">${s.title}</div>
+          <div style="font-size:.82rem;color:var(--muted);margin-top:.3rem;line-height:1.4">${s.desc}</div>
+          <div class="scheme-meta">${s.meta.map(m=>`<span>${m}</span>`).join('')}<span class="scheme-tag">${s.tag}</span></div>
+        </div>
+        <a href="${s.link}" target="_blank" rel="noopener" class="scheme-link" onclick="event.stopPropagation()">Apply →</a>`;
+      list.appendChild(card);
+    });
+  }
+
+  /* MEETINGS */
   function renderMeetings(meetings){
     const list=document.getElementById('meeting-list');list.innerHTML='';
     meetings.forEach((m,i)=>{
@@ -995,20 +1055,18 @@
           <div class="meeting-details"><span>📍 ${m.location}</span><span>🕐 ${m.time}</span><span>📋 ${m.agenda}</span></div>
           ${m.today?'<span class="meeting-badge today-badge">Today</span>':'<span class="meeting-badge">Upcoming</span>'}
         </div>
-        <button class="meeting-rsvp" onclick="rsvp(this,'${m.title.replace(/'/g,"\\'")}')">RSVP</button>`;
+        <button class="meeting-rsvp" onclick="rsvp(this,'${m.title.replace(/'/g,"\\'")}')">Attend</button>`;
       list.appendChild(card);
     });
   }
 
   function rsvp(btn,title){
     btn.classList.toggle('rsvpd');
-    if(btn.classList.contains('rsvpd')){btn.textContent='✓ Going';toast('📅 RSVP Confirmed',`Registered for: ${title}`)}
-    else{btn.textContent='RSVP';toast('📅 Removed',`Removed from: ${title}`)}
+    if(btn.classList.contains('rsvpd')){btn.textContent='✓ Going';toast('📅 Registered',`You are marked for: ${title}`)}
+    else{btn.textContent='Attend';toast('📅 Removed',`Removed from: ${title}`)}
   }
 
-  /* ════════════════════════════════════════
-     INFRASTRUCTURE
-  ════════════════════════════════════════ */
+  /* INFRASTRUCTURE */
   function renderInfra(items){
     const grid=document.getElementById('infra-grid'),summ=document.getElementById('infra-summary');
     grid.innerHTML='';
@@ -1029,11 +1087,10 @@
         <div class="infra-name">${item.name}</div>
         <div class="infra-status">${item.statusText}</div>
         <div class="infra-last">${item.last}</div>
-        <div class="infra-prog"><div class="infra-prog-track"><div class="infra-prog-fill" style="width:0%" data-h="${item.health||80}"></div></div></div>
+        <div class="infra-prog"><div class="infra-prog-track"><div class="infra-prog-fill" style="width:0%"></div></div></div>
         <button class="report-btn" onclick="reportIssue(event,'${item.name.replace(/'/g,"\\'")}')">⚑ Report Issue</button>`;
-      const fn=()=>openModal('Infrastructure',item.name,`<strong>Status:</strong> ${item.statusText}<br><strong>Health Score:</strong> ${item.health||80}%<br><strong>Last Updated:</strong> ${item.last}<br><br>Use the Report button to submit a citizen issue report directly to the city maintenance team. Reports are reviewed within 24 hours.`);
-      card.addEventListener('click',fn);
-      card.addEventListener('keydown',e=>{if(e.key==='Enter')fn()});
+      const fn=()=>openModal('Infrastructure',item.name,`<strong>Current Status:</strong> ${item.statusText}<br><strong>System Health:</strong> ${item.health||80}%<br><strong>Last Updated:</strong> ${item.last}<br><br>To report a civic infrastructure issue, use the Report button or visit <a href="${item.link||'https://pgportal.gov.in'}" target="_blank" rel="noopener" style="color:var(--saffron)">the official grievance portal</a>. All reports are reviewed within 24–48 hours.`);
+      card.addEventListener('click',fn);card.addEventListener('keydown',e=>{if(e.key==='Enter')fn()});
       grid.appendChild(card);
       requestAnimationFrame(()=>setTimeout(()=>{const f=card.querySelector('.infra-prog-fill');if(f)f.style.width=(item.health||80)+'%'},300+i*80));
     });
@@ -1041,12 +1098,22 @@
 
   function reportIssue(e,name){
     e.stopPropagation();
-    toast('📝 Report Submitted',`Issue for "${name}" logged. Ref #CW-${Date.now().toString().slice(-5)}`);
+    toast('📝 Report Submitted',`Issue logged for "${name}". Ref #CW-${Date.now().toString().slice(-5)}. You can also file at pgportal.gov.in`);
   }
 
-  /* ════════════════════════════════════════
-     ACTIVITY
-  ════════════════════════════════════════ */
+  /* QUICK LINKS */
+  function renderQuickLinks(){
+    const grid=document.getElementById('ql-grid');
+    QUICK_LINKS.forEach(ql=>{
+      const btn=document.createElement('a');
+      btn.className='ql-btn';btn.href=ql.url;btn.target='_blank';btn.rel='noopener';
+      btn.setAttribute('aria-label',ql.label);
+      btn.innerHTML=`<span class="ql-icon">${ql.icon}</span>${ql.label}`;
+      grid.appendChild(btn);
+    });
+  }
+
+  /* ACTIVITY */
   function renderActivity(items){
     const feed=document.getElementById('activity-feed');if(!feed)return;
     feed.innerHTML='';
@@ -1058,19 +1125,19 @@
     });
   }
 
-  /* ════════════════════════════════════════
-     TICKER
-  ════════════════════════════════════════ */
+  /* TICKER */
   function buildTicker(){
     const items=[
-      {c:'red',t:'VOTE LIVE: Dorchester Zoning Amendment — Council in session'},
-      {c:'yellow',t:'MEETING TODAY: City Council Regular Session @ 6:00 PM — City Hall'},
-      {c:'red',t:'ALERT: Water Boil Advisory — Zone 4 (East Boston) remains active'},
-      {c:'green',t:'PASSED: MBTA Green Line Extension Funding Match 11-1'},
-      {c:'yellow',t:'BUDGET: FY2026 $4.28B — Education receives 34% share'},
-      {c:'yellow',t:'DELAYS: Silver Line SL2 running 8–12 min late — Signal Issue'},
-      {c:'green',t:'MEETING JUN 8: Zoning Board of Appeals — 12 cases on agenda'},
-      {c:'red',t:'VOTE PENDING: Affordable Housing Trust Fund $120M — Jun 10'},
+      {c:'saffron',t:'PARLIAMENT LIVE: Women\'s Reservation Bill 128th Amendment — Lok Sabha voting at noon'},
+      {c:'green',  t:'PM-KISAN 18th Instalment: ₹20,000 Cr disbursed to 9.26 Cr farmers today'},
+      {c:'red',    t:'DELHI AQI: 312 Very Poor — GRAP Stage 3 active, construction work banned'},
+      {c:'saffron',t:'BUDGET 2025-26: ₹50.65 Lakh Cr total outlay — 11.1% higher than previous year'},
+      {c:'white',  t:'RTI PORTAL: 22 lakh+ applications filed online in 2025 — response rate 94%'},
+      {c:'green',  t:'METRO EXPANSION: 3 new corridors inaugurated in Chennai, Pune and Ahmedabad'},
+      {c:'saffron',t:'WAQF BILL: JPC concludes regional hearings — report expected by July 2026'},
+      {c:'red',    t:'MUMBAI: Central Railway delays — Kalyan-CST section affected by overhead wire snapping'},
+      {c:'green',  t:'AYUSHMAN BHARAT: 7.37 Cr hospital admissions processed — ₹99,000 Cr claims settled'},
+      {c:'white',  t:'ONE NATION ONE ELECTION: Joint Committee reviewing constitutional amendment — 47 consultations done'},
     ];
     const ticker=document.getElementById('ticker');
     [...items,...items].forEach(item=>{
@@ -1080,9 +1147,7 @@
     });
   }
 
-  /* ════════════════════════════════════════
-     SEARCH
-  ════════════════════════════════════════ */
+  /* SEARCH */
   function initSearch(){
     const input=document.getElementById('searchInput'),res=document.getElementById('searchResults'),clr=document.getElementById('searchClear');
     input.addEventListener('input',()=>{
@@ -1092,26 +1157,25 @@
     clr.addEventListener('click',()=>{input.value='';input.focus();res.classList.remove('open');clr.classList.remove('vis')});
     input.addEventListener('keydown',e=>{
       const items=res.querySelectorAll('.sri');
-      if(e.key==='ArrowDown'){e.preventDefault();focusIdx=Math.min(focusIdx+1,items.length-1);hlResult(items)}
-      else if(e.key==='ArrowUp'){e.preventDefault();focusIdx=Math.max(focusIdx-1,0);hlResult(items)}
+      if(e.key==='ArrowDown'){e.preventDefault();focusIdx=Math.min(focusIdx+1,items.length-1);hlRes(items)}
+      else if(e.key==='ArrowUp'){e.preventDefault();focusIdx=Math.max(focusIdx-1,0);hlRes(items)}
       else if(e.key==='Enter'){if(focusIdx>=0&&items[focusIdx])items[focusIdx].click();else triggerSearch()}
       else if(e.key==='Escape')res.classList.remove('open');
     });
     document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))res.classList.remove('open')});
   }
-
-  function hlResult(items){items.forEach((el,i)=>el.classList.toggle('focused',i===focusIdx))}
-
+  function hlRes(items){items.forEach((el,i)=>el.classList.toggle('focused',i===focusIdx))}
   function hl(text,q){return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),'<mark>$1</mark>')}
 
   function doSearch(q){
-    const res=document.getElementById('searchResults'),d=CITIES[city]||CITIES.boston,ql=q.toLowerCase(),hits=[];
-    (d.votes||[]).forEach(v=>{if(v.title.toLowerCase().includes(ql)||v.desc.toLowerCase().includes(ql))hits.push({type:'vote',label:v.title,anchor:'#votes',sub:`${v.status} · ${v.date}`})});
+    const res=document.getElementById('searchResults'),d=CITIES[city]||CITIES.delhi,ql=q.toLowerCase(),hits=[];
+    (d.votes||[]).forEach(v=>{if(v.title.toLowerCase().includes(ql)||v.desc.toLowerCase().includes(ql))hits.push({type:'vote',label:v.title,anchor:'#votes',sub:`${v.status} · ${v.body} · ${v.date}`})});
     (d.meetings||[]).forEach(m=>{if(m.title.toLowerCase().includes(ql)||m.location.toLowerCase().includes(ql))hits.push({type:'meeting',label:m.title,anchor:'#meetings',sub:`${m.month} ${m.day} · ${m.time}`})});
     (d.infra||[]).forEach(item=>{if(item.name.toLowerCase().includes(ql)||item.statusText.toLowerCase().includes(ql))hits.push({type:'infra',label:item.name,anchor:'#infra',sub:item.statusText})});
     (d.budget?.items||[]).forEach(item=>{if(item.name.toLowerCase().includes(ql))hits.push({type:'budget',label:item.name,anchor:'#budget',sub:`${item.pct}% — ${item.amount}`})});
+    (d.schemes||[]).forEach(s=>{if(s.title.toLowerCase().includes(ql)||s.desc.toLowerCase().includes(ql))hits.push({type:'scheme',label:s.title,anchor:'#schemes',sub:s.tag})});
     res.innerHTML='';focusIdx=-1;
-    if(!hits.length){res.innerHTML=`<div class="search-empty">No results for "<strong>${q}</strong>"</div>`}
+    if(!hits.length){res.innerHTML=`<div class="search-empty">No results for "<strong>${q}</strong>" — Try searching bills, schemes, or infrastructure</div>`}
     else hits.slice(0,8).forEach(h=>{
       const el=document.createElement('div');el.className='sri';el.setAttribute('role','option');
       el.innerHTML=`<span class="srt srt-${h.type}">${h.type}</span><div><div>${hl(h.label,q)}</div><div style="font-size:.6rem;color:var(--muted);margin-top:2px">${h.sub}</div></div>`;
@@ -1120,12 +1184,9 @@
     });
     res.classList.add('open');
   }
-
   function triggerSearch(){const q=document.getElementById('searchInput').value.trim();if(q.length>=2)doSearch(q)}
 
-  /* ════════════════════════════════════════
-     MODAL
-  ════════════════════════════════════════ */
+  /* MODAL */
   function openModal(tag,title,body){
     modalCtx=title;
     document.getElementById('modal-tag').textContent=tag;
@@ -1143,15 +1204,12 @@
   }
   function shareCurrentModal(){
     const url=location.href;
-    if(navigator.share)navigator.share({title:'CivicWatch — '+modalCtx,url});
+    if(navigator.share)navigator.share({title:'CivicWatch India — '+modalCtx,url});
     else navigator.clipboard.writeText(url).then(()=>{closeModal();toast('🔗 Copied','Link copied to clipboard.')});
   }
   document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
-  /* ════════════════════════════════════════
-     TOAST
-  ════════════════════════════════════════ */
+  /* TOAST */
   function toast(title,body){tQueue.push({title,body});if(!tBusy)nextToast()}
   function nextToast(){
     if(!tQueue.length){tBusy=false;return}tBusy=true;
@@ -1161,7 +1219,7 @@
     el.innerHTML=`<div class="toast-content"><div class="toast-title">${title}</div><div class="toast-body">${body}</div></div><button class="toast-close" onclick="dismissToast(this)" aria-label="Dismiss">✕</button>`;
     c.appendChild(el);
     requestAnimationFrame(()=>setTimeout(()=>el.classList.add('show'),20));
-    setTimeout(()=>dismissToast(el.querySelector('.toast-close'),el),5000);
+    setTimeout(()=>dismissToast(el.querySelector('.toast-close'),el),5500);
   }
   function dismissToast(btn,override){
     const el=override||btn.closest('.toast');if(!el)return;
