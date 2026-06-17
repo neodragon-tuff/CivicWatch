@@ -7,7 +7,6 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-NXT33DBMR2');
 </script>
   <meta charset="UTF-8"/>
@@ -39,7 +38,6 @@
     body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9000}
     a{color:inherit;text-decoration:none}
     button{font-family:inherit;cursor:pointer}
-    /* ANIMATIONS */
     @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
     @keyframes slideIn{from{transform:translateY(22px);opacity:0}to{transform:translateY(0);opacity:1}}
@@ -47,20 +45,16 @@
     @keyframes blink{50%{opacity:0}}
     @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
     @keyframes ashoka{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-    /* SKIP LINK */
+    @keyframes spin{to{transform:rotate(360deg)}}
     .skip-link{position:absolute;top:-999px;left:1rem;background:var(--civic);color:#fff;padding:.5rem 1rem;font-family:'DM Mono',monospace;font-size:.8rem;z-index:10000;border-radius:2px}
     .skip-link:focus{top:1rem}
-    /* PROGRESS BAR */
     .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(to right,var(--saffron),var(--w),var(--green));z-index:9999;width:0%;transition:width .3s ease,opacity .4s}
-    /* TRICOLOUR TOP STRIP */
     .tricolour-strip{height:4px;background:linear-gradient(to right,var(--saffron) 33.33%,white 33.33% 66.66%,var(--green) 66.66%)}
-    /* ANNOUNCE BAR */
     .announce-bar{background:var(--navy);color:#fff;padding:.4rem 2rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:.75rem}
     .announce-dot{width:6px;height:6px;border-radius:50%;background:var(--saffron);animation:blink 1.2s steps(1) infinite;flex-shrink:0}
     .announce-msg{flex:1}
     .announce-close{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;margin-left:auto;padding:0 .25rem}
     .announce-close:hover{color:#fff}
-    /* MASTHEAD */
     .masthead{background:var(--civic);color:var(--paper);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--gold);position:sticky;top:0;z-index:500;height:64px;gap:1rem}
     .masthead-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-.02em;display:flex;align-items:center;gap:.6rem;flex-shrink:0}
     .logo-emblem{width:28px;height:28px;position:relative;display:flex;align-items:center;justify-content:center}
@@ -77,18 +71,26 @@
     .icon-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;width:34px;height:34px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:.95rem;transition:background var(--t)}
     .icon-btn:hover{background:rgba(255,255,255,.2)}
     .hamburger{display:none}
-    /* MOBILE NAV */
     .mobile-nav{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:var(--civic);z-index:490;flex-direction:column;padding:2rem;overflow-y:auto}
     .mobile-nav.open{display:flex;animation:fadeIn .2s ease}
     .mobile-nav a{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:rgba(245,240,232,.65);padding:1rem 0;border-bottom:1px solid rgba(255,255,255,.08);transition:color var(--t)}
     .mobile-nav a:hover{color:#fff}
     .mobile-nav-close{position:absolute;top:1rem;right:1.5rem;background:none;border:none;color:rgba(255,255,255,.4);font-size:1.5rem}
-    /* DATELINE */
     .dateline-bar{background:var(--cream);border-bottom:1px solid var(--border);padding:.45rem 2rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;color:var(--muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;transition:background var(--t)}
     .city-selector{display:flex;align-items:center;gap:.5rem}
     .city-selector select{font-family:'DM Mono',monospace;font-size:.65rem;background:transparent;border:1px solid var(--border);color:var(--ink);padding:2px 6px;cursor:pointer}
     .city-selector select:focus{outline:2px solid var(--saffron)}
-    /* HERO */
+
+    /* LIVE WEATHER WIDGET */
+    .weather-widget{background:var(--civic);color:#fff;padding:.5rem 2rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.06em;display:flex;align-items:center;gap:2rem;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.1)}
+    .weather-item{display:flex;align-items:center;gap:.4rem;opacity:.9}
+    .weather-item strong{color:var(--saffron)}
+    .weather-loading{animation:blink 1.5s steps(1) infinite}
+    .weather-refresh{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:2px;cursor:pointer;transition:all var(--t);margin-left:auto}
+    .weather-refresh:hover{background:rgba(255,255,255,.1);color:#fff}
+    .weather-refresh.spinning{pointer-events:none}
+    .weather-refresh.spinning::before{content:'↻ ';display:inline-block;animation:spin .8s linear infinite}
+
     .hero{padding:3.5rem 2rem 2.5rem;max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center}
     .hero-left{animation:fadeUp .6s ease both}
     .hero-eyebrow{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--saffron);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
@@ -119,11 +121,9 @@
     .stat-trend{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--green);margin-top:2px}
     .hero-right{animation:fadeUp .7s ease .2s both;display:flex;align-items:center;justify-content:center}
     .hero-visual{width:100%;max-width:420px;aspect-ratio:1}
-    /* RTI BANNER */
     .rti-banner{background:var(--navy);color:#fff;padding:1rem 2rem;display:flex;align-items:center;gap:1.5rem;font-size:.85rem;flex-wrap:wrap}
     .rti-banner-text{flex:1;line-height:1.5}
     .rti-banner-text strong{font-family:'Syne',sans-serif;color:var(--saffron);display:block;margin-bottom:2px;font-size:1rem}
-    /* TICKER */
     .ticker-wrap{background:var(--civic);color:var(--paper);overflow:hidden;padding:.55rem 0;position:relative}
     .ticker-wrap::before,.ticker-wrap::after{content:'';position:absolute;top:0;width:60px;height:100%;z-index:2}
     .ticker-wrap::before{left:0;background:linear-gradient(to right,var(--civic),transparent)}
@@ -133,7 +133,6 @@
     .ticker-item{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.06em;display:flex;align-items:center;gap:.5rem}
     .tdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
     .tdot.saffron{background:var(--saffron)}.tdot.green{background:var(--green)}.tdot.red{background:var(--r)}.tdot.white{background:#fff}
-    /* SEARCH */
     .search-wrap{padding:1.25rem 2rem 0;max-width:1240px;margin:0 auto;position:relative;z-index:200}
     .search-bar{display:flex;border:2px solid var(--ink);background:var(--w);max-width:640px;transition:box-shadow var(--t),background var(--t)}
     .search-bar:focus-within{box-shadow:var(--shadow-md)}
@@ -153,13 +152,10 @@
     .srt-infra{background:#fce4ec;color:var(--r)}.srt-budget{background:#e3f2fd;color:var(--navy)}.srt-scheme{background:#f3e5f5;color:#6a1b9a}
     .sri mark{background:rgba(255,153,51,.3);border-radius:1px}
     .search-empty{padding:1.5rem;text-align:center;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted)}
-    /* MAIN GRID */
     .main-grid{max-width:1240px;margin:1.5rem auto;padding:0 2rem;display:grid;grid-template-columns:2fr 1fr;grid-template-rows:auto;gap:1.5rem}
-    /* SECTION HEADER */
     .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:2px solid var(--ink)}
     .section-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:.5rem}
     .section-count{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
-    /* ALERT BANNER */
     .alert-banner{grid-column:1/3;border-left:4px solid var(--saffron);background:rgba(255,153,51,.08);padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;font-size:.88rem;animation:fadeUp .4s ease both}
     body.dark .alert-banner{background:rgba(255,153,51,.15)}
     .alert-icon{font-size:1.2rem;flex-shrink:0}
@@ -167,7 +163,6 @@
     .alert-text strong{font-family:'Syne',sans-serif;display:block;margin-bottom:2px}
     .alert-dismiss{background:none;border:none;color:var(--muted);font-size:1.1rem;padding:0 .25rem}
     .alert-dismiss:hover{color:var(--ink)}
-    /* PARLIAMENT VOTES */
     .vote-tracker{grid-column:1;grid-row:1}
     .filter-tabs{display:flex;border:1px solid var(--border);overflow:hidden;background:var(--w);margin-bottom:1rem}
     .ftab{flex:1;background:transparent;border:none;border-right:1px solid var(--border);font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:.5rem .25rem;cursor:pointer;transition:all var(--t);display:flex;align-items:center;justify-content:center;gap:4px}
@@ -202,7 +197,6 @@
     .vab:hover{background:var(--civic);color:#fff;border-color:var(--civic)}
     .impact-tag{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:2px;white-space:nowrap;align-self:start;font-weight:500}
     .tag-high{background:#fce4ec;color:var(--r)}.tag-medium{background:#fff3e0;color:var(--saffron)}.tag-low{background:#e8f5e9;color:var(--g)}
-    /* BUDGET */
     .budget-panel{grid-column:2;grid-row:1/4}
     .budget-inner{border:1px solid var(--border);background:var(--w);padding:1.25rem;position:sticky;top:74px;transition:background var(--t)}
     .budget-total{text-align:center;padding:1rem 0;border-bottom:1px solid var(--border);margin-bottom:1rem}
@@ -224,7 +218,6 @@
     .budget-actions{display:flex;gap:.5rem;margin-top:1rem}
     .bact{flex:1;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);background:transparent;color:var(--muted);padding:6px;transition:all var(--t);border-radius:2px}
     .bact:hover{background:var(--civic);color:#fff;border-color:var(--civic)}
-    /* GOVT SCHEMES */
     .schemes-panel{grid-column:1;grid-row:2}
     .scheme-card{border:1px solid var(--border);background:var(--w);padding:1rem 1.25rem;margin-bottom:.5rem;display:flex;gap:1rem;align-items:center;transition:box-shadow var(--t),transform var(--t);animation:fadeUp .4s ease both}
     .scheme-card:hover{box-shadow:var(--shadow-md);transform:translate(-2px,-2px)}
@@ -235,7 +228,6 @@
     .scheme-tag{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:2px;background:var(--cream);color:var(--muted);white-space:nowrap}
     .scheme-link{flex-shrink:0;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--civic);padding:5px 10px;color:var(--civic);border-radius:2px;transition:all var(--t)}
     .scheme-link:hover{background:var(--civic);color:#fff}
-    /* MEETINGS */
     .meetings-panel{grid-column:1;grid-row:3}
     .meeting-card{border:1px solid var(--border);background:var(--w);padding:1rem 1.25rem;margin-bottom:.5rem;display:flex;gap:1rem;align-items:center;transition:box-shadow var(--t),transform var(--t),background var(--t);animation:fadeUp .4s ease both}
     .meeting-card:hover{box-shadow:var(--shadow-md);transform:translate(-2px,-2px)}
@@ -248,11 +240,9 @@
     .meeting-details{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;margin-top:4px;display:flex;gap:1rem;flex-wrap:wrap}
     .meeting-badge{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;background:var(--cream);color:var(--muted);padding:2px 7px;border-radius:2px;white-space:nowrap;margin-top:5px;display:inline-block}
     .meeting-badge.today-badge{background:#fff3e0;color:var(--saffron)}
-    .meeting-badge.live-badge-sm{background:#e8f5e9;color:var(--g)}
     .meeting-rsvp{flex-shrink:0;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--civic);padding:6px 12px;cursor:pointer;transition:all var(--t);background:transparent;color:var(--civic);border-radius:2px}
     .meeting-rsvp:hover,.meeting-rsvp.rsvpd{background:var(--civic);color:#fff}
     .meeting-rsvp.rsvpd{background:var(--g);border-color:var(--g)}
-    /* INFRASTRUCTURE */
     .infra-panel{grid-column:1/3}
     .infra-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.25rem}
     .isc{border:1px solid var(--border);padding:.85rem;background:var(--w);display:flex;align-items:center;gap:.75rem;transition:background var(--t)}
@@ -282,7 +272,6 @@
     .infra-card.critical .infra-prog-fill{background:var(--r)}.infra-card.warning .infra-prog-fill{background:var(--saffron)}.infra-card.ok .infra-prog-fill{background:var(--g)}
     .report-btn{margin-top:.75rem;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);background:transparent;color:var(--muted);padding:5px 10px;cursor:pointer;display:block;width:100%;transition:all var(--t);border-radius:2px}
     .report-btn:hover{background:var(--civic);color:#fff;border-color:var(--civic)}
-    /* ACTIVITY */
     .activity-panel{grid-column:2;grid-row:4}
     .activity-inner{border:1px solid var(--border);background:var(--w);padding:1.25rem;transition:background var(--t)}
     .activity-item{display:flex;gap:.75rem;padding:.6rem 0;border-bottom:1px solid var(--border);align-items:flex-start}
@@ -290,14 +279,12 @@
     .activity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
     .activity-text{font-size:.82rem;line-height:1.4}
     .activity-time{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);margin-top:2px}
-    /* QUICK LINKS */
     .quicklinks-panel{grid-column:1;grid-row:4}
     .quicklinks-inner{border:1px solid var(--border);background:var(--w);padding:1.25rem;transition:background var(--t)}
     .ql-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
     .ql-btn{border:1px solid var(--border);background:transparent;padding:.75rem .5rem;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all var(--t);border-radius:2px;display:flex;flex-direction:column;align-items:center;gap:.3rem;text-align:center;line-height:1.3}
     .ql-btn:hover{background:var(--civic);color:#fff;border-color:var(--civic);transform:translate(-1px,-1px);box-shadow:var(--shadow-sm)}
     .ql-icon{font-size:1.2rem}
-    /* TOAST */
     .toast-container{position:fixed;bottom:1.5rem;right:1.5rem;z-index:2000;display:flex;flex-direction:column;gap:.5rem;max-width:320px}
     .toast{background:var(--civic);color:#fff;padding:.9rem 1.25rem;font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.04em;border-left:4px solid var(--saffron);box-shadow:var(--shadow-lg);transform:translateX(120%);opacity:0;transition:transform .35s cubic-bezier(.25,.8,.25,1),opacity .35s;display:flex;gap:.75rem;align-items:flex-start}
     .toast.show{transform:translateX(0);opacity:1}
@@ -306,7 +293,6 @@
     .toast-body{opacity:.8;font-size:.68rem;line-height:1.4}
     .toast-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:1rem;padding:0;flex-shrink:0}
     .toast-close:hover{color:#fff}
-    /* MODAL */
     .modal-overlay{position:fixed;inset:0;background:rgba(13,13,13,.75);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:1rem}
     .modal-overlay.open{display:flex;animation:fadeIn .2s ease}
     .modal{background:var(--paper);border:2px solid var(--ink);padding:2rem;max-width:580px;width:100%;box-shadow:var(--shadow-lg);animation:slideIn .3s cubic-bezier(.25,.8,.25,1);position:relative;max-height:90vh;overflow-y:auto}
@@ -319,11 +305,9 @@
     .modal-body strong{color:var(--ink)}
     .modal-hr{border:none;border-top:1px solid var(--border);margin:1rem 0}
     .modal-actions{margin-top:1.25rem;display:flex;gap:.75rem;flex-wrap:wrap}
-    /* BACK TO TOP */
     .back-top{position:fixed;bottom:1.5rem;left:1.5rem;z-index:400;width:40px;height:40px;background:var(--navy);color:#fff;border:none;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s,transform var(--t),background var(--t);box-shadow:var(--shadow-md)}
     .back-top.vis{opacity:1;pointer-events:all}
     .back-top:hover{transform:translateY(-3px);background:var(--saffron);color:#000}
-    /* FOOTER */
     .footer{background:var(--ink);color:var(--cream);padding:2.5rem 2rem;margin-top:3rem;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem}
     .footer-brand{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.6rem;display:flex;align-items:center;gap:.6rem}
     .footer-tricolour{display:flex;gap:3px;align-items:center}
@@ -341,7 +325,6 @@
     .footer-bottom{background:#000;color:rgba(237,231,214,.35);padding:.75rem 2rem;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
     .footer-bottom a{color:rgba(237,231,214,.4)}
     .footer-bottom a:hover{color:rgba(237,231,214,.7)}
-    /* RESPONSIVE */
     @media(max-width:1024px){
       .main-grid{grid-template-columns:1fr}
       .budget-panel,.infra-panel,.activity-panel,.alert-banner,.quicklinks-panel{grid-column:1}
@@ -366,6 +349,7 @@
       .modal{padding:1.25rem}
       .ql-grid{grid-template-columns:repeat(2,1fr)}
       .rti-banner{padding:.75rem 1.25rem}
+      .weather-widget{padding:.5rem 1.25rem;gap:1rem}
     }
     @media(max-width:480px){
       .hero-stats{grid-template-columns:1fr}
@@ -378,30 +362,23 @@
   <div class="progress-bar" id="progressBar"></div>
   <div class="tricolour-strip"></div>
 
-  <!-- ANNOUNCE BAR -->
   <div class="announce-bar" id="announceBar">
     <span class="announce-dot"></span>
     <span class="announce-msg">🏛️ PARLIAMENT SESSION LIVE — Lok Sabha: Women's Reservation Bill Amendment debate ongoing · New Delhi</span>
     <button class="announce-close" onclick="this.closest('.announce-bar').remove()" aria-label="Dismiss">✕</button>
   </div>
 
-  <!-- MASTHEAD -->
   <header class="masthead" role="banner">
     <div class="masthead-logo logo-text">
-      <div class="logo-emblem">
-        <div class="logo-chakra"><div class="logo-chakra-dot"></div></div>
-      </div>
-      <div>
-        <span>Civic<span>Watch</span> India</span>
-        <span class="logo-hindi">नागरिक पारदर्शिता</span>
-      </div>
+      <div class="logo-emblem"><div class="logo-chakra"><div class="logo-chakra-dot"></div></div></div>
+      <div><span>Civic<span>Watch</span> India</span><span class="logo-hindi">नागरिक पारदर्शिता</span></div>
     </div>
     <nav class="masthead-nav" aria-label="Main navigation">
-      <a href="#votes"    class="nav-link">Parliament</a>
-      <a href="#schemes"  class="nav-link">Schemes</a>
+      <a href="#votes" class="nav-link">Parliament</a>
+      <a href="#schemes" class="nav-link">Schemes</a>
       <a href="#meetings" class="nav-link">Meetings</a>
-      <a href="#infra"    class="nav-link">Infrastructure</a>
-      <a href="#budget"   class="nav-link">Budget</a>
+      <a href="#infra" class="nav-link">Infrastructure</a>
+      <a href="#budget" class="nav-link">Budget</a>
       <a href="#activity" class="nav-link">Activity</a>
     </nav>
     <div class="masthead-right">
@@ -411,18 +388,16 @@
     </div>
   </header>
 
-  <!-- MOBILE NAV -->
   <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" aria-hidden="true">
     <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">✕</button>
-    <a href="#votes"    onclick="closeMobileNav()">Parliament</a>
-    <a href="#schemes"  onclick="closeMobileNav()">Schemes</a>
+    <a href="#votes" onclick="closeMobileNav()">Parliament</a>
+    <a href="#schemes" onclick="closeMobileNav()">Schemes</a>
     <a href="#meetings" onclick="closeMobileNav()">Meetings</a>
-    <a href="#infra"    onclick="closeMobileNav()">Infrastructure</a>
-    <a href="#budget"   onclick="closeMobileNav()">Budget</a>
+    <a href="#infra" onclick="closeMobileNav()">Infrastructure</a>
+    <a href="#budget" onclick="closeMobileNav()">Budget</a>
     <a href="#activity" onclick="closeMobileNav()">Activity</a>
   </nav>
 
-  <!-- DATELINE -->
   <div class="dateline-bar">
     <span id="dateline-text" aria-live="polite">Loading…</span>
     <div class="city-selector">
@@ -440,7 +415,11 @@
     </div>
   </div>
 
-  <!-- HERO -->
+  <!-- LIVE WEATHER WIDGET — pulls from your Render API -->
+  <div class="weather-widget" id="weatherWidget">
+    <span class="weather-item weather-loading">⏳ Fetching live weather data…</span>
+  </div>
+
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero-left">
       <div class="hero-eyebrow">नागरिक पारदर्शिता मंच · Civic Transparency Platform</div>
@@ -459,50 +438,38 @@
     </div>
     <div class="hero-right" aria-hidden="true">
       <svg class="hero-visual" viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="bg-g" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#e8f5e9"/>
-            <stop offset="100%" stop-color="#f5f0e8"/>
-          </radialGradient>
-        </defs>
+        <defs><radialGradient id="bg-g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e8f5e9"/><stop offset="100%" stop-color="#f5f0e8"/></radialGradient></defs>
         <circle cx="210" cy="210" r="205" fill="url(#bg-g)" stroke="#c8bfaa" stroke-width="1"/>
-        <!-- Ashoka Chakra inspired -->
         <circle cx="210" cy="210" r="80" fill="none" stroke="#000080" stroke-width="2" opacity="0.15"/>
         <circle cx="210" cy="210" r="130" fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
         <circle cx="210" cy="210" r="165" fill="none" stroke="#c8bfaa" stroke-width="0.8"/>
-        <!-- 24 spokes simplified as 8 -->
         <line x1="210" y1="130" x2="210" y2="290" stroke="#000080" stroke-width="0.6" opacity="0.2"/>
         <line x1="130" y1="210" x2="290" y2="210" stroke="#000080" stroke-width="0.6" opacity="0.2"/>
         <line x1="153" y1="153" x2="267" y2="267" stroke="#000080" stroke-width="0.6" opacity="0.2"/>
         <line x1="267" y1="153" x2="153" y2="267" stroke="#000080" stroke-width="0.6" opacity="0.2"/>
-        <!-- Data nodes -->
         <circle cx="210" cy="80" r="11" fill="#FF9933" class="dp"/>
-        <circle cx="330" cy="162" r="8"  fill="#138808"/>
+        <circle cx="330" cy="162" r="8" fill="#138808"/>
         <circle cx="300" cy="320" r="13" fill="#000080"/>
-        <circle cx="120" cy="305" r="9"  fill="#FF9933"/>
+        <circle cx="120" cy="305" r="9" fill="#FF9933"/>
         <circle cx="105" cy="158" r="11" fill="#138808" class="dp"/>
-        <!-- Connecting lines -->
-        <line x1="210" y1="80"  x2="330" y2="162" stroke="#FF9933" stroke-width="1" opacity="0.3"/>
+        <line x1="210" y1="80" x2="330" y2="162" stroke="#FF9933" stroke-width="1" opacity="0.3"/>
         <line x1="330" y1="162" x2="300" y2="320" stroke="#138808" stroke-width="1" opacity="0.3"/>
         <line x1="300" y1="320" x2="120" y2="305" stroke="#000080" stroke-width="1" opacity="0.3"/>
         <line x1="120" y1="305" x2="105" y2="158" stroke="#FF9933" stroke-width="1" opacity="0.3"/>
-        <line x1="105" y1="158" x2="210" y2="80"  stroke="#138808" stroke-width="1" opacity="0.3"/>
-        <!-- Center Ashoka Chakra -->
+        <line x1="105" y1="158" x2="210" y2="80" stroke="#138808" stroke-width="1" opacity="0.3"/>
         <circle cx="210" cy="210" r="22" fill="#000080"/>
-        <circle cx="210" cy="210" r="9"  fill="#FF9933"/>
-        <circle cx="210" cy="210" r="3"  fill="#fff"/>
-        <!-- Labels -->
-        <text x="210" y="60"  font-family="DM Mono" font-size="8" fill="#6b6355" text-anchor="middle" letter-spacing="1">LOK SABHA</text>
+        <circle cx="210" cy="210" r="9" fill="#FF9933"/>
+        <circle cx="210" cy="210" r="3" fill="#fff"/>
+        <text x="210" y="60" font-family="DM Mono" font-size="8" fill="#6b6355" text-anchor="middle" letter-spacing="1">LOK SABHA</text>
         <text x="358" y="168" font-family="DM Mono" font-size="8" fill="#6b6355" text-anchor="middle" letter-spacing="1">BUDGET</text>
         <text x="310" y="348" font-family="DM Mono" font-size="8" fill="#6b6355" text-anchor="middle" letter-spacing="1">SCHEMES</text>
         <text x="100" y="348" font-family="DM Mono" font-size="8" fill="#6b6355" text-anchor="middle" letter-spacing="1">INFRA</text>
-        <text x="62"  y="155" font-family="DM Mono" font-size="8" fill="#6b6355" text-anchor="middle" letter-spacing="1">ALERTS</text>
+        <text x="62" y="155" font-family="DM Mono" font-size="8" fill="#6b6355" text-anchor="middle" letter-spacing="1">ALERTS</text>
         <style>.dp{animation:dp 2.2s ease-in-out infinite}@keyframes dp{0%,100%{opacity:1}50%{opacity:.4}}</style>
       </svg>
     </div>
   </section>
 
-  <!-- RTI BANNER -->
   <div class="rti-banner">
     <div class="rti-banner-text">
       <strong>🔍 Right to Information Act, 2005</strong>
@@ -512,12 +479,10 @@
     <a href="https://rtionline.gov.in" target="_blank" rel="noopener" class="btn btn-outline" style="border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.7);flex-shrink:0">RTI Status Tracker →</a>
   </div>
 
-  <!-- TICKER -->
   <div class="ticker-wrap" role="marquee" aria-label="Live updates" aria-live="off">
     <div class="ticker-inner" id="ticker"></div>
   </div>
 
-  <!-- SEARCH -->
   <div class="search-wrap" role="search">
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Search bills, schemes, meetings, infrastructure, cities…" aria-label="Search civic data" autocomplete="off" spellcheck="false"/>
@@ -527,10 +492,7 @@
     <div class="search-results" id="searchResults" role="listbox" aria-label="Search results"></div>
   </div>
 
-  <!-- MAIN CONTENT -->
   <main class="main-grid" id="main-content">
-
-    <!-- ALERT BANNER -->
     <div class="alert-banner" id="alertBanner" role="alert" aria-live="assertive">
       <span class="alert-icon">⚠️</span>
       <div class="alert-text">
@@ -540,23 +502,21 @@
       <button class="alert-dismiss" onclick="this.closest('.alert-banner').remove()" aria-label="Dismiss">✕</button>
     </div>
 
-    <!-- PARLIAMENT VOTES -->
     <section class="vote-tracker" id="votes" aria-labelledby="votes-heading">
       <div class="section-header">
         <span class="section-title" id="votes-heading">🏛️ Parliament & Assembly Bills</span>
         <span class="section-count" id="vote-count" aria-live="polite">Loading…</span>
       </div>
       <div class="filter-tabs" role="tablist" aria-label="Filter bills by status">
-        <button class="ftab active" role="tab" aria-selected="true"  data-filter="all"  onclick="filterVotes('all',this)">All <span class="ftab-count" id="tc-all">0</span></button>
-        <button class="ftab"        role="tab" aria-selected="false" data-filter="live" onclick="filterVotes('live',this)">In Session <span class="ftab-count" id="tc-live">0</span></button>
-        <button class="ftab"        role="tab" aria-selected="false" data-filter="pend" onclick="filterVotes('pend',this)">Pending <span class="ftab-count" id="tc-pend">0</span></button>
-        <button class="ftab"        role="tab" aria-selected="false" data-filter="pass" onclick="filterVotes('pass',this)">Passed <span class="ftab-count" id="tc-pass">0</span></button>
-        <button class="ftab"        role="tab" aria-selected="false" data-filter="fail" onclick="filterVotes('fail',this)">Defeated <span class="ftab-count" id="tc-fail">0</span></button>
+        <button class="ftab active" role="tab" aria-selected="true" data-filter="all" onclick="filterVotes('all',this)">All <span class="ftab-count" id="tc-all">0</span></button>
+        <button class="ftab" role="tab" aria-selected="false" data-filter="live" onclick="filterVotes('live',this)">In Session <span class="ftab-count" id="tc-live">0</span></button>
+        <button class="ftab" role="tab" aria-selected="false" data-filter="pend" onclick="filterVotes('pend',this)">Pending <span class="ftab-count" id="tc-pend">0</span></button>
+        <button class="ftab" role="tab" aria-selected="false" data-filter="pass" onclick="filterVotes('pass',this)">Passed <span class="ftab-count" id="tc-pass">0</span></button>
+        <button class="ftab" role="tab" aria-selected="false" data-filter="fail" onclick="filterVotes('fail',this)">Defeated <span class="ftab-count" id="tc-fail">0</span></button>
       </div>
       <div id="vote-list" role="list"></div>
     </section>
 
-    <!-- BUDGET -->
     <section class="budget-panel" id="budget" aria-labelledby="budget-heading">
       <div class="section-header">
         <span class="section-title" id="budget-heading">💰 Union Budget</span>
@@ -584,7 +544,6 @@
       </div>
     </section>
 
-    <!-- GOVERNMENT SCHEMES -->
     <section class="schemes-panel" id="schemes" aria-labelledby="schemes-heading">
       <div class="section-header">
         <span class="section-title" id="schemes-heading">📋 Active Government Schemes</span>
@@ -593,7 +552,6 @@
       <div id="scheme-list"></div>
     </section>
 
-    <!-- MEETINGS -->
     <section class="meetings-panel" id="meetings" aria-labelledby="meetings-heading">
       <div class="section-header">
         <span class="section-title" id="meetings-heading">📅 Public Meetings & Hearings</span>
@@ -602,7 +560,6 @@
       <div id="meeting-list" role="list"></div>
     </section>
 
-    <!-- INFRASTRUCTURE -->
     <section class="infra-panel" id="infra" aria-labelledby="infra-heading">
       <div class="section-header">
         <span class="section-title" id="infra-heading">🏗️ Infrastructure Status</span>
@@ -612,43 +569,31 @@
       <div class="infra-grid" id="infra-grid" role="list"></div>
     </section>
 
-    <!-- QUICK LINKS -->
     <section class="quicklinks-panel" aria-labelledby="ql-heading">
       <div class="section-header">
         <span class="section-title" id="ql-heading">🔗 Citizen Services</span>
         <span class="section-count">OFFICIAL GOV LINKS</span>
       </div>
-      <div class="quicklinks-inner">
-        <div class="ql-grid" id="ql-grid"></div>
-      </div>
+      <div class="quicklinks-inner"><div class="ql-grid" id="ql-grid"></div></div>
     </section>
 
-    <!-- ACTIVITY -->
     <section class="activity-panel" id="activity" aria-labelledby="activity-heading">
       <div class="section-header">
         <span class="section-title" id="activity-heading">⚡ Recent Activity</span>
         <span class="section-count">LIVE FEED</span>
       </div>
-      <div class="activity-inner">
-        <div id="activity-feed"></div>
-      </div>
+      <div class="activity-inner"><div id="activity-feed"></div></div>
     </section>
-
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer" role="contentinfo">
     <div>
       <div class="footer-brand">
-        <div class="footer-tricolour">
-          <div class="ft-s" style="background:var(--saffron)"></div>
-          <div class="ft-s" style="background:#fff"></div>
-          <div class="ft-s" style="background:var(--green)"></div>
-        </div>
+        <div class="footer-tricolour"><div class="ft-s" style="background:var(--saffron)"></div><div class="ft-s" style="background:#fff"></div><div class="ft-s" style="background:var(--green)"></div></div>
         CivicWatch India
       </div>
       <p class="footer-desc">Open-source civic transparency platform for Indian citizens. Data from Parliament, state assemblies, municipal corporations, and government open-data portals.</p>
-      <p class="footer-disclaimer">This is an independent civic project. Not affiliated with the Government of India or any political party. Data is sourced from official public records.</p>
+      <p class="footer-disclaimer">Independent civic project. Not affiliated with the Government of India or any political party.</p>
       <div class="footer-social">
         <a href="https://github.com/neodragon-tuff/CivicWatch" target="_blank" rel="noopener" aria-label="GitHub">GH</a>
         <a href="https://neodragon-tuff.github.io/CivicWatch/" target="_blank" rel="noopener" aria-label="Live site">↗</a>
@@ -687,10 +632,9 @@
   </footer>
   <div class="footer-bottom">
     <span>© 2026 CivicWatch India — Open Source MIT License — Built by <a href="https://github.com/neodragon-tuff" target="_blank" rel="noopener">@neodragon-tuff</a> · सत्यमेव जयते</span>
-    <span>v3.0.0 — India Edition — Phase 1 Day 1</span>
+    <span>v3.1.0 — Live Data Edition — Phase 1 Day 1</span>
   </div>
 
-  <!-- MODAL -->
   <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-el">
     <div class="modal">
       <div class="modal-header">
@@ -710,9 +654,84 @@
   <button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
 
   <script>
-  /* ══════════════════════════════════════
-     INDIA CIVIC DATA
-  ══════════════════════════════════════ */
+  /* ════════════════════════════════════
+     LIVE API CONFIG — YOUR RENDER URL
+  ════════════════════════════════════ */
+  const API_BASE = 'https://civicwatch-india-api.onrender.com';
+
+  /* city name → API param mapping */
+  const CITY_API_MAP = {
+    delhi:'delhi', mumbai:'mumbai', bengaluru:'bengaluru',
+    chennai:'chennai', kolkata:'kolkata', hyderabad:'hyderabad',
+    pune:'pune', ahmedabad:'ahmedabad'
+  };
+
+  /* ════════════════════════════════════
+     FETCH LIVE WEATHER & AQI
+  ════════════════════════════════════ */
+  async function fetchLiveWeather(cityKey) {
+    const widget = document.getElementById('weatherWidget');
+    widget.innerHTML = '<span class="weather-item weather-loading">⏳ Fetching live data…</span>';
+    try {
+      const apiCity = CITY_API_MAP[cityKey] || 'delhi';
+      const [weatherRes, aqiRes] = await Promise.all([
+        fetch(`${API_BASE}/api/weather/${apiCity}`),
+        fetch(`${API_BASE}/api/aqi/${apiCity}`)
+      ]);
+      const weather = await weatherRes.json();
+      const aqi    = await aqiRes.json();
+
+      const aqiVal    = aqi.aqi !== 'N/A' ? aqi.aqi : '—';
+      const aqiStatus = aqi.status || '—';
+      const aqiColor  = getAQIColor(aqiVal);
+      const now       = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Kolkata'});
+
+      widget.innerHTML = `
+        <span class="weather-item">🌡️ <strong>${weather.temperature}°C</strong> ${weather.condition}</span>
+        <span class="weather-item">💧 <strong>${weather.humidity}%</strong> Humidity</span>
+        <span class="weather-item">💨 <strong>${weather.windspeed} km/h</strong> Wind</span>
+        <span class="weather-item">🌫️ AQI <strong style="color:${aqiColor}">${aqiVal} — ${aqiStatus}</strong></span>
+        <span class="weather-item" style="opacity:.5">Updated ${now} IST</span>
+        <button class="weather-refresh" onclick="fetchLiveWeather('${cityKey}')" aria-label="Refresh weather data">↻ Refresh</button>
+      `;
+
+      /* Update AQI infra card if on Delhi */
+      const aqiCard = document.querySelector('.infra-card .infra-name');
+      if (aqiCard && aqiCard.textContent.includes('AQI') && aqiVal !== '—') {
+        const statusEl = aqiCard.nextElementSibling;
+        if (statusEl) statusEl.textContent = `AQI ${aqiVal} — ${aqiStatus}`;
+        const lastEl = aqiCard.parentElement.querySelector('.infra-last');
+        if (lastEl) lastEl.textContent = `Live · Updated ${now} IST`;
+      }
+
+    } catch(err) {
+      widget.innerHTML = `
+        <span class="weather-item" style="opacity:.6">⚠️ Live data unavailable — API may be waking up (first load can take 30s)</span>
+        <button class="weather-refresh" onclick="fetchLiveWeather('${cityKey}')" aria-label="Retry">↻ Retry</button>
+      `;
+    }
+  }
+
+  function getAQIColor(aqi) {
+    if (!aqi || aqi==='—') return 'var(--muted)';
+    if (aqi <= 50)  return '#138808';
+    if (aqi <= 100) return '#d4a847';
+    if (aqi <= 200) return '#FF9933';
+    if (aqi <= 300) return '#c84b2f';
+    return '#7b0000';
+  }
+
+  /* Auto refresh every 10 minutes */
+  let weatherRefreshInterval;
+  function startWeatherRefresh(cityKey) {
+    clearInterval(weatherRefreshInterval);
+    fetchLiveWeather(cityKey);
+    weatherRefreshInterval = setInterval(() => fetchLiveWeather(cityKey), 10 * 60 * 1000);
+  }
+
+  /* ════════════════════════════════════
+     CIVIC DATA
+  ════════════════════════════════════ */
   const CITIES = {
     delhi:{
       name:'New Delhi (NCT)',
@@ -725,11 +744,11 @@
         {name:'Other Ministries',pct:35,amount:'₹17.73 L Cr',color:'#6b6355'},
       ]},
       votes:[
-        {id:'d1',title:'Women\'s Reservation (Constitution 128th Amendment) Bill',status:'live',impact:'high',yea:428,nay:2,total:543,date:'Jun 4, 2026',body:'Lok Sabha',desc:'Reserves 33% of seats in Lok Sabha and State Legislative Assemblies for women. The amendment has wide cross-party support and is being debated clause by clause. Implementation subject to delimitation exercise after Census 2027.'},
-        {id:'d2',title:'Digital Personal Data Protection Rules 2026',status:'pend',impact:'high',yea:0,nay:0,total:543,date:'Jun 18, 2026',body:'Lok Sabha',desc:'Establishes rules under the DPDP Act 2023. Specifies consent framework, Data Fiduciary obligations, and creates a Data Protection Board. Public comments received: 22,000+. Privacy advocates raise concerns over government exemptions.'},
-        {id:'d3',title:'Waqf (Amendment) Bill 2024',status:'pend',impact:'high',yea:0,nay:0,total:543,date:'Jun 25, 2026',body:'Joint Parliamentary Committee',desc:'Proposes extensive changes to the Waqf Act 1995. Currently before JPC for detailed examination. Opposition parties have raised concerns; government says it aims to improve Waqf Board governance and accountability.'},
-        {id:'d4',title:'One Nation One Election Bill',status:'pend',impact:'high',yea:0,nay:0,total:543,date:'Jul 1, 2026',body:'Constitution Amendment',desc:'Proposes simultaneous elections to Lok Sabha and all State Assemblies. Referred to Joint Committee headed by Ram Nath Kovind. Critics cite federal concerns; supporters cite cost-efficiency of ₹4,000+ crore per election cycle.'},
-        {id:'d5',title:'Banking Laws (Amendment) Bill 2024',status:'pass',impact:'medium',yea:302,nay:185,total:543,date:'May 20, 2026',body:'Lok Sabha',desc:'Passed 302-185. Amends RBI Act and Banking Regulation Act to allow up to 4 nominees per account, directs unclaimed dividends to IEPF, and updates audit provisions for public sector banks.'},
+        {id:'d1',title:"Women's Reservation (Constitution 128th Amendment) Bill",status:'live',impact:'high',yea:428,nay:2,total:543,date:'Jun 4, 2026',body:'Lok Sabha',desc:'Reserves 33% of seats in Lok Sabha and State Legislative Assemblies for women. Wide cross-party support. Implementation subject to delimitation after Census 2027.'},
+        {id:'d2',title:'Digital Personal Data Protection Rules 2026',status:'pend',impact:'high',yea:0,nay:0,total:543,date:'Jun 18, 2026',body:'Lok Sabha',desc:'Establishes rules under DPDP Act 2023. Specifies consent framework and Data Fiduciary obligations. 22,000+ public comments received. Privacy advocates raise concerns over government exemptions.'},
+        {id:'d3',title:'Waqf (Amendment) Bill 2024',status:'pend',impact:'high',yea:0,nay:0,total:543,date:'Jun 25, 2026',body:'Joint Parliamentary Committee',desc:'Proposes changes to Waqf Act 1995. Currently before JPC. Opposition parties have raised concerns; government says it aims to improve Waqf Board governance.'},
+        {id:'d4',title:'One Nation One Election Bill',status:'pend',impact:'high',yea:0,nay:0,total:543,date:'Jul 1, 2026',body:'Constitution Amendment',desc:'Proposes simultaneous elections to Lok Sabha and all State Assemblies. Referred to Joint Committee. Critics cite federal concerns; supporters cite cost savings of ₹4,000+ Cr per election cycle.'},
+        {id:'d5',title:'Banking Laws (Amendment) Bill 2024',status:'pass',impact:'medium',yea:302,nay:185,total:543,date:'May 20, 2026',body:'Lok Sabha',desc:'Passed 302-185. Amends RBI Act and Banking Regulation Act. Allows up to 4 nominees per account and directs unclaimed dividends to IEPF.'},
       ],
       meetings:[
         {month:'JUN',day:'04',title:'NDMC Public Grievance Session',location:'Palika Kendra, Sansad Marg',time:'10:00 AM',agenda:'47 grievances',today:true},
@@ -739,7 +758,7 @@
         {month:'JUN',day:'20',title:'Environment Compensation Committee',location:'EPCA Office, Khan Market',time:'2:30 PM',agenda:'GRAP review',today:false},
       ],
       infra:[
-        {icon:'🌫️',name:'Air Quality (AQI)',status:'critical',statusText:'AQI 312 — Very Poor',last:'Updated 1h ago',health:10,link:'https://app.cpcbccr.com'},
+        {icon:'🌫️',name:'Air Quality (AQI)',status:'critical',statusText:'Fetching live AQI…',last:'Loading…',health:10,link:'https://app.cpcbccr.com'},
         {icon:'🚇',name:'Delhi Metro Network',status:'ok',statusText:'All Lines Operational',last:'Updated 30m ago',health:96,link:'https://www.delhimetrorail.com'},
         {icon:'🌊',name:'Delhi Jal Board Supply',status:'warning',statusText:'Low Pressure — South Delhi',last:'Updated 2h ago',health:55,link:'https://delhijalboard.delhi.gov.in'},
         {icon:'🛣️',name:'NH-48 (Delhi–Gurugram)',status:'warning',statusText:'Congestion — Mahipalpur',last:'Updated 45m ago',health:50,link:'https://tis.nhai.gov.in'},
@@ -748,16 +767,16 @@
       ],
       schemes:[
         {icon:'🏠',title:'PM Awas Yojana — Urban',desc:'Affordable housing for EWS/LIG/MIG families. ₹2.5 lakh central assistance per unit.',meta:['Beneficiaries: 1.18 Cr','Deadline: Dec 2024'],link:'https://pmaymis.gov.in',tag:'Housing'},
-        {icon:'💊',title:'Ayushman Bharat – PM-JAY',desc:'Health cover of ₹5 lakh per family per year for 55 Cr+ beneficiaries from poor/vulnerable families.',meta:['Coverage: ₹5 Lakh / yr','Hospitals: 29,000+'],link:'https://pmjay.gov.in',tag:'Health'},
-        {icon:'🌾',title:'PM-KISAN Samman Nidhi',desc:'₹6,000 per year direct income support for all land-holding farmer families, in 3 equal instalments.',meta:['Farmers: 11.3 Cr','Outlay: ₹60,000 Cr'],link:'https://pmkisan.gov.in',tag:'Agriculture'},
-        {icon:'🎓',title:'PM Vidyalakshmi Scheme',desc:'Collateral-free education loans for meritorious students at govt & private institutions up to ₹10 lakh.',meta:['New 2024–25','Rate: 3% subvention'],link:'https://www.education.gov.in',tag:'Education'},
-        {icon:'🏭',title:'Production Linked Incentive (PLI)',desc:'₹1.97 lakh crore incentive scheme across 14 key sectors to boost domestic manufacturing and exports.',meta:['14 sectors','Investment: ₹3 L Cr+'],link:'https://www.pli.gov.in',tag:'Industry'},
+        {icon:'💊',title:'Ayushman Bharat – PM-JAY',desc:'Health cover of ₹5 lakh per family per year for 55 Cr+ beneficiaries.',meta:['Coverage: ₹5 Lakh / yr','Hospitals: 29,000+'],link:'https://pmjay.gov.in',tag:'Health'},
+        {icon:'🌾',title:'PM-KISAN Samman Nidhi',desc:'₹6,000 per year direct income support for all land-holding farmer families.',meta:['Farmers: 11.3 Cr','Outlay: ₹60,000 Cr'],link:'https://pmkisan.gov.in',tag:'Agriculture'},
+        {icon:'🎓',title:'PM Vidyalakshmi Scheme',desc:'Collateral-free education loans for meritorious students up to ₹10 lakh.',meta:['New 2024–25','Rate: 3% subvention'],link:'https://www.education.gov.in',tag:'Education'},
+        {icon:'🏭',title:'Production Linked Incentive (PLI)',desc:'₹1.97 lakh crore incentive across 14 key sectors to boost manufacturing.',meta:['14 sectors','Investment: ₹3 L Cr+'],link:'https://www.pli.gov.in',tag:'Industry'},
       ],
       stats:{votes:38,meetings:12,alerts:4},
       trends:{votes:'3 in session today',meetings:'Next: Today 10AM',alerts:'↑ AQI worsening'},
-      alert:{title:'Delhi AQI Alert — Very Poor Air Quality (AQI 312)',body:'Delhi NCR AQI reached 312 (Very Poor) this morning. GRAP Stage 3 restrictions active. Construction work banned. Schools advised to consider online classes. Source: CPCB, updated 1h ago.'},
+      alert:{title:'Delhi AQI Alert — Live data loading from CPCB',body:'CivicWatch is fetching live AQI data for Delhi from your backend API. This updates every 10 minutes automatically.'},
       activity:[
-        {color:'#FF9933',text:'Bill In Session: Women\'s Reservation 128th Amendment — Lok Sabha debate ongoing',time:'12 min ago'},
+        {color:'#FF9933',text:"Bill In Session: Women's Reservation 128th Amendment — Lok Sabha debate ongoing",time:'12 min ago'},
         {color:'#c84b2f',text:'AQI Alert raised to Stage 3 — construction activities banned in NCR',time:'1h ago'},
         {color:'#138808',text:'PM-KISAN 18th instalment: ₹20,000 Cr released to 9.26 Cr farmers',time:'3h ago'},
         {color:'#000080',text:'DDA Master Plan 2041: Public hearing scheduled Jun 8 at Vikas Sadan',time:'5h ago'},
@@ -775,14 +794,14 @@
         {name:'Other',pct:31,amount:'₹15.70 L Cr',color:'#6b6355'},
       ]},
       votes:[
-        {id:'m1',title:'Maharashtra Uniform Civil Code Bill 2026',status:'live',impact:'high',yea:0,nay:0,total:288,date:'Jun 5, 2026',body:'Maharashtra Vidhan Sabha',desc:'State government proposes to implement UCC in Maharashtra pending Supreme Court review of the central legislation. Bill addresses marriage, divorce, adoption, and inheritance laws uniformly across communities.'},
-        {id:'m2',title:'BMC Revised Development Plan 2034 Approval',status:'pend',impact:'high',yea:0,nay:0,total:236,date:'Jun 20, 2026',body:'BMC General Body',desc:'The revised DP 2034 includes new FSI norms, slum rehabilitation clusters, coastal road connectivity, and revised CRZ boundaries. 1.4 lakh public objections received and reviewed.'},
-        {id:'m3',title:'Mumbai Metro Rail Phase 3 Funding',status:'pass',impact:'medium',yea:198,nay:38,total:236,date:'May 15, 2026',body:'BMC General Body',desc:'Passed 198-38. Approves ₹15,000 Cr municipal contribution to Metro 3 (Colaba-BKC-SEEPZ) operations and Metro 7 extension toward Bhiwandi.'},
+        {id:'m1',title:'Maharashtra Uniform Civil Code Bill 2026',status:'live',impact:'high',yea:0,nay:0,total:288,date:'Jun 5, 2026',body:'Maharashtra Vidhan Sabha',desc:'State government proposes UCC in Maharashtra pending Supreme Court review. Addresses marriage, divorce, adoption, and inheritance laws uniformly across communities.'},
+        {id:'m2',title:'BMC Revised Development Plan 2034 Approval',status:'pend',impact:'high',yea:0,nay:0,total:236,date:'Jun 20, 2026',body:'BMC General Body',desc:'Revised DP 2034 includes new FSI norms, slum rehabilitation, coastal road connectivity, and revised CRZ boundaries. 1.4 lakh public objections received.'},
+        {id:'m3',title:'Mumbai Metro Rail Phase 3 Funding',status:'pass',impact:'medium',yea:198,nay:38,total:236,date:'May 15, 2026',body:'BMC General Body',desc:'Passed 198-38. Approves ₹15,000 Cr municipal contribution to Metro 3 (Colaba-BKC-SEEPZ) and Metro 7 extension toward Bhiwandi.'},
       ],
       meetings:[
         {month:'JUN',day:'05',title:'BMC Standing Committee — Budget Review',location:'BMC Headquarters, Fort',time:'11:00 AM',agenda:'12 items',today:true},
         {month:'JUN',day:'10',title:'MMRDA Regional Plan Consultation',location:'World Trade Centre, Cuffe Parade',time:'10:00 AM',agenda:'DP amendments',today:false},
-        {month:'JUN',day:'18',title:'Mumbai Port Authority Meeting',location:'Shoorji Vallabhdas Marg, Ballard Estate',time:'3:00 PM',agenda:'Port expansion',today:false},
+        {month:'JUN',day:'18',title:'Mumbai Port Authority Meeting',location:'Ballard Estate',time:'3:00 PM',agenda:'Port expansion',today:false},
         {month:'JUN',day:'24',title:'Dharavi Redevelopment Public Hearing',location:'Municipal School, Dharavi',time:'4:00 PM',agenda:'Resident objections',today:false},
       ],
       infra:[
@@ -794,32 +813,29 @@
         {icon:'✈️',name:'CSIA (Terminal 2)',status:'warning',statusText:'Runway 09/27 Maintenance',last:'Updated 2h ago',health:65,link:'https://www.csia.in'},
       ],
       schemes:[
-        {icon:'🏘️',title:'Slum Rehabilitation Authority (SRA)',desc:'Free housing for slum dwellers in Mumbai through developer cross-subsidy model.',meta:['Active Projects: 4,200+','Coverage: 60L residents'],link:'https://sra.gov.in',tag:'Housing'},
-        {icon:'🚌',title:'BEST Electric Bus Expansion',desc:'BEST undertaking rolling out 2,100 electric buses by Dec 2026 across Mumbai.',meta:['Routes: 500+','Zero Emission'],link:'https://www.bestundertaking.com',tag:'Transport'},
-        {icon:'🌊',title:'Coastal Road Project Phase 2',desc:'Marine Lines to Worli connectivity via undersea tunnel — Phase 2 from Worli to Versova.',meta:['Length: 8.6 km','Investment: ₹9,800 Cr'],link:'https://mumbaicoastalroad.com',tag:'Infrastructure'},
+        {icon:'🏘️',title:'Slum Rehabilitation Authority (SRA)',desc:'Free housing for slum dwellers through developer cross-subsidy model.',meta:['Active Projects: 4,200+','Coverage: 60L residents'],link:'https://sra.gov.in',tag:'Housing'},
+        {icon:'🚌',title:'BEST Electric Bus Expansion',desc:'BEST rolling out 2,100 electric buses by Dec 2026 across Mumbai.',meta:['Routes: 500+','Zero Emission'],link:'https://www.bestundertaking.com',tag:'Transport'},
+        {icon:'🌊',title:'Coastal Road Project Phase 2',desc:'Marine Lines to Worli via undersea tunnel — Phase 2 from Worli to Versova.',meta:['Length: 8.6 km','Investment: ₹9,800 Cr'],link:'https://mumbaicoastalroad.com',tag:'Infrastructure'},
       ],
       stats:{votes:22,meetings:8,alerts:2},
       trends:{votes:'1 in session today',meetings:'Next: Today 11AM',alerts:'↓ Improving'},
-      alert:{title:'Central Railway Delays — Kalyan to CST',body:'Central Railway suburban services delayed by 15-20 min on Kalyan-CST section due to overhead wire snapping near Thane. Alternate routes advised. Updated 30m ago.'},
+      alert:{title:'Central Railway Delays — Kalyan to CST',body:'Central Railway suburban services delayed 15-20 min on Kalyan-CST section. Alternate routes advised. Updated 30m ago.'},
       activity:[
-        {color:'#FF9933',text:'Maharashtra UCC Bill: Vidhan Sabha session starts — cross-party debate expected',time:'8 min ago'},
+        {color:'#FF9933',text:'Maharashtra UCC Bill: Vidhan Sabha session starts — debate expected',time:'8 min ago'},
         {color:'#d4a847',text:'BEST adds 50 electric buses on Routes 1, 6, 340 from today',time:'2h ago'},
         {color:'#138808',text:'Dharavi Redevelopment: 1,200 residents receive allotment letters',time:'4h ago'},
         {color:'#c84b2f',text:'CR Delay Alert: Kalyan-CST services affected — wire snapping at Thane',time:'30 min ago'},
       ]
     }
   };
-  // Clone template for other cities
   ['bengaluru','chennai','kolkata','hyderabad','pune','ahmedabad'].forEach(c=>{
     const t=JSON.parse(JSON.stringify(CITIES.delhi));
     const n={bengaluru:'Bengaluru, Karnataka',chennai:'Chennai, Tamil Nadu',kolkata:'Kolkata, West Bengal',hyderabad:'Hyderabad, Telangana',pune:'Pune, Maharashtra',ahmedabad:'Ahmedabad, Gujarat'};
     t.name=n[c]; CITIES[c]=t;
   });
 
-  /* STATE */
   let city='delhi',filter='all',modalCtx='',focusIdx=-1,tQueue=[],tBusy=false;
 
-  /* QUICK LINKS DATA */
   const QUICK_LINKS=[
     {icon:'🗳️',label:'Voter Portal',url:'https://voters.eci.gov.in'},
     {icon:'📝',label:'File RTI',url:'https://rti.india.gov.in'},
@@ -835,14 +851,14 @@
     {icon:'🛡️',label:'Cyber Crime',url:'https://cybercrime.gov.in'},
   ];
 
-  /* INIT */
   document.addEventListener('DOMContentLoaded',()=>{
     initProgress();initDark();initMobileNav();
     initSearch();initScrollSpy();initBackTop();
     updateDateline();buildTicker();
     renderCity('delhi');renderQuickLinks();
+    startWeatherRefresh('delhi'); // ← LIVE DATA STARTS HERE
     setInterval(updateDateline,60000);
-    setTimeout(()=>toast('🏛️ Parliament In Session','Women\'s Reservation Bill 128th Amendment — Lok Sabha voting begins at 12:00 PM today.'),1800);
+    setTimeout(()=>toast('🌡️ Live Data Active','Weather & AQI now updating from your backend API every 10 minutes.'),2500);
   });
 
   function initProgress(){
@@ -883,12 +899,15 @@
 
   function updateDateline(){
     const now=new Date();
-    const ist=new Date(now.getTime()+(5.5*3600000));
     document.getElementById('dateline-text').textContent=
-      ist.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Kolkata'}).toUpperCase()+' IST — LIVE';
+      now.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Kolkata'}).toUpperCase()+' IST — LIVE';
   }
 
-  function changeCity(c){city=c;filter='all';renderCity(c);toast('📍 City Updated',`Now showing civic data for ${CITIES[c]?.name||c}`)}
+  function changeCity(c){
+    city=c;filter='all';renderCity(c);
+    startWeatherRefresh(c); // fetch live weather for new city
+    toast('📍 City Updated',`Now showing civic data for ${CITIES[c]?.name||c}`);
+  }
 
   function renderCity(c){
     const d=CITIES[c]||CITIES.delhi;
@@ -897,12 +916,9 @@
     document.getElementById('trend-votes').textContent=d.trends?.votes||'';
     document.getElementById('trend-meetings').textContent=d.trends?.meetings||'';
     document.getElementById('trend-alerts').textContent=d.trends?.alerts||'';
-    renderVotes(d.votes||[]);
-    renderBudget(d.budget||{});
-    renderSchemes(d.schemes||[]);
-    renderMeetings(d.meetings||[]);
-    renderInfra(d.infra||[]);
-    renderActivity(d.activity||[]);
+    renderVotes(d.votes||[]);renderBudget(d.budget||{});
+    renderSchemes(d.schemes||[]);renderMeetings(d.meetings||[]);
+    renderInfra(d.infra||[]);renderActivity(d.activity||[]);
     if(d.alert){
       const ab=document.getElementById('alertBanner');
       if(ab){document.getElementById('alertTitle').textContent=d.alert.title;document.getElementById('alertBody').textContent=d.alert.body;ab.style.display='flex'}
@@ -915,7 +931,6 @@
     const iv=setInterval(()=>{n=Math.min(n+step,target);el.textContent=n;if(n>=target)clearInterval(iv)},35);
   }
 
-  /* VOTES */
   function renderVotes(votes){
     const list=document.getElementById('vote-list');list.innerHTML='';
     const counts={all:votes.length,live:0,pend:0,pass:0,fail:0};
@@ -925,8 +940,7 @@
     const sm={live:{l:'●',c:'live'},pend:{l:'◷',c:'pend'},pass:{l:'✓',c:'pass'},fail:{l:'✕',c:'fail'}};
     const im={high:'tag-high',medium:'tag-medium',low:'tag-low'};
     votes.forEach((v,i)=>{
-      const yp=v.yea&&v.total?Math.round(v.yea/v.total*100):0;
-      const np=100-yp;
+      const yp=v.yea&&v.total?Math.round(v.yea/v.total*100):0,np=100-yp;
       const s=sm[v.status];
       const card=document.createElement('div');
       card.className='vote-card'+(filter!=='all'&&v.status!==filter?' hidden':'');
@@ -955,8 +969,7 @@
         </div>
         <div><span class="impact-tag ${im[v.impact]}">${v.impact}</span></div>`;
       const exp=()=>{
-        const ex=card.classList.toggle('expanded');
-        card.setAttribute('aria-expanded',ex);
+        const ex=card.classList.toggle('expanded');card.setAttribute('aria-expanded',ex);
         if(ex&&showBar)requestAnimationFrame(()=>{card.querySelector('.vote-bar-yes').style.width=yp+'%';card.querySelector('.vote-bar-no').style.width=np+'%'});
       };
       card.addEventListener('click',exp);
@@ -976,17 +989,16 @@
     e.stopPropagation();
     const url=location.href.split('#')[0]+'#votes';
     if(navigator.share)navigator.share({title:'CivicWatch India — '+decodeURIComponent(enc),url});
-    else navigator.clipboard.writeText(url).then(()=>toast('🔗 Copied',`Link for "${decodeURIComponent(enc)}" copied.`));
+    else navigator.clipboard.writeText(url).then(()=>toast('🔗 Copied',`Link copied.`));
   }
-  function subVote(e,enc){e.stopPropagation();toast('🔔 Subscribed',`You'll be alerted when "${decodeURIComponent(enc)}" is updated.`)}
+  function subVote(e,enc){e.stopPropagation();toast('🔔 Subscribed',`You will be alerted when "${decodeURIComponent(enc)}" is updated.`)}
   function voteModal(e,btn){
     e.stopPropagation();
     const v=JSON.parse(btn.getAttribute('data-v').replace(/&#39;/g,"'"));
     const yp=v.yea&&v.total?Math.round(v.yea/v.total*100):0;
-    openModal('Parliament Bill',v.title,`<strong>Status:</strong> ${v.status.toUpperCase()}<br><strong>Legislative Body:</strong> ${v.body}<br><strong>Date:</strong> ${v.date}<br><strong>Impact:</strong> ${v.impact.toUpperCase()}<br>${v.yea>0?`<br><strong>Vote Count:</strong> ${v.yea} Ayes / ${v.nay} Noes of ${v.total} members (${yp}% in favour)<br>`:''}<br>${v.desc}<br><br><em>Source: <a href="https://sansad.in" target="_blank" rel="noopener" style="color:var(--saffron)">Sansad.in — Parliament of India</a></em>`);
+    openModal('Parliament Bill',v.title,`<strong>Status:</strong> ${v.status.toUpperCase()}<br><strong>Body:</strong> ${v.body}<br><strong>Date:</strong> ${v.date}<br><strong>Impact:</strong> ${v.impact.toUpperCase()}<br>${v.yea>0?`<br><strong>Vote Count:</strong> ${v.yea} Ayes / ${v.nay} Noes of ${v.total} (${yp}% in favour)<br>`:''}<br>${v.desc}<br><br><em>Source: <a href="https://sansad.in" target="_blank" rel="noopener" style="color:var(--saffron)">Sansad.in</a></em>`);
   }
 
-  /* BUDGET */
   function renderBudget(b){
     document.getElementById('budget-total').textContent=b.total||'—';
     document.getElementById('budget-change').textContent=b.change||'';
@@ -994,7 +1006,7 @@
     buildDonut(b.items||[]);
     (b.items||[]).forEach((item,i)=>{
       const div=document.createElement('div');div.className='budget-item';
-      div.innerHTML=`<div class="budget-item-header"><span class="budget-item-name">${item.name}</span><div class="budget-item-right"><span class="budget-item-amt">${item.amount}</span><span class="budget-item-pct" style="color:${item.color}">${item.pct}%</span></div></div><div class="budget-track" title="${item.name}: ${item.pct}%"><div class="budget-fill" style="width:0%;background:${item.color}"></div></div>`;
+      div.innerHTML=`<div class="budget-item-header"><span class="budget-item-name">${item.name}</span><div class="budget-item-right"><span class="budget-item-amt">${item.amount}</span><span class="budget-item-pct" style="color:${item.color}">${item.pct}%</span></div></div><div class="budget-track"><div class="budget-fill" style="width:0%;background:${item.color}"></div></div>`;
       c.appendChild(div);
       requestAnimationFrame(()=>setTimeout(()=>{div.querySelector('.budget-fill').style.width=item.pct+'%'},200+i*60));
     });
@@ -1025,7 +1037,7 @@
     const a=document.createElement('a');
     a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
     a.download=`civicwatch-india-budget-${city}.csv`;a.click();
-    toast('⬇ Exported',`Budget data exported as CSV.`);
+    toast('⬇ Exported','Budget data saved as CSV.');
   }
   function shareBudget(){
     const url=location.href.split('#')[0]+'#budget';
@@ -1033,24 +1045,15 @@
     else navigator.clipboard.writeText(url).then(()=>toast('🔗 Copied','Budget link copied.'));
   }
 
-  /* SCHEMES */
   function renderSchemes(schemes){
     const list=document.getElementById('scheme-list');list.innerHTML='';
     (schemes||[]).forEach((s,i)=>{
       const card=document.createElement('div');card.className='scheme-card';card.style.animationDelay=(i*.07)+'s';
-      card.innerHTML=`
-        <div class="scheme-icon">${s.icon}</div>
-        <div class="scheme-info">
-          <div class="scheme-title">${s.title}</div>
-          <div style="font-size:.82rem;color:var(--muted);margin-top:.3rem;line-height:1.4">${s.desc}</div>
-          <div class="scheme-meta">${s.meta.map(m=>`<span>${m}</span>`).join('')}<span class="scheme-tag">${s.tag}</span></div>
-        </div>
-        <a href="${s.link}" target="_blank" rel="noopener" class="scheme-link" onclick="event.stopPropagation()">Apply →</a>`;
+      card.innerHTML=`<div class="scheme-icon">${s.icon}</div><div class="scheme-info"><div class="scheme-title">${s.title}</div><div style="font-size:.82rem;color:var(--muted);margin-top:.3rem;line-height:1.4">${s.desc}</div><div class="scheme-meta">${s.meta.map(m=>`<span>${m}</span>`).join('')}<span class="scheme-tag">${s.tag}</span></div></div><a href="${s.link}" target="_blank" rel="noopener" class="scheme-link" onclick="event.stopPropagation()">Apply →</a>`;
       list.appendChild(card);
     });
   }
 
-  /* MEETINGS */
   function renderMeetings(meetings){
     const list=document.getElementById('meeting-list');list.innerHTML='';
     meetings.forEach((m,i)=>{
@@ -1071,11 +1074,10 @@
 
   function rsvp(btn,title){
     btn.classList.toggle('rsvpd');
-    if(btn.classList.contains('rsvpd')){btn.textContent='✓ Going';toast('📅 Registered',`You are marked for: ${title}`)}
+    if(btn.classList.contains('rsvpd')){btn.textContent='✓ Going';toast('📅 Registered',`Marked for: ${title}`)}
     else{btn.textContent='Attend';toast('📅 Removed',`Removed from: ${title}`)}
   }
 
-  /* INFRASTRUCTURE */
   function renderInfra(items){
     const grid=document.getElementById('infra-grid'),summ=document.getElementById('infra-summary');
     grid.innerHTML='';
@@ -1098,7 +1100,7 @@
         <div class="infra-last">${item.last}</div>
         <div class="infra-prog"><div class="infra-prog-track"><div class="infra-prog-fill" style="width:0%"></div></div></div>
         <button class="report-btn" onclick="reportIssue(event,'${item.name.replace(/'/g,"\\'")}')">⚑ Report Issue</button>`;
-      const fn=()=>openModal('Infrastructure',item.name,`<strong>Current Status:</strong> ${item.statusText}<br><strong>System Health:</strong> ${item.health||80}%<br><strong>Last Updated:</strong> ${item.last}<br><br>To report a civic infrastructure issue, use the Report button or visit <a href="${item.link||'https://pgportal.gov.in'}" target="_blank" rel="noopener" style="color:var(--saffron)">the official grievance portal</a>. All reports are reviewed within 24–48 hours.`);
+      const fn=()=>openModal('Infrastructure',item.name,`<strong>Status:</strong> ${item.statusText}<br><strong>Health:</strong> ${item.health||80}%<br><strong>Updated:</strong> ${item.last}<br><br>Report issues at <a href="${item.link||'https://pgportal.gov.in'}" target="_blank" rel="noopener" style="color:var(--saffron)">official portal</a>. Reviewed within 24–48 hours.`);
       card.addEventListener('click',fn);card.addEventListener('keydown',e=>{if(e.key==='Enter')fn()});
       grid.appendChild(card);
       requestAnimationFrame(()=>setTimeout(()=>{const f=card.querySelector('.infra-prog-fill');if(f)f.style.width=(item.health||80)+'%'},300+i*80));
@@ -1107,10 +1109,9 @@
 
   function reportIssue(e,name){
     e.stopPropagation();
-    toast('📝 Report Submitted',`Issue logged for "${name}". Ref #CW-${Date.now().toString().slice(-5)}. You can also file at pgportal.gov.in`);
+    toast('📝 Report Submitted',`Issue logged for "${name}". Ref #CW-${Date.now().toString().slice(-5)}`);
   }
 
-  /* QUICK LINKS */
   function renderQuickLinks(){
     const grid=document.getElementById('ql-grid');
     QUICK_LINKS.forEach(ql=>{
@@ -1122,7 +1123,6 @@
     });
   }
 
-  /* ACTIVITY */
   function renderActivity(items){
     const feed=document.getElementById('activity-feed');if(!feed)return;
     feed.innerHTML='';
@@ -1134,19 +1134,18 @@
     });
   }
 
-  /* TICKER */
   function buildTicker(){
     const items=[
-      {c:'saffron',t:'PARLIAMENT LIVE: Women\'s Reservation Bill 128th Amendment — Lok Sabha voting at noon'},
+      {c:'saffron',t:"PARLIAMENT LIVE: Women's Reservation Bill 128th Amendment — Lok Sabha voting at noon"},
       {c:'green',  t:'PM-KISAN 18th Instalment: ₹20,000 Cr disbursed to 9.26 Cr farmers today'},
-      {c:'red',    t:'DELHI AQI: 312 Very Poor — GRAP Stage 3 active, construction work banned'},
+      {c:'red',    t:'DELHI AQI: Live data now updating from CPCB via CivicWatch backend API'},
       {c:'saffron',t:'BUDGET 2025-26: ₹50.65 Lakh Cr total outlay — 11.1% higher than previous year'},
       {c:'white',  t:'RTI PORTAL: 22 lakh+ applications filed online in 2025 — response rate 94%'},
       {c:'green',  t:'METRO EXPANSION: 3 new corridors inaugurated in Chennai, Pune and Ahmedabad'},
       {c:'saffron',t:'WAQF BILL: JPC concludes regional hearings — report expected by July 2026'},
-      {c:'red',    t:'MUMBAI: Central Railway delays — Kalyan-CST section affected by overhead wire snapping'},
-      {c:'green',  t:'AYUSHMAN BHARAT: 7.37 Cr hospital admissions processed — ₹99,000 Cr claims settled'},
-      {c:'white',  t:'ONE NATION ONE ELECTION: Joint Committee reviewing constitutional amendment — 47 consultations done'},
+      {c:'red',    t:'MUMBAI: Central Railway delays — Kalyan-CST section affected'},
+      {c:'green',  t:'AYUSHMAN BHARAT: 7.37 Cr hospital admissions — ₹99,000 Cr claims settled'},
+      {c:'white',  t:'LIVE WEATHER: Real-time temperature, humidity & AQI now active for all 8 cities'},
     ];
     const ticker=document.getElementById('ticker');
     [...items,...items].forEach(item=>{
@@ -1156,7 +1155,6 @@
     });
   }
 
-  /* SEARCH */
   function initSearch(){
     const input=document.getElementById('searchInput'),res=document.getElementById('searchResults'),clr=document.getElementById('searchClear');
     input.addEventListener('input',()=>{
@@ -1175,16 +1173,15 @@
   }
   function hlRes(items){items.forEach((el,i)=>el.classList.toggle('focused',i===focusIdx))}
   function hl(text,q){return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),'<mark>$1</mark>')}
-
   function doSearch(q){
     const res=document.getElementById('searchResults'),d=CITIES[city]||CITIES.delhi,ql=q.toLowerCase(),hits=[];
-    (d.votes||[]).forEach(v=>{if(v.title.toLowerCase().includes(ql)||v.desc.toLowerCase().includes(ql))hits.push({type:'vote',label:v.title,anchor:'#votes',sub:`${v.status} · ${v.body} · ${v.date}`})});
+    (d.votes||[]).forEach(v=>{if(v.title.toLowerCase().includes(ql)||v.desc.toLowerCase().includes(ql))hits.push({type:'vote',label:v.title,anchor:'#votes',sub:`${v.status} · ${v.body}`})});
     (d.meetings||[]).forEach(m=>{if(m.title.toLowerCase().includes(ql)||m.location.toLowerCase().includes(ql))hits.push({type:'meeting',label:m.title,anchor:'#meetings',sub:`${m.month} ${m.day} · ${m.time}`})});
     (d.infra||[]).forEach(item=>{if(item.name.toLowerCase().includes(ql)||item.statusText.toLowerCase().includes(ql))hits.push({type:'infra',label:item.name,anchor:'#infra',sub:item.statusText})});
     (d.budget?.items||[]).forEach(item=>{if(item.name.toLowerCase().includes(ql))hits.push({type:'budget',label:item.name,anchor:'#budget',sub:`${item.pct}% — ${item.amount}`})});
     (d.schemes||[]).forEach(s=>{if(s.title.toLowerCase().includes(ql)||s.desc.toLowerCase().includes(ql))hits.push({type:'scheme',label:s.title,anchor:'#schemes',sub:s.tag})});
     res.innerHTML='';focusIdx=-1;
-    if(!hits.length){res.innerHTML=`<div class="search-empty">No results for "<strong>${q}</strong>" — Try searching bills, schemes, or infrastructure</div>`}
+    if(!hits.length){res.innerHTML=`<div class="search-empty">No results for "<strong>${q}</strong>"</div>`}
     else hits.slice(0,8).forEach(h=>{
       const el=document.createElement('div');el.className='sri';el.setAttribute('role','option');
       el.innerHTML=`<span class="srt srt-${h.type}">${h.type}</span><div><div>${hl(h.label,q)}</div><div style="font-size:.6rem;color:var(--muted);margin-top:2px">${h.sub}</div></div>`;
@@ -1195,7 +1192,6 @@
   }
   function triggerSearch(){const q=document.getElementById('searchInput').value.trim();if(q.length>=2)doSearch(q)}
 
-  /* MODAL */
   function openModal(tag,title,body){
     modalCtx=title;
     document.getElementById('modal-tag').textContent=tag;
@@ -1214,11 +1210,10 @@
   function shareCurrentModal(){
     const url=location.href;
     if(navigator.share)navigator.share({title:'CivicWatch India — '+modalCtx,url});
-    else navigator.clipboard.writeText(url).then(()=>{closeModal();toast('🔗 Copied','Link copied to clipboard.')});
+    else navigator.clipboard.writeText(url).then(()=>{closeModal();toast('🔗 Copied','Link copied.')});
   }
   document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
 
-  /* TOAST */
   function toast(title,body){tQueue.push({title,body});if(!tBusy)nextToast()}
   function nextToast(){
     if(!tQueue.length){tBusy=false;return}tBusy=true;
